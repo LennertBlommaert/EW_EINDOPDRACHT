@@ -1,6 +1,7 @@
 const path = require(`path`);
 
 const webpack = require(`webpack`);
+const {HotModuleReplacementPlugin} = webpack;
 const {UglifyJsPlugin} = webpack.optimize;
 
 const CopyWebpackPlugin = require(`copy-webpack-plugin`);
@@ -8,12 +9,14 @@ const ExtractTextWebpackPlugin = require(`extract-text-webpack-plugin`);
 const configHtmls = require(`webpack-config-htmls`)();
 
 const {getIfUtils, removeEmpty} = require(`webpack-config-utils`);
-const {ifProduction} = getIfUtils(process.env.NODE_ENV);
+const {ifProduction, ifDevelopment} = getIfUtils(process.env.NODE_ENV);
 
 const extractCSS = new ExtractTextWebpackPlugin(`css/style.css`);
 
 // change for production build on different server path
 const publicPath = `/`;
+
+const port = 3000;
 
 const copy = new CopyWebpackPlugin([{
   from: `./src/assets`,
@@ -29,6 +32,7 @@ const config = {
   entry: removeEmpty([
     `./src/css/style.css`,
     `./src/js/script.js`,
+    ifDevelopment(...configHtmls.entry)
   ]),
 
   resolve: {
@@ -40,18 +44,49 @@ const config = {
   },
 
   output: {
-    path: path.join(__dirname, `server`, `public`),
+    path: path.join(__dirname, `dist`),
     filename: `js/[name].[hash].js`,
     publicPath
   },
 
   devtool: `source-map`,
 
+  devServer: {
+
+    contentBase: `./src`,
+    historyApiFallback: true, // react-router
+    hot: true,
+
+    overlay: {
+      errors: true,
+      warnings: true
+    },
+
+    port
+
+  },
+
   module: {
 
     rules: removeEmpty([
 
-      {
+      ifDevelopment({
+        test: /\.css$/,
+        use: [
+          `style-loader`,
+          {
+            loader: `css-loader`,
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: `postcss-loader`
+          }
+        ]
+      }),
+
+      ifProduction({
         test: /\.css$/,
         loader: extractCSS.extract([
           {
@@ -64,7 +99,7 @@ const config = {
             loader: `postcss-loader`
           }
         ])
-      },
+      }),
 
       {
         test: /\.html$/,
@@ -131,8 +166,12 @@ const config = {
 
     ...configHtmls.plugins,
 
-    copy,
-    extractCSS,
+    ifDevelopment(new HotModuleReplacementPlugin()),
+
+
+
+    ifProduction(copy),
+    ifProduction(extractCSS),
 
     ifProduction(
       new UglifyJsPlugin({
