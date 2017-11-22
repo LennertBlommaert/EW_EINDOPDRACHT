@@ -1,9 +1,13 @@
 //import parseMidiMessage from './lib/parseMidiMessage';
 
-import getMIDIInputValues from './lib/getMIDIInputValues';
-import parseMIDIMessageData from './lib/parseMIDIMessageData';
+//QUESTION overkill in onze toepassing?
+// import Keyboard from './classes/Keyboard';
+// let keyboard;
+
+import MIDIController from './classes/MIDIController';
+let midiController;
+
 import onMIDIFailure from './lib/onMIDIFailure';
-import onMIDIAccessStateChange from './lib/onMIDIAccessStateChange';
 
 import createScene from './lib/createScene';
 import createCamera from './lib/createCamera';
@@ -13,7 +17,7 @@ import createObjectOnNote from './lib/createObjectOnNote.js';
 let scene, camera, renderer;
 
 import createSynth from './lib/createSynth';
-let synth, pushedNotes = [];
+let synth, pushedFrequencies = [];
 
 import Constants from './objects/Constants';
 
@@ -29,35 +33,23 @@ const getMIDIAccess = () => {
 };
 
 const MIDISucces = MIDIAccess => {
-  const MIDIInputValues = getMIDIInputValues(MIDIAccess);
-
-  MIDIInputValues.forEach(inputValue => {
-    inputValue.onmidimessage = onMIDIMessage;
-  });
-
-  MIDIAccess.onstatechange = e => onMIDIAccessStateChange(e);
+  midiController = new MIDIController(MIDIAccess);
+  midiController.on(`midicontrollerkeyup`, handleControllerKeyUp);
+  midiController.on(`midicontrollerkeydown`, handleControllerKeyDown);
 };
 
-const onMIDIMessage = ({data: MIDIData} = [0, 0, 0]) => {
-  const {command, note, velocity} = parseMIDIMessageData(MIDIData);
-  // const {command, note} = parseMIDIMessageData(MIDIData);
-
-  if (command === Constants.MIDI_KEY_DOWN_COMMAND) {
-    createObjectOnNote(note, scene);
-    pushedNotes.push(note);
-    synth.triggerAttack(pushedNotes, undefined, velocity);
-  } else {
-    pushedNotes = pushedNotes.filter(n => n !== note);
-    synth.triggerRelease([note]);
-  }
-
-  // Note - time - velocity
-  //synth.triggerAttack(note, new Date().getTime(), velocity);
-
-  //Stop playing note after a while
-  //synth.triggerAttackRelease(pushedNotes, `4n`);
+const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
+  //QUESTION: maybe a function creating objects based on frequencies instead of notes?
+  createObjectOnNote(note, scene);
+  pushedFrequencies.push(frequency);
+  console.log(note, frequency);
+  synth.triggerAttack(pushedFrequencies, undefined, velocity);
 };
 
+const handleControllerKeyUp = ({frequency = 440}) => {
+  pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
+  synth.triggerRelease([frequency]);
+};
 
 const handleWindowResize = () => {
   Constants.WIDTH = window.innerWidth;
@@ -80,19 +72,28 @@ const setupScene = () => {
 
 const loop = () => {
   renderer.render(scene, camera);
-  // sea.moveWaves(currentNote / 20);
   window.requestAnimationFrame(loop);
+};
+
+const getKeyCodeData = keyCode => {
+  return Constants.KEY_NOTE_FREQUENCY.filter(d => d.keyCode === keyCode)[0];
 };
 
 const init = () => {
 
-  getMIDIAccess();
+  synth = createSynth();
 
   setupScene();
 
-  synth = createSynth();
+  getKeyCodeData(81);
 
-  console.log(synth);
+  window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
+  window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
+
+  getMIDIAccess();
+
+  //window.addEventListener(`keydown`, handleKeyDown);
+
 
   loop();
 
