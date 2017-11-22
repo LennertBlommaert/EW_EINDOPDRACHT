@@ -7,8 +7,6 @@ import getRandomArbitrary from './getRandomArbitrary';
 
 const createObjectOnNote = (note = 0, scene) => {
 
-  console.log(note % 7);
-
   if (note >= 60) {
     createPlane(scene);
   }
