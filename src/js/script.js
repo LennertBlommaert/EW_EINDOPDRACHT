@@ -15,7 +15,7 @@ import createRenderer from './lib/createRenderer';
 import createLights from './lib/createLights';
 import createObjectOnNote from './lib/createObjectOnNote.js';
 import Tree from './classes/Tree';
-let scene, camera, renderer;
+let scene, camera, renderer, controls;
 
 import createSynth from './lib/createSynth';
 let synth, pushedFrequencies = [], pushedNotes = [];
@@ -89,6 +89,8 @@ const handleWindowResize = () => {
   Constants.HEIGHT = window.innerHeight;
 
   renderer.setSize(Constants.WIDTH, Constants.HEIGHT);
+  console.log(camera.rotation);
+
   camera.aspect = Constants.WIDTH / Constants.HEIGHT;
   camera.updateProjectionMatrix();
 };
@@ -100,6 +102,16 @@ const setupScene = () => {
   camera = createCamera(Constants.WIDTH / Constants.HEIGHT);
   renderer = createRenderer();
 
+  //Alles in class steken die te maken heeft met Three
+  controls = new THREE.OrbitControls(camera, document.querySelector(`.world`));
+  controls.autoRotate = true;
+  controls.keys = {
+    LEFT: 37, //left arrow
+    UP: 38, // up arrow
+    RIGHT: 39, // right arrow
+    BOTTOM: 40 // down arrow
+  };
+
   window.addEventListener(`resize`, handleWindowResize, false);
 
   createLights(scene);
@@ -107,6 +119,8 @@ const setupScene = () => {
 
 const loop = () => {
   renderer.render(scene, camera);
+  camera.rotation.x ++;
+  controls.update();
   window.requestAnimationFrame(loop);
 };
 
@@ -121,17 +135,15 @@ const init = () => {
   setupScene();
   createTree();
 
-  getKeyCodeData(81);
 
   window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
   window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
 
   getMIDIAccess();
 
-  //window.addEventListener(`keydown`, handleKeyDown);
-
-
   loop();
+
+  camera.position;
 
 };
 

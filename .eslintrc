@@ -2,5 +2,6 @@
   "extends": "devine",
   "globals": {
     "THREE": true,
+    "OrbitControls": true,
   }
 }

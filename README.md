@@ -1,15 +1,12 @@
 # The_Creation
 
-
+## Feedback consults
 mss standaard al een drum track die afspeelt
 wereld pulseert daarop,
 keuze van drumtrack
 
 Focus op proper totaalervaring
 maar 5weken, WebVR later erin
-
-INTERESTING READ
-https://github.com/saebekassebil/teoria
 
 
 ## Korte overview muziek theorie
@@ -29,7 +26,5 @@ https://music.stackexchange.com/questions/42694/what-is-a-chord-in-terms-of-freq
 
 - Tone.js
 - Three.js
-- Teoria.js
-
-Currently not available
-- Tonal.js (tonal-detect)
+- Teoria.js https://github.com/saebekassebil/teoria
+- Più.js
