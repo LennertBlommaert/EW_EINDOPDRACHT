@@ -24,3 +24,12 @@ Chord = het samen spelen van bepaalde frequencies, hun golven gaan inteferen en 
 Vanaf men twee noten speelt, speelt men een chord
 Wanneer deze frequencies samen passen spreekt men over consonance, i.t.t. dissconace
 https://music.stackexchange.com/questions/42694/what-is-a-chord-in-terms-of-frequencies
+
+## Used libraries
+
+- Tone.js
+- Three.js
+- Teoria.js
+
+Currently not available
+- Tonal.js (tonal-detect)

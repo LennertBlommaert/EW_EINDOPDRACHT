@@ -70,7 +70,6 @@ const Constants = {
     {
       keyCode: 69,
       frequency: 329.63,
-      note: 64
     },
     {
       keyCode: 82,

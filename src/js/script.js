@@ -18,9 +18,16 @@ import Tree from './classes/Tree';
 let scene, camera, renderer;
 
 import createSynth from './lib/createSynth';
-let synth, pushedFrequencies = [];
+let synth, pushedFrequencies = [], pushedNotes = [];
 
 import Constants from './objects/Constants';
+
+// Currently unavailable
+//import {chord} from 'tonal-detect';
+
+import teoria from 'teoria';
+import piu from 'piu';
+
 
 const getMIDIAccess = () => {
   if (navigator.requestMIDIAccess) {
@@ -39,16 +46,41 @@ const MIDISucces = MIDIAccess => {
   midiController.on(`midicontrollerkeydown`, handleControllerKeyDown);
 };
 
-const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-  //QUESTION: maybe a function creating objects based on frequencies instead of notes?
-  createObjectOnNote(note, scene);
-  pushedFrequencies.push(frequency);
-  console.log(note, frequency);
-  synth.triggerAttack(pushedFrequencies, undefined, velocity);
+const minorChordPlayed = () => {
+  console.log(`MINOR PLAYED`);
 };
 
-const handleControllerKeyUp = ({frequency = 440}) => {
+const majorChordPlayed = () => {
+  console.log(`MAJOR PLAYED`);
+};
+
+const checkChordType = () => {
+  const teoriaNotes = pushedNotes.map(teoria.note.fromMIDI);
+  // const triads = piu.triads(teoriaNotes);
+  const infer = piu.infer(teoriaNotes);
+
+  // Check if a chord is recognised
+  if (infer.length === 0) return;
+
+  if (infer[0].type === `m`) return minorChordPlayed();
+  if (infer[0].type === ``) return majorChordPlayed();
+};
+
+const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
+  //QUESTION: maybe a function creating objects based on frequencies instead of notes?
+  // Maybe not, maybe rather play music based on notes
+  createObjectOnNote(note, scene);
+  pushedFrequencies.push(frequency);
+  pushedNotes.push(note);
+  synth.triggerAttack(pushedFrequencies, undefined, velocity);
+
+  //Only check when multiple keys are being pressed
+  if (pushedNotes.length > 1) checkChordType();
+};
+
+const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
+  pushedNotes = pushedNotes.filter(n => n !== note);
   synth.triggerRelease([frequency]);
 };
 

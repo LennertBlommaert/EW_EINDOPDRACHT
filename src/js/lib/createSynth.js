@@ -21,7 +21,12 @@ const createSynth = () => {
 
   //to make a 4 voice MonoSynth
   //https://github.com/Tonejs/Tone.js/wiki/Instruments#polyphony-with-tonepolysynth
-  return new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
+  //https://github.com/Tonejs/Tone.js/wiki/Effects
+  const distortion = new Tone.Distortion(0.2).toMaster();
+  const polySynth = new Tone.PolySynth(4, Tone.MonoSynth).connect(distortion);
+
+
+  return polySynth.connect(distortion);
 };
 
 export default createSynth;
