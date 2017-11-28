@@ -14,6 +14,7 @@ import createCamera from './lib/createCamera';
 import createRenderer from './lib/createRenderer';
 import createLights from './lib/createLights';
 import createObjectOnNote from './lib/createObjectOnNote.js';
+import Tree from './classes/Tree';
 let scene, camera, renderer;
 
 import createSynth from './lib/createSynth';
@@ -60,6 +61,8 @@ const handleWindowResize = () => {
   camera.updateProjectionMatrix();
 };
 
+const createTree = () => new Tree(scene);
+
 const setupScene = () => {
   scene = createScene();
   camera = createCamera(Constants.WIDTH / Constants.HEIGHT);
@@ -84,6 +87,7 @@ const init = () => {
   synth = createSynth();
 
   setupScene();
+  createTree();
 
   getKeyCodeData(81);
 
