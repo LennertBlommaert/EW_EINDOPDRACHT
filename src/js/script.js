@@ -102,7 +102,7 @@ const setupScene = () => {
   camera = createCamera(Constants.WIDTH / Constants.HEIGHT);
   renderer = createRenderer();
 
-  //Alles in class steken die te maken heeft met Three
+  //Alles in class steken die te maken heeft met Three?
   controls = new THREE.OrbitControls(camera, document.querySelector(`.world`));
   controls.autoRotate = true;
   controls.keys = {
@@ -119,13 +119,32 @@ const setupScene = () => {
 
 const loop = () => {
   renderer.render(scene, camera);
-  camera.rotation.x ++;
   controls.update();
   window.requestAnimationFrame(loop);
 };
 
 const getKeyCodeData = keyCode => {
   return Constants.KEY_NOTE_FREQUENCY.filter(d => d.keyCode === keyCode)[0];
+};
+
+const handleOnResetButtonClick = () => {
+  while (scene.children.length > 0) {
+    scene.children[0].children.forEach(c => {
+      c.material.dispose();
+      c.geometry.dispose();
+    });
+
+    scene.remove(scene.children[0]);
+  }
+  // scene.children.forEach(child => {
+  //
+  //   child.children.forEach(c => {
+  //     c.material.dispose();
+  //     c.geometry.dispose();
+  //   });
+  //
+  //   scene.remove(child);
+  // });
 };
 
 const init = () => {
@@ -138,6 +157,9 @@ const init = () => {
 
   window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
   window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
+
+  const $resetButton = document.querySelector(`.reset-button`);
+  $resetButton.addEventListener(`click`, handleOnResetButtonClick);
 
   getMIDIAccess();
 
