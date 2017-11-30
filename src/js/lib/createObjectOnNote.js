@@ -7,11 +7,17 @@ import getRandomArbitrary from './getRandomArbitrary';
 
 const createObjectOnNote = (note = 0, scene) => {
 
-  if (note >= 60) {
+  if (note > 60) {
     createPlane(scene);
   }
 
-  if (note <= 60) {
+  // A key on keyboard
+  if (note === 60) {
+    console.log(scene);
+    scene.terrain.minHeight++;
+  }
+
+  if (note < 60) {
     createCloud(scene);
   }
 };

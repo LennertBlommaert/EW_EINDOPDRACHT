@@ -12,7 +12,7 @@ import onMIDIFailure from './lib/onMIDIFailure';
 import ThreeController from './classes/ThreeController.js';
 let threeController;
 
-import createObjectOnNote from './lib/createObjectOnNote.js';
+//aimport createObjectOnNote from './lib/createObjectOnNote.js';
 import Tree from './classes/Tree';
 
 import createSynth from './lib/createSynth';
@@ -67,7 +67,7 @@ const checkChordType = () => {
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
-  createObjectOnNote(note, threeController.scene);
+  threeController.scene.createObjectOnNote(note);
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
   synth.triggerAttack(pushedFrequencies, undefined, velocity);
@@ -80,8 +80,6 @@ const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
   pushedNotes = pushedNotes.filter(n => n !== note);
   synth.triggerRelease([frequency]);
-  console.log(threeController.scene);
-
 };
 
 const handleWindowResize = () => {
@@ -98,7 +96,10 @@ const createTree = () => new Tree(threeController.scene);
 
 const loop = () => {
   threeController.renderer.render(threeController.scene, threeController.camera);
-  threeController.controls.update();
+
+  threeController.camera.rotate();
+  //threeController.controls.update();
+
   window.requestAnimationFrame(loop);
 };
 

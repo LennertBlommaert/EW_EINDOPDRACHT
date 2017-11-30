@@ -25,6 +25,8 @@ class Tree {
     this.mesh.castShadow = true;
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
 
+    this.mesh.position.z = 100;
+
     console.log(this.mesh);
 
     scene.add(this.mesh);
