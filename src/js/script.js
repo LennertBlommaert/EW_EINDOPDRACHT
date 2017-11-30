@@ -9,13 +9,11 @@ let midiController;
 
 import onMIDIFailure from './lib/onMIDIFailure';
 
-import createScene from './lib/createScene';
-import createCamera from './lib/createCamera';
-import createRenderer from './lib/createRenderer';
-import createLights from './lib/createLights';
+import ThreeController from './classes/ThreeController.js';
+let threeController;
+
 import createObjectOnNote from './lib/createObjectOnNote.js';
 import Tree from './classes/Tree';
-let scene, camera, renderer, controls;
 
 import createSynth from './lib/createSynth';
 let synth, pushedFrequencies = [], pushedNotes = [];
@@ -69,7 +67,7 @@ const checkChordType = () => {
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
-  createObjectOnNote(note, scene);
+  createObjectOnNote(note, threeController.scene);
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
   synth.triggerAttack(pushedFrequencies, undefined, velocity);
@@ -82,76 +80,57 @@ const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
   pushedNotes = pushedNotes.filter(n => n !== note);
   synth.triggerRelease([frequency]);
+  console.log(threeController.scene);
+
 };
 
 const handleWindowResize = () => {
   Constants.WIDTH = window.innerWidth;
   Constants.HEIGHT = window.innerHeight;
 
-  renderer.setSize(Constants.WIDTH, Constants.HEIGHT);
-  console.log(camera.rotation);
+  threeController.renderer.setSize(Constants.WIDTH, Constants.HEIGHT);
 
-  camera.aspect = Constants.WIDTH / Constants.HEIGHT;
-  camera.updateProjectionMatrix();
+  threeController.camera.aspect = Constants.WIDTH / Constants.HEIGHT;
+  threeController.camera.updateProjectionMatrix();
 };
 
-const createTree = () => new Tree(scene);
-
-const setupScene = () => {
-  scene = createScene();
-  camera = createCamera(Constants.WIDTH / Constants.HEIGHT);
-  renderer = createRenderer();
-
-  //Alles in class steken die te maken heeft met Three?
-  controls = new THREE.OrbitControls(camera, document.querySelector(`.world`));
-  controls.autoRotate = true;
-  controls.keys = {
-    LEFT: 37, //left arrow
-    UP: 38, // up arrow
-    RIGHT: 39, // right arrow
-    BOTTOM: 40 // down arrow
-  };
-
-  window.addEventListener(`resize`, handleWindowResize, false);
-
-  createLights(scene);
-};
+const createTree = () => new Tree(threeController.scene);
 
 const loop = () => {
-  renderer.render(scene, camera);
-  controls.update();
+  threeController.renderer.render(threeController.scene, threeController.camera);
+  threeController.controls.update();
   window.requestAnimationFrame(loop);
 };
 
 const getKeyCodeData = keyCode => {
-  return Constants.KEY_NOTE_FREQUENCY.filter(d => d.keyCode === keyCode)[0];
+
+  const keyCodeData = Constants.KEY_NOTE_FREQUENCY.filter(d => d.keyCode === keyCode)[0];
+
+
+  if (keyCodeData !== undefined) return keyCodeData;
+
+  return {};
 };
 
 const handleOnResetButtonClick = () => {
-  while (scene.children.length > 0) {
-    scene.children[0].children.forEach(c => {
+  while (threeController.scene.children.length > 0) {
+    threeController.scene.children[0].children.forEach(c => {
       c.material.dispose();
       c.geometry.dispose();
     });
 
-    scene.remove(scene.children[0]);
+    threeController.scene.remove(threeController.scene.children[0]);
   }
-  // scene.children.forEach(child => {
-  //
-  //   child.children.forEach(c => {
-  //     c.material.dispose();
-  //     c.geometry.dispose();
-  //   });
-  //
-  //   scene.remove(child);
-  // });
 };
 
 const init = () => {
 
   synth = createSynth();
 
-  setupScene();
+  threeController = new ThreeController();
+
+  window.addEventListener(`resize`, handleWindowResize, false);
+
   createTree();
 
 
@@ -164,8 +143,6 @@ const init = () => {
   getMIDIAccess();
 
   loop();
-
-  camera.position;
 
 };
 
