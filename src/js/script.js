@@ -20,7 +20,7 @@ let synth, pushedFrequencies = [], pushedNotes = [];
 
 import Constants from './objects/Constants';
 
-// Currently unavailable
+// Currently unavailable, yet promising
 //import {chord} from 'tonal-detect';
 
 import teoria from 'teoria';

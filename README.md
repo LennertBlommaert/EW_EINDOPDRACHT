@@ -26,5 +26,7 @@ https://music.stackexchange.com/questions/42694/what-is-a-chord-in-terms-of-freq
 
 - Tone.js
 - Three.js
+  - OrbitControls.js
+  - THREE.Terrain.js
 - Teoria.js https://github.com/saebekassebil/teoria
 - Più.js

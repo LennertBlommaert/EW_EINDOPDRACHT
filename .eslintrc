@@ -3,5 +3,6 @@
   "globals": {
     "THREE": true,
     "OrbitControls": true,
+    "THREE.Terrain": true,
   }
 }
