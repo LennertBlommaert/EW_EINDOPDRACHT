@@ -14,7 +14,6 @@ class Tree {
   }
 
   handleLoad = (geom, mat, scene) => {
-    console.log(geom);
 
     geom.computeBoundingBox();
 
@@ -23,11 +22,10 @@ class Tree {
     this.mesh = new THREE.Mesh(geom, mat);
     this.mesh.receiveShadow = true;
     this.mesh.castShadow = true;
+
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
 
     this.mesh.position.z = 100;
-
-    console.log(this.mesh);
 
     scene.add(this.mesh);
     requestAnimationFrame(this.animateGrowth);

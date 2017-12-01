@@ -97,8 +97,11 @@ const createTree = () => new Tree(threeController.scene);
 const loop = () => {
   threeController.renderer.render(threeController.scene, threeController.camera);
 
-  threeController.camera.rotate();
-  //threeController.controls.update();
+  //threeController.camera.rotate();
+  threeController.controls.update();
+  threeController.scene.moveShadowLight();
+
+  threeController.scene.lowerTerrain();
 
   window.requestAnimationFrame(loop);
 };
