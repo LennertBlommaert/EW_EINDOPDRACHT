@@ -8,15 +8,16 @@ import getRandomArbitrary from '../lib/getRandomArbitrary';
 
 export default class Scene extends THREE.Scene {
 
-  constructor({fogColor = 0xffffff, fogNear = 300, fogFar = 950}) {
+  constructor({skyColor = 0x191970, fogNear = 300, fogFar = 950}) {
     super();
-    this.fog = new THREE.Fog(fogColor, fogNear, fogFar);
-    this.addLights();
-    this.addTerrain();
+    this.fog = new THREE.Fog(skyColor, fogNear, fogFar);
+    this.addLights({});
+    this.addTerrain({});
+    this.background = new THREE.Color(skyColor);
   }
 
-  addLights = () => {
-    this.hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
+  addLights = ({skyColor = 0x191970, groundColor = 0x0B6623}) => {
+    this.hemisphereLight = new THREE.HemisphereLight(skyColor, groundColor);
 
     this.shadowLight = this.createShadowLight();
 
@@ -25,7 +26,7 @@ export default class Scene extends THREE.Scene {
   }
 
   createShadowLight = () => {
-    const shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+    const shadowLight = new THREE.DirectionalLight(0x787da3, .9);
     // const shadowLight = new THREE.SpotLight(0xffffff, .9);
 
     shadowLight.position.set(150, 350, 350);
@@ -52,14 +53,14 @@ export default class Scene extends THREE.Scene {
   moveShadowLight = () => {
   }
 
-  addTerrain = () => {
+  addTerrain = ({groundColor = 0x0B6623}) => {
     const xS = 63, yS = 63;
     const terrain = THREE.Terrain({
       name: `Terrain`,
       easing: THREE.Terrain.Linear,
       frequency: 2.5,
       heightmap: THREE.Terrain.DiamondSquare,
-      material: new THREE.MeshBasicMaterial({color: 0x0B6623, flatShading: true}),
+      material: new THREE.MeshBasicMaterial({color: groundColor, flatShading: true}),
       maxHeight: 10,
       minHeight: - 10,
       steps: 1,
