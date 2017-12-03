@@ -1,5 +1,8 @@
 # The_Creation
 
+## VRAGEN CONSULT
+- interessante manier van werken "pooling" trees?
+
 ## Feedback consults
 mss standaard al een drum track die afspeelt
 wereld pulseert daarop,

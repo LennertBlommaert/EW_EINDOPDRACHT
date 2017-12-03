@@ -130,7 +130,6 @@ const init = () => {
   getMIDIAccess();
 
   loop();
-
 };
 
 init();

@@ -1,5 +1,4 @@
 import Cloud from '../classes/Cloud';
-import Airplane from '../classes/Airplane';
 import Tree from '../classes/Tree';
 
 import Constants from '../objects/Constants';
@@ -17,7 +16,9 @@ export default class Scene extends THREE.Scene {
     this.addTerrain(groundColor);
     this.background = new THREE.Color(skyColor);
 
-    console.log(this.children);
+    this.trees = [];
+
+    window.setInterval(this.removeChildren, 3000);
 
   }
 
@@ -31,7 +32,7 @@ export default class Scene extends THREE.Scene {
   }
 
   createShadowLight = () => {
-    const shadowLight = new THREE.DirectionalLight(0x787da3, .9);
+    const shadowLight = new THREE.DirectionalLight(0xffffff, .5);
     // const shadowLight = new THREE.SpotLight(0xffffff, .9);
 
     shadowLight.position.set(150, 350, 350);
@@ -98,10 +99,6 @@ export default class Scene extends THREE.Scene {
 
   createObjectOnNote = (note = 0) => {
 
-    if (note > 60) {
-      this.addPlane();
-    }
-
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 60) {
@@ -113,7 +110,7 @@ export default class Scene extends THREE.Scene {
       this.addTree();
     }
 
-    if (note < 60) {
+    if (note === 69) {
       this.addCloud();
     }
 
@@ -135,24 +132,22 @@ export default class Scene extends THREE.Scene {
     this.add(cloud.mesh);
   };
 
-
-
-  addPlane = () => {
-    const airplane = new Airplane();
-
-    airplane.mesh.scale.set(.25, .25, .25);
-
-    airplane.mesh.position.y = getRandomArbitrary(0, 50);
-    airplane.mesh.position.z = getRandomArbitrary(0, 50);
-    airplane.mesh.position.x = getRandomArbitrary(0, Constants.WIDTH / 2) - Constants.WIDTH / 4;
-
-    this.add(airplane.mesh);
-
-  }
-
   addTree = () => {
-    const tree = new Tree(...this.loadedData.treeData);
-    this.add(tree.mesh);
+
+    //LOOK FOR TREES THAT ALREADY EXIST BUT WERE SHRUNK
+    const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
+
+    if (deadTree) return deadTree.animateGrowth();
+
+    //IF NO SHRUNKEN TREES WERE FOUND, CREATE A NEW TREE
+    const newTree = new Tree(...this.loadedData.treeData);
+
+    this.trees.push(newTree);
+
+    console.log(`New tree mesh position y`, newTree.mesh.position.y);
+    console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);
+
+    this.add(newTree.mesh);
   }
 
   updateTerrain = (distanceFromCamera = 500) => {
@@ -233,6 +228,28 @@ export default class Scene extends THREE.Scene {
 
   darken = () => {
     console.info(`DARKEN THE WORLD DOWN`);
+  }
+
+  removeChildren = () => {
+
+    const cloud = this.getObjectByName(`Cloud`);
+    if (cloud) this.removeChild(cloud);
+
+    // "POOLING" possibility?
+    const livingTree = this.trees.find(tree => tree.scaleFactor >= 100);
+    if (livingTree) livingTree.animateShrink();
+
+    // const tree = this.getObjectByName(`Tree`);
+    // if (tree) this.tree.removeChild(tree);
+
+  }
+
+  removeChild = child => {
+    child.children.forEach(block => {
+      block.material.dispose();
+      block.geometry.dispose();
+    });
+    this.remove(child);
   }
 
   //   this.children.forEach(child => {
