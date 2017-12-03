@@ -7,6 +7,7 @@ export default class Renderer extends THREE.WebGLRenderer {
     this.setSize(Constants.WIDTH, Constants.HEIGHT);
 
     this.shadowMap.enabled = true;
+    this.shadowMapDebug = true;
 
     const container = document.querySelector(`.world`);
     container.appendChild(this.domElement);

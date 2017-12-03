@@ -22,6 +22,20 @@ export default class ThreeController {
     this.renderer = new Renderer({});
     this.camera = new Camera({});
     this.controls = new Controls({camera: this.camera});
+
+    this.linkGUIControls();
+  }
+
+  linkGUIControls = () => {
+    this.$resetButton = document.querySelector(`.reset-button`);
+    this.$resetButton.addEventListener(`click`, this.scene.emptyScene);
+
+    this.$autoRotateButton = document.querySelector(`.auto-rotation-button`);
+    console.log(this.$autoRotateButton);
+    this.$autoRotateButton.addEventListener(`click`, this.controls.toggleAutorotate);
+
+    this.$autRotateSpeedRange = document.querySelector(`#auto-rotation-speed`);
+    this.$autRotateSpeedRange.addEventListener(`input`, ({currentTarget}) => this.controls.setAutorationSpeed(parseInt(currentTarget.value, 10)));
   }
 
   loadJSONFiles = () => {

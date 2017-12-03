@@ -9,7 +9,7 @@ class Tree {
 
     //THESE LINES CAUSE TREES TO SPAWN HIGHER AND HIGHER EACH TIME A NEW TREE IS ADDED TO THE Scene
     // WHY???
-    //LINES ARE USED TO PU TREE'S SCALEPOINT TO ITS ROOTS
+    //LINES ARE USED TO PUT TREE'S SCALEPOINT TO ITS ROOTS
     //geom.computeBoundingBox();
     //geom.applyMatrix(new THREE.Matrix4().makeTranslation(0, geom.boundingBox.min.y, 0));
 

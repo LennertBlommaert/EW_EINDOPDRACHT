@@ -11,4 +11,14 @@ export default class Controls extends THREE.OrbitControls {
       BOTTOM: 40 // down arrow
     };
   }
+
+  toggleAutorotate = () => {
+    console.log(`alleez`);
+    this.autoRotate = !this.autoRotate;
+  }
+
+  setAutorationSpeed = speed => {
+    console.log(speed);
+    this.autoRotateSpeed = speed;
+  };
 }

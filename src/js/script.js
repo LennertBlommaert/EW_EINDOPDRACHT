@@ -124,9 +124,6 @@ const init = () => {
   window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
   window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
 
-  const $resetButton = document.querySelector(`.reset-button`);
-  $resetButton.addEventListener(`click`, threeController.scene.emptyScene);
-
   getMIDIAccess();
 
   loop();
