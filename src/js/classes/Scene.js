@@ -9,16 +9,19 @@ import getRandomArbitrary from '../lib/getRandomArbitrary';
 
 export default class Scene extends THREE.Scene {
 
-  constructor({skyColor = 0x191970, fogNear = 300, fogFar = 950, loadedData = []}) {
+  constructor({skyColor = 0x191970, groundColor = 0x0B6623, fogNear = 300, fogFar = 950, loadedData = []}) {
     super();
     this.loadedData = loadedData;
     this.fog = new THREE.Fog(skyColor, fogNear, fogFar);
-    this.addLights({});
-    this.addTerrain({});
+    this.addLights(skyColor, groundColor);
+    this.addTerrain(groundColor);
     this.background = new THREE.Color(skyColor);
+
+    console.log(this.children);
+
   }
 
-  addLights = ({skyColor = 0x191970, groundColor = 0x0B6623}) => {
+  addLights = (skyColor, groundColor) => {
     this.hemisphereLight = new THREE.HemisphereLight(skyColor, groundColor);
 
     this.shadowLight = this.createShadowLight();
@@ -52,10 +55,9 @@ export default class Scene extends THREE.Scene {
     return shadowLight;
   }
 
-  moveShadowLight = () => {
-  }
+  moveShadowLight = () => {}
 
-  addTerrain = ({groundColor = 0x0B6623}) => {
+  addTerrain = groundColor => {
     const xS = 63, yS = 63;
     const terrain = THREE.Terrain({
       name: `Terrain`,
@@ -81,8 +83,6 @@ export default class Scene extends THREE.Scene {
 
     terrain.name = `Terrain`;
 
-    console.log(terrain);
-
     // NO EFFECT
     terrain.children[0].receiveShadow = true;
     terrain.children[0].castShadow = true;
@@ -94,8 +94,6 @@ export default class Scene extends THREE.Scene {
     // terrain.geometry.computeVertexNormals();
 
     this.add(terrain);
-
-    console.log(this.getObjectByName(`Terrain`));
   }
 
   createObjectOnNote = (note = 0) => {
@@ -114,8 +112,6 @@ export default class Scene extends THREE.Scene {
     if (note === 62) {
       this.addTree();
     }
-
-    console.log(note);
 
     if (note < 60) {
       this.addCloud();
@@ -156,11 +152,6 @@ export default class Scene extends THREE.Scene {
 
   addTree = () => {
     const tree = new Tree(...this.loadedData.treeData);
-
-    tree.mesh.position.z = getRandomArbitrary(0, Constants.WIDTH / 2) - Constants.WIDTH / 4;
-    tree.mesh.position.x = getRandomArbitrary(0, Constants.WIDTH / 2) - Constants.WIDTH / 4;
-    tree.mesh.position.z = getRandomArbitrary(- 70, - 50);
-
     this.add(tree.mesh);
   }
 
@@ -202,5 +193,58 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeFaceNormals();
     terrainGeom.computeVertexNormals();
   }
+
+  emptyScene = () => {
+
+
+    // while (this.children.length > 3) {
+    //
+    //   if (this.children[0].name !== `Terrain` || this.children[0].type !== `DirectionalLight` || this.children[0].type !== `HemisphereLight`) {
+    //
+    //     if (this.children[0].length) {
+    //       this.children[0].children.forEach(c => {
+    //         c.material.dispose();
+    //         c.geometry.dispose();
+    //       });
+    //
+    //     }
+    //
+    //     this.remove(this.children[0]);
+    //   }
+
+    while (this.children.length > 0) {
+
+      this.children[0].children.forEach(c => {
+        c.material.dispose();
+        c.geometry.dispose();
+      });
+
+      this.remove(this.children[0]);
+    }
+
+    this.addLights();
+    this.addTerrain();
+
+  }
+
+  brighten = () => {
+    console.info(`BRIGHTEN THE WORLD UP`);
+  }
+
+  darken = () => {
+    console.info(`DARKEN THE WORLD DOWN`);
+  }
+
+  //   this.children.forEach(child => {
+  //     console.info(child.name, child.type);
+  //     if (child.name !== `Terrain` || child.type !== `DirectionalLight` || child.type !== `HemisphereLight`) {
+  //       child.children.forEach(c => {
+  //         c.material.dispose();
+  //         c.geometry.dispose();
+  //       });
+  //
+  //       this.remove(child);
+  //     }
+  //   });
 
 }

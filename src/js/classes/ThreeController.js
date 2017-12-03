@@ -42,9 +42,9 @@ export default class ThreeController {
     .then(
 
       this.loader.load(
-        `assets/data/tree.json`,
+        `assets/data/cloud.json`,
         (geom, mat) => {
-          this.loadedData.rockData = [geom, mat];
+          this.loadedData.cloudData = [geom, mat];
           return;
         }
       )

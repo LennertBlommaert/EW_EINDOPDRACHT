@@ -44,11 +44,11 @@ const MIDISucces = MIDIAccess => {
 };
 
 const minorChordPlayed = () => {
-  console.log(`MINOR PLAYED`);
+  threeController.scene.darken();
 };
 
 const majorChordPlayed = () => {
-  console.log(`MAJOR PLAYED`);
+  threeController.scene.brighten();
 };
 
 const checkChordType = () => {
@@ -113,17 +113,6 @@ const getKeyCodeData = keyCode => {
   return {};
 };
 
-const handleOnResetButtonClick = () => {
-  while (threeController.scene.children.length > 0) {
-    threeController.scene.children[0].children.forEach(c => {
-      c.material.dispose();
-      c.geometry.dispose();
-    });
-
-    threeController.scene.remove(threeController.scene.children[0]);
-  }
-};
-
 const init = () => {
 
   synth = createSynth();
@@ -136,7 +125,7 @@ const init = () => {
   window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
 
   const $resetButton = document.querySelector(`.reset-button`);
-  $resetButton.addEventListener(`click`, handleOnResetButtonClick);
+  $resetButton.addEventListener(`click`, threeController.scene.emptyScene);
 
   getMIDIAccess();
 
