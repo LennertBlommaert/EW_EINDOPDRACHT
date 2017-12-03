@@ -1,5 +1,6 @@
 import Cloud from '../classes/Cloud';
 import Airplane from '../classes/Airplane';
+import Tree from '../classes/Tree';
 
 import Constants from '../objects/Constants';
 
@@ -8,8 +9,9 @@ import getRandomArbitrary from '../lib/getRandomArbitrary';
 
 export default class Scene extends THREE.Scene {
 
-  constructor({skyColor = 0x191970, fogNear = 300, fogFar = 950}) {
+  constructor({skyColor = 0x191970, fogNear = 300, fogFar = 950, loadedData = []}) {
     super();
+    this.loadedData = loadedData;
     this.fog = new THREE.Fog(skyColor, fogNear, fogFar);
     this.addLights({});
     this.addTerrain({});
@@ -99,25 +101,31 @@ export default class Scene extends THREE.Scene {
   createObjectOnNote = (note = 0) => {
 
     if (note > 60) {
-      this.createPlane();
+      this.addPlane();
     }
 
-    // A key on keyboard
-
+    // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 60) {
       this.updateTerrain();
     }
 
+    // W/Z on keyboard
+    if (note === 62) {
+      this.addTree();
+    }
+
+    console.log(note);
+
     if (note < 60) {
-      this.createCloud();
+      this.addCloud();
     }
 
     //console.log(this.getObjectByName(`Terrain`).minHeight);
   };
 
 
-  createCloud = () => {
+  addCloud = () => {
     const cloud = new Cloud();
 
     cloud.mesh.position.y = getRandomArbitrary(0, Constants.HEIGHT / 2);
@@ -133,7 +141,7 @@ export default class Scene extends THREE.Scene {
 
 
 
-  createPlane = () => {
+  addPlane = () => {
     const airplane = new Airplane();
 
     airplane.mesh.scale.set(.25, .25, .25);
@@ -144,6 +152,16 @@ export default class Scene extends THREE.Scene {
 
     this.add(airplane.mesh);
 
+  }
+
+  addTree = () => {
+    const tree = new Tree(...this.loadedData.treeData);
+
+    tree.mesh.position.z = getRandomArbitrary(0, Constants.WIDTH / 2) - Constants.WIDTH / 4;
+    tree.mesh.position.x = getRandomArbitrary(0, Constants.WIDTH / 2) - Constants.WIDTH / 4;
+    tree.mesh.position.z = getRandomArbitrary(- 70, - 50);
+
+    this.add(tree.mesh);
   }
 
   updateTerrain = (distanceFromCamera = 500) => {

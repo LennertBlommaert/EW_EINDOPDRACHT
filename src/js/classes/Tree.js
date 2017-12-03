@@ -1,19 +1,14 @@
+import getRandomArbitrary from '../lib/getRandomArbitrary';
+
 class Tree {
 
-  constructor(scene) {
-    // const loader = new THREE.JSONLoader();
+  constructor(geom, mat) {
+
+    console.info(geom, mat);
+
     this.loader = new THREE.JSONLoader();
-    this.mesh = {};
     this.scaleFactor = 1;
     this.scaleFactorIncreasement = 1;
-
-    this.loader.load(
-      `assets/data/tree.json`,
-      (geom, mat) => this.handleLoad(geom, mat, scene)
-    );
-  }
-
-  handleLoad = (geom, mat, scene) => {
 
     geom.computeBoundingBox();
 
@@ -23,20 +18,22 @@ class Tree {
     this.mesh.receiveShadow = true;
     this.mesh.castShadow = true;
 
+    this.mesh.position.z = getRandomArbitrary(0, 500);
+    this.mesh.position.x = getRandomArbitrary(0, 500);
+    this.mesh.position.y = getRandomArbitrary(- 5, 0);
+
+
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
 
-    this.mesh.position.z = 100;
-
-    scene.add(this.mesh);
-    requestAnimationFrame(this.animateGrowth);
-  };
+    window.requestAnimationFrame(this.animateGrowth);
+  }
 
   animateGrowth = () => {
     this.scaleFactor += this.scaleFactorIncreasement;
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
 
     if (this.scaleFactor < 100) {
-      requestAnimationFrame(this.animateGrowth);
+      window.requestAnimationFrame(this.animateGrowth);
     }
   }
 }

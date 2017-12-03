@@ -13,7 +13,6 @@ import ThreeController from './classes/ThreeController.js';
 let threeController;
 
 //aimport createObjectOnNote from './lib/createObjectOnNote.js';
-import Tree from './classes/Tree';
 
 import createSynth from './lib/createSynth';
 let synth, pushedFrequencies = [], pushedNotes = [];
@@ -92,8 +91,6 @@ const handleWindowResize = () => {
   threeController.camera.updateProjectionMatrix();
 };
 
-const createTree = () => new Tree(threeController.scene);
-
 const loop = () => {
   threeController.renderer.render(threeController.scene, threeController.camera);
 
@@ -134,9 +131,6 @@ const init = () => {
   threeController = new ThreeController();
 
   window.addEventListener(`resize`, handleWindowResize, false);
-
-  createTree();
-
 
   window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
   window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
