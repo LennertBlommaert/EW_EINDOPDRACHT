@@ -1,5 +1,6 @@
 import frequencyFromNoteNumber from './frequencyFromNoteNumber';
 
+//Note is a MIDI note (not the same as a normal music note)
 const parseMIDIMessageData = data => {
   return {
     command: data[0] >> 4,

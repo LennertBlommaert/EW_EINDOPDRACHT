@@ -1,20 +1,9 @@
 @import 'reset';
 @import 'vars';
 
-html {
-  background-color: var(--bg-color);
-}
-
-body {
-  font-family: Roboto;
-  font-size: 1.6rem;
-  margin: 2rem;
-}
-
-header {
-  margin: 2rem 0;
-}
-
-h1 {
-  font-size: 3rem;
+.world {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
