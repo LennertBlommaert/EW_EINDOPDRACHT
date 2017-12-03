@@ -35,7 +35,7 @@ export default class ThreeController {
     this.$autoRotateButton.addEventListener(`click`, this.controls.toggleAutorotate);
 
     this.$autRotateSpeedRange = document.querySelector(`#auto-rotation-speed`);
-    this.$autRotateSpeedRange.addEventListener(`input`, ({currentTarget}) => this.controls.setAutorationSpeed(parseInt(currentTarget.value, 10)));
+    this.$autRotateSpeedRange.addEventListener(`input`, ({currentTarget}) => this.controls.setAutorationSpeed(parseFloat(currentTarget.value, 10)));
   }
 
   loadJSONFiles = () => {

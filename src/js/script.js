@@ -14,8 +14,11 @@ let threeController;
 
 //aimport createObjectOnNote from './lib/createObjectOnNote.js';
 
-import createSynth from './lib/createSynth';
-let synth, pushedFrequencies = [], pushedNotes = [];
+// import createSynth from './lib/createSynth';
+
+let pushedFrequencies = [], pushedNotes = [];
+import SynthController from './classes/SynthController.js';
+let synthController;
 
 import Constants from './objects/Constants';
 
@@ -69,7 +72,7 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   threeController.scene.createObjectOnNote(note);
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
-  synth.triggerAttack(pushedFrequencies, undefined, velocity);
+  synthController.synth.triggerAttack(pushedFrequencies, undefined, velocity);
 
   //Only check when multiple keys are being pressed
   if (pushedNotes.length > 1) checkChordType();
@@ -78,7 +81,7 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
   pushedNotes = pushedNotes.filter(n => n !== note);
-  synth.triggerRelease([frequency]);
+  synthController.synth.triggerRelease([frequency]);
 };
 
 const handleWindowResize = () => {
@@ -115,7 +118,7 @@ const getKeyCodeData = keyCode => {
 
 const init = () => {
 
-  synth = createSynth();
+  synthController = new SynthController();
 
   threeController = new ThreeController();
 
