@@ -20,7 +20,7 @@ export default class ToneController {
         attack: 0.01,
         decay: 0.1,
         sustain: 0.5,
-        release: 1,
+        release: 1.2,
         attackCurve: `exponential`,
         //releaseCurve: `exponential`
       }
@@ -40,24 +40,47 @@ export default class ToneController {
     //   octaves: 1.5
     // }).toMaster();
 
-    const seq = new Tone.Sequence((time, note) => {
-      this.membraneSynth.triggerAttackRelease(note, `2n`);
-      //const vel = Math.random() * 0.5 + 0.5;
-      //metalSynth.triggerAttack(vel);
-    }, [`C0`, 0, 0, `C0`, `C0`, 0], `8n`);
-    seq.start(`1m`);
+    this.beat = new Tone.Event((time, pitch) => {
+      this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
+    }, `C0`);
+
+    this.beat.set({
+      loop: true,
+      loopEnd: `2n`
+    });
+
+    this.beat.humanize = `64n`;
+
+    this.beat.start(`1m`);
+
+    //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
+    // this.seq = new Tone.Sequence((time, note) => {
+    //   this.membraneSynth.triggerAttackRelease(note, `2n`);
+    //   //const vel = Math.random() * 0.5 + 0.5;
+    //   //metalSynth.triggerAttack(vel);
+    // }, [`C0`, 0, 0, `C0`, `C0`, 0], `8n`);
+    // this.seq.start(`1m`);
 
 
     Tone.Transport.start();
 
+    this._linkControls();
+  }
+
+  _linkControls = () => {
     this.$volumeRange = document.querySelector(`#sound-volume-range`);
     this.$volumeRange.addEventListener(`input`, ({currentTarget}) => this.handleVolumeRangeInput(parseInt(currentTarget.value, 10)));
+
+    this.$autoRotateButton = document.querySelector(`.drum-beat-button`);
+    this.$autoRotateButton.addEventListener(`click`, this.toggleBeat);
   }
 
   handleVolumeRangeInput = volume => {
     this.synth.volume.value = volume;
     this.membraneSynth.volume.value = volume - volume / 3;
   }
+
+  toggleBeat = () => this.beat.loop = !this.beat.loop;
 }
 
 
