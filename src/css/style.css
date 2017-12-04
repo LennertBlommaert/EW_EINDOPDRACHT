@@ -7,3 +7,10 @@
   height: 100%;
   overflow: hidden;
 }
+
+.gui {
+  background-color: midnightblue;
+  color: white;
+  font-family: Roboto;
+  font-size: 1.6rem;
+}

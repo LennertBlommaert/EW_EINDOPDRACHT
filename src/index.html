@@ -35,19 +35,26 @@
 
 <body>
 
-  <button class="reset-button">
-    Reset world
-  </button>
+  <div class='gui'>
+    <button class="reset-button">
+      Reset world
+    </button>
 
-  <button class="auto-rotation-button">
-    Start/Stop auto rotation
-  </button>
+    <label for='auto-rotation-speed'>Auto rotation speed</label>
+    <input id='auto-rotation-speed' name="auto-rotation-speed" type="range" value="1" min="0.5" step="0.1" max="5.5" />
 
-  <label for='auto-rotation-speed'>Auto rotation speed</label>
-  <input id='auto-rotation-speed' name="auto-rotation-speed" type="range" value="1" min="0.5" step="0.1" max="5.5" />
+    <button class="auto-rotation-button">
+      Start/Stop auto rotation
+    </button>
 
-  <label for='synth-volume-range'>Synth volume</label>
-  <input id='synth-volume-range' name="synth-volume-range" type="range" value="0" min="-20" step="2" max="20" />
+    <label for='sound-volume-range'>Sound volume</label>
+    <input id='sound-volume-range' name="sound-volume-range" type="range" value="0" min="-20" step="2" max="20" />
+    <button class="drum-beat-button">
+      Start/Stop drum beat
+    </button>
+
+
+  </div>
 
   <div class="world"></div>
 

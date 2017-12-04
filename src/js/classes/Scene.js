@@ -11,10 +11,12 @@ export default class Scene extends THREE.Scene {
   constructor({skyColor = 0x191970, groundColor = 0x0B6623, fogNear = 300, fogFar = 950, loadedData = []}) {
     super();
     this.loadedData = loadedData;
-    this.fog = new THREE.Fog(skyColor, fogNear, fogFar);
-    this.addLights(skyColor, groundColor);
-    this.addTerrain(groundColor);
-    this.background = new THREE.Color(skyColor);
+    this.groundColor = groundColor;
+    this.skyColor = skyColor;
+    this.fog = new THREE.Fog(this.skyColor, fogNear, fogFar);
+    this.addLights();
+    this.addTerrain();
+    this.background = new THREE.Color(this.skyColor);
 
     this.trees = [];
 
@@ -22,8 +24,8 @@ export default class Scene extends THREE.Scene {
 
   }
 
-  addLights = (skyColor, groundColor) => {
-    this.hemisphereLight = new THREE.HemisphereLight(skyColor, groundColor);
+  addLights = () => {
+    this.hemisphereLight = new THREE.HemisphereLight(this.skyColor, this.groundColor);
 
     this.shadowLight = this.createShadowLight();
 
@@ -58,14 +60,14 @@ export default class Scene extends THREE.Scene {
 
   moveShadowLight = () => {}
 
-  addTerrain = groundColor => {
+  addTerrain = () => {
     const xS = 63, yS = 63;
     const terrain = THREE.Terrain({
       name: `Terrain`,
       easing: THREE.Terrain.Linear,
       frequency: 2.5,
       heightmap: THREE.Terrain.DiamondSquare,
-      material: new THREE.MeshBasicMaterial({color: groundColor, flatShading: true}),
+      material: new THREE.MeshBasicMaterial({color: this.groundColor, flatShading: true}),
       maxHeight: 10,
       minHeight: - 10,
       steps: 1,
