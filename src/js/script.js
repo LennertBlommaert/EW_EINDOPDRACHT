@@ -94,6 +94,12 @@ const handleWindowResize = () => {
   threeController.camera.updateProjectionMatrix();
 };
 
+const handleToneControllerBeatPlayed = () => {
+  //NOTE: can be replaced by something
+  //Seemed like a fun effect in the moment
+  threeController.scene.raiseTerrain(500, 20);
+};
+
 const loop = () => {
   threeController.renderer.render(threeController.scene, threeController.camera);
 
@@ -119,6 +125,7 @@ const getKeyCodeData = keyCode => {
 const init = () => {
 
   toneController = new ToneController();
+  toneController.on(`tonecontrollerbeatplayed`, handleToneControllerBeatPlayed);
 
   threeController = new ThreeController();
 

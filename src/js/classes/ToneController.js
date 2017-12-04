@@ -1,7 +1,9 @@
+import EventEmitter2 from '../vendors/eventemitter2';
 import Tone from 'tone';
 
-export default class ToneController {
+export default class ToneController extends EventEmitter2 {
   constructor() {
+    super({});
 
     this.distortion = new Tone.Distortion(0.2).toMaster();
     this.synth = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
@@ -40,8 +42,12 @@ export default class ToneController {
     //   octaves: 1.5
     // }).toMaster();
 
+    //NOTE: JS setInterval not so accurate, wich is important for Sound
+    //Therefore on Tone.event emit  beat has been played for pulsating world
+    //Instead of a setInterval in script.js wich triggers beat and pulsating world
     this.beat = new Tone.Event((time, pitch) => {
       this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
+      this.emit(`tonecontrollerbeatplayed`, pitch);
     }, `C0`);
 
     this.beat.set({

@@ -20,7 +20,7 @@ export default class Scene extends THREE.Scene {
 
     this.trees = [];
 
-    window.setInterval(this.removeChildren, 3000);
+    window.setInterval(this.removeChildren, 1500);
 
   }
 
@@ -104,7 +104,7 @@ export default class Scene extends THREE.Scene {
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 60) {
-      this.updateTerrain();
+      this.raiseTerrain();
     }
 
     // W/Z on keyboard
@@ -152,7 +152,7 @@ export default class Scene extends THREE.Scene {
     this.add(newTree.mesh);
   }
 
-  updateTerrain = (distanceFromCamera = 500) => {
+  raiseTerrain = (distanceFromCamera = 400, increasement = 5) => {
 
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
@@ -161,7 +161,7 @@ export default class Scene extends THREE.Scene {
 
     terrainGeom.vertices.forEach(v => {
       if (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera) {
-        v.z += 5 - Math.random() * 4;
+        v.z += increasement - Math.random() * (increasement * 4 / 5);
       }
     });
 
@@ -172,7 +172,7 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeVertexNormals();
   }
 
-  lowerTerrain = (distanceFromCamera = 500) => {
+  lowerTerrain = (distanceFromCamera = 400) => {
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
 
@@ -180,7 +180,7 @@ export default class Scene extends THREE.Scene {
 
     terrainGeom.vertices.forEach(v => {
       if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
-        v.z -= 0.1;
+        v.z -= 0.25;
       }
     });
 
