@@ -8,7 +8,7 @@ class Cloud {
 
     const geom = new THREE.BoxGeometry(20, 20, 20);
 
-    const mat = new THREE.MeshPhongMaterial({
+    const mat = new THREE.MeshBasicMaterial({
       color: `#ffffff`
     });
 

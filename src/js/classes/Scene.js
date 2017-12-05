@@ -1,5 +1,6 @@
 import Cloud from '../classes/Cloud';
 import Tree from '../classes/Tree';
+import Colors from '../objects/Colors';
 
 import Constants from '../objects/Constants';
 
@@ -8,7 +9,7 @@ import getRandomArbitrary from '../lib/getRandomArbitrary';
 
 export default class Scene extends THREE.Scene {
 
-  constructor({skyColor = 0x191970, groundColor = 0x0B6623, fogNear = 300, fogFar = 950, loadedData = []}) {
+  constructor({skyColor = Colors.sky, groundColor = Colors.grass, fogNear = 300, fogFar = 950, loadedData = []}) {
     super();
     this.loadedData = loadedData;
     this.groundColor = groundColor;
@@ -67,7 +68,7 @@ export default class Scene extends THREE.Scene {
       easing: THREE.Terrain.Linear,
       frequency: 2.5,
       heightmap: THREE.Terrain.DiamondSquare,
-      material: new THREE.MeshBasicMaterial({color: this.groundColor, flatShading: true}),
+      material: new THREE.MeshPhongMaterial({color: this.groundColor, flatShading: true}),
       maxHeight: 10,
       minHeight: - 10,
       steps: 1,
@@ -142,12 +143,12 @@ export default class Scene extends THREE.Scene {
     if (deadTree) return deadTree.animateGrowth();
 
     //IF NO SHRUNKEN TREES WERE FOUND, CREATE A NEW TREE
-    const newTree = new Tree(...this.loadedData.treeData);
+    const newTree = new Tree(this.loadedData.treeData[0]);
 
     this.trees.push(newTree);
 
-    console.log(`New tree mesh position y`, newTree.mesh.position.y);
-    console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);
+    // console.log(`New tree mesh position y`, newTree.mesh.position.y);
+    // console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);
 
     this.add(newTree.mesh);
   }
