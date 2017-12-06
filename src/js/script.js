@@ -75,6 +75,7 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   pushedNotes.push(note);
   toneController.synth.triggerAttack(pushedFrequencies, undefined, velocity);
 
+  //threeController.camera.lookAt(threeController.scene.children[threeController.scene.children.length - 1]);
   //Only check when multiple keys are being pressed
   if (pushedNotes.length > 1) checkChordType();
 };
@@ -174,7 +175,7 @@ const init = () => {
 
 
   toneController = new ToneController();
-  toneController.on(`tonecontrollerbeatplayed`, handleToneControllerBeatPlayed);
+  toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
 
   getMIDIAccess();
 };

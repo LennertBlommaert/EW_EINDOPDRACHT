@@ -8,6 +8,11 @@ export default class Camera extends THREE.PerspectiveCamera {
     this.rotation.y = - 1;
   }
 
+  move() {
+    //this.position.z ++;
+    this.updateProjectionMatrix();
+  }
+
   //NOT IN USE
   rotate(angle = 0.005) {
     this.rotation.y -= angle;

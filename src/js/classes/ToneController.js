@@ -29,43 +29,51 @@ export default class ToneController extends EventEmitter2 {
     }).toMaster();
 
     // CYMBALS
-    // this.metalSynth = new Tone.MetalSynth({
-    //   frequency: 200,
-    //   envelope: {
-    //     attack: 0.001,
-    //     decay: 1.4,
-    //     release: 0.2
-    //   },
-    //   harmonicity: 5.1,
-    //   modulationIndex: 32,
-    //   resonance: 4000,
-    //   octaves: 1.5
-    // }).toMaster();
+    this.metalSynth = new Tone.MetalSynth({
+      frequency: 200,
+      envelope: {
+        attack: 0.001,
+        decay: 2,
+        release: 0.2
+      },
+      harmonicity: 5.1,
+      modulationIndex: 32,
+      resonance: 4000,
+      octaves: 1.5
+    }).toMaster();
+
+    this.metalSynth.volume.value = - 25;
 
     //NOTE: JS setInterval not so accurate, wich is important for Sound
     //Therefore on Tone.event emit  beat has been played for pulsating world
     //Instead of a setInterval in script.js wich triggers beat and pulsating world
-    this.beat = new Tone.Event((time, pitch) => {
-      this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
-      this.emit(`tonecontrollerbeatplayed`, pitch);
-    }, `C0`);
-
-    this.beat.set({
-      loop: true,
-      loopEnd: `2n`
-    });
-
-    this.beat.humanize = `64n`;
-
-    this.beat.start(`1m`);
+    // this.beat = new Tone.Event((time, pitch) => {
+    //   this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
+    //   this.emit(`tonecontrollerbeatplayed`, pitch);
+    // }, `C0`);
+    //
+    // this.beat.set({
+    //   loop: true,
+    //   loopEnd: `2n`
+    // });
+    //
+    // this.beat.humanize = `64n`;
+    //
+    // this.beat.start(`1m`);
 
     //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
-    // this.seq = new Tone.Sequence((time, note) => {
-    //   this.membraneSynth.triggerAttackRelease(note, `2n`);
-    //   //const vel = Math.random() * 0.5 + 0.5;
-    //   //metalSynth.triggerAttack(vel);
-    // }, [`C0`, 0, 0, `C0`, `C0`, 0], `8n`);
-    // this.seq.start(`1m`);
+    this.seq = new Tone.Sequence((time, note) => {
+      if (note === `C0`) {
+        this.emit(`tonecontrollerplayedtom`, note);
+      }
+
+      // const vel = Math.random() * 0.5 + 0.5;
+      // this.metalSynth.triggerAttack(vel);
+
+      this.membraneSynth.triggerAttackRelease(note, `2n`);
+
+    }, [`C0`, 0, 0, `C0`, `C0`, 0], `8n`);
+    this.seq.start(`1m`);
 
 
     Tone.Transport.start();
