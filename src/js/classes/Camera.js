@@ -4,6 +4,8 @@ export default class Camera extends THREE.PerspectiveCamera {
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;
+    //this.rotation.x = 1;
+    this.rotation.y = - 1;
   }
 
   //NOT IN USE

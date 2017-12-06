@@ -11,6 +11,7 @@ import onMIDIFailure from './lib/onMIDIFailure';
 
 import ThreeController from './classes/ThreeController.js';
 let threeController;
+const loadedData = {};
 
 //aimport createObjectOnNote from './lib/createObjectOnNote.js';
 
@@ -122,21 +123,60 @@ const getKeyCodeData = keyCode => {
   return {};
 };
 
-const init = () => {
+const loadJSONFiles = () => {
 
-  toneController = new ToneController();
-  toneController.on(`tonecontrollerbeatplayed`, handleToneControllerBeatPlayed);
+  console.log(`LOADJSONFILES`);
+  const loader = new THREE.JSONLoader();
 
-  threeController = new ThreeController();
+  return new Promise(resolve => {
+
+    loader.load(
+      `assets/data/tree.json`,
+      (geom, mat) => {
+        loadedData.treeData = [geom, mat];
+        resolve();
+      }
+    );
+
+  })
+  .then(
+
+    loader.load(
+      `assets/data/cloud.json`,
+      (geom, mat) => {
+        loadedData.cloudData = [geom, mat];
+        return;
+      }
+    )
+
+  );
+};
+
+const initThree = () => {
+
+  console.log(`initTHREE`);
+
+  threeController = new ThreeController(loadedData);
 
   window.addEventListener(`resize`, handleWindowResize, false);
 
   window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
   window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
 
-  getMIDIAccess();
-
   loop();
+};
+
+const init = () => {
+
+  loadJSONFiles()
+    .then(() => initThree())
+    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
+
+
+  toneController = new ToneController();
+  toneController.on(`tonecontrollerbeatplayed`, handleToneControllerBeatPlayed);
+
+  getMIDIAccess();
 };
 
 init();
