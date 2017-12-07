@@ -6,6 +6,7 @@ export default class Camera extends THREE.PerspectiveCamera {
     this.position.z = z;
     //this.rotation.x = 1;
     this.rotation.y = - 1;
+    this.castShadow = true;
   }
 
   moveUp() {

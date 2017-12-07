@@ -5,8 +5,10 @@ export default class ToneController extends EventEmitter2 {
   constructor() {
     super({});
 
+    this.beatNote = `C0`;
     this.distortion = new Tone.Distortion(0.2).toMaster();
     this.synth = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
+    this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
 
     // TOMS AND KICK
     this.membraneSynth = new Tone.MembraneSynth({
@@ -62,23 +64,48 @@ export default class ToneController extends EventEmitter2 {
     // this.beat.start(`1m`);
 
     //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
-    this.seq = new Tone.Sequence((time, note) => {
-      if (note === `C0`) {
-        this.emit(`tonecontrollerplayedtom`, note);
-      }
+    this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `8n`);
+    this.seq.start(`8n`);
 
-      // const vel = Math.random() * 0.5 + 0.5;
-      // this.metalSynth.triggerAttack(vel);
+    //this.seq.at(0, 0);
 
-      this.membraneSynth.triggerAttackRelease(note, `2n`);
+    this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
+    this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
+    this.drumBeatRepresentations = Array.from(document.querySelectorAll(`.drum-beat-representation`));
 
-    }, [`C0`, 0, 0, `C0`, `C0`, 0], `8n`);
-    //this.seq.start(`1m`);
-
+    this._setDrumBeatRepresentationssetInitialClasses();
 
     Tone.Transport.start();
 
     this._linkControls();
+  }
+
+  handleOnDrumBeatRepresentationsListClick = ({target}) => {
+
+    const index = parseInt(target.dataset.order, 10);
+
+    target.classList.toggle(`active`);
+
+    if (this.seq.at(index).value === 0) return this.seq.at(index, this.beatNote);
+
+    this.seq.at(index, 0);
+  }
+
+  _setDrumBeatRepresentationssetInitialClasses = () => {
+    this.seqEvents.forEach((e, i) => {
+      if (e !== 0) this.drumBeatRepresentations[i].classList.toggle(`active`);
+    });
+  }
+
+  _playNote = (time, note) => {
+    if (note !== 0) {
+      this.emit(`tonecontrollerplayedtom`, note);
+    }
+
+    // const vel = Math.random() * 0.5 + 0.5;
+    // this.metalSynth.triggerAttack(vel);
+
+    this.membraneSynth.triggerAttackRelease(note, `2n`);
   }
 
   _linkControls = () => {

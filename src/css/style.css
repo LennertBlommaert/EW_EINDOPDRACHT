@@ -1,16 +1,50 @@
 @import 'reset';
 @import 'vars';
 
+body {
+  font-family: Roboto;
+}
+
 .world {
   position: absolute;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  z-index: -3;
 }
 
 .gui {
   background-color: midnightblue;
   color: white;
-  font-family: Roboto;
   font-size: 1.6rem;
+}
+
+.drum-beat-representations {
+  display: flex;
+  flex-direction: row;
+  background: none;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  opacity: .1;
+  cursor: pointer;
+
+  font-size: 2.5rem;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.drum-beat-representation {
+
+  width: 4rem;
+  height: 4rem;
+  text-align: center;
+  background: white;
+  border-radius: 1rem;
+
+  &.active {
+    background: green;
+  }
 }
