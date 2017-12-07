@@ -18,6 +18,7 @@ body {
   background-color: midnightblue;
   color: white;
   font-size: 1.6rem;
+  z-index: 10;
 }
 
 .drum-beat-representations {

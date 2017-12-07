@@ -8,7 +8,6 @@ export default class ToneController extends EventEmitter2 {
     console.log(Tone.now());
 
     this.beatNote = `C0`;
-    this.distortion = new Tone.Distortion(0.2).toMaster();
     this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
 
 
