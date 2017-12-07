@@ -15,7 +15,7 @@ const loadedData = {};
 
 //aimport createObjectOnNote from './lib/createObjectOnNote.js';
 
-// import createSynth from './lib/createSynth';
+// import createmidiSynth from './lib/createmidiSynth';
 
 let pushedFrequencies = [], pushedNotes = [];
 import ToneController from './classes/ToneController.js';
@@ -68,14 +68,13 @@ const checkChordType = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-  console.log(`SCENE:`, threeController.scene);
 
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
   threeController.scene.createObjectOnNote(note, threeController.camera.rotation);
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
-  toneController.synth.triggerAttack(pushedFrequencies, undefined, velocity);
+  toneController.midiSynth.triggerAttack(pushedFrequencies, undefined, velocity);
 
   //threeController.camera.lookAt(threeController.scene.children[threeController.scene.children.length - 1]);
   //Only check when multiple keys are being pressed
@@ -92,7 +91,7 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
   pushedNotes = pushedNotes.filter(n => n !== note);
-  toneController.synth.triggerRelease([frequency]);
+  toneController.midiSynth.triggerRelease([frequency]);
 };
 
 const handleWindowResize = () => {
@@ -110,6 +109,10 @@ const handleToneControllerBeatPlayed = () => {
   //Seemed like a fun effect in the moment
   threeController.scene.raiseTerrain(500, 20);
   //threeController.camera.bounce();
+};
+
+const handleToneControllerOnNewMeasure = time => {
+  console.log(`HANDLETONECONTROLLERONNEWMEASURE - time: ${time}`);
 };
 
 const loop = () => {
@@ -135,7 +138,6 @@ const getKeyCodeData = keyCode => {
 
 const loadJSONFiles = () => {
 
-  console.log(`LOADJSONFILES`);
   const loader = new THREE.JSONLoader();
 
   return new Promise(resolve => {
@@ -164,8 +166,6 @@ const loadJSONFiles = () => {
 
 const initThree = () => {
 
-  console.log(`initTHREE`);
-
   threeController = new ThreeController(loadedData);
 
   window.addEventListener(`resize`, handleWindowResize, false);
@@ -185,6 +185,7 @@ const init = () => {
 
   toneController = new ToneController();
   toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
+  toneController.on(`tonecontrollernewmeasure`, handleToneControllerOnNewMeasure);
 
   getMIDIAccess();
 };

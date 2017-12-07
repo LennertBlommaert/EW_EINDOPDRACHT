@@ -5,10 +5,39 @@ export default class ToneController extends EventEmitter2 {
   constructor() {
     super({});
 
+    console.log(Tone.now());
+
     this.beatNote = `C0`;
     this.distortion = new Tone.Distortion(0.2).toMaster();
-    this.synth = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
     this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
+
+
+    //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
+    this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `6n`);
+    this.seq.start(`6n`);
+
+    this.loop = new Tone.Loop(time => {
+      this.emit(`tonecontrollernewmeasure`, time);
+    }, `1m`);
+    this.loop.start();
+
+    this.createWind();
+    this._createSynths();
+
+    Tone.Transport.start();
+
+    this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
+    this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
+    this.drumBeatRepresentations = Array.from(document.querySelectorAll(`.drum-beat-representation`));
+    this._setDrumBeatRepresentationssetInitialClasses();
+
+    this._linkControls();
+  }
+
+  _createSynths = () => {
+    this.midiSunth;
+
+    this.midiSynth = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
 
     // TOMS AND KICK
     this.membraneSynth = new Tone.MembraneSynth({
@@ -45,39 +74,6 @@ export default class ToneController extends EventEmitter2 {
     }).toMaster();
 
     this.metalSynth.volume.value = - 25;
-
-    //NOTE: JS setInterval not so accurate, wich is important for Sound
-    //Therefore on Tone.event emit  beat has been played for pulsating world
-    //Instead of a setInterval in script.js wich triggers beat and pulsating world
-    // this.beat = new Tone.Event((time, pitch) => {
-    //   this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
-    //   this.emit(`tonecontrollerbeatplayed`, pitch);
-    // }, `C0`);
-    //
-    // this.beat.set({
-    //   loop: true,
-    //   loopEnd: `2n`
-    // });
-    //
-    // this.beat.humanize = `64n`;
-    //
-    // this.beat.start(`1m`);
-
-    //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
-    this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `8n`);
-    this.seq.start(`8n`);
-
-    //this.seq.at(0, 0);
-
-    this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
-    this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
-    this.drumBeatRepresentations = Array.from(document.querySelectorAll(`.drum-beat-representation`));
-
-    this._setDrumBeatRepresentationssetInitialClasses();
-
-    Tone.Transport.start();
-
-    this._linkControls();
   }
 
   handleOnDrumBeatRepresentationsListClick = ({target}) => {
@@ -89,6 +85,7 @@ export default class ToneController extends EventEmitter2 {
     if (this.seq.at(index).value === 0) return this.seq.at(index, this.beatNote);
 
     this.seq.at(index, 0);
+
   }
 
   _setDrumBeatRepresentationssetInitialClasses = () => {
@@ -101,6 +98,8 @@ export default class ToneController extends EventEmitter2 {
     if (note !== 0) {
       this.emit(`tonecontrollerplayedtom`, note);
     }
+
+    // this.noiseSynth.triggerAttack();
 
     // const vel = Math.random() * 0.5 + 0.5;
     // this.metalSynth.triggerAttack(vel);
@@ -123,7 +122,55 @@ export default class ToneController extends EventEmitter2 {
 
   toggleBeat = () => this.seq.loop = !this.seq.loop;
   // toggleBeat = () => this.beat.loop = !this.beat.loop;
+
+  createWind = () => {
+
+    //initialize the noise and start
+    //“pink”, “white”, and “brown”
+    this.windNoise = new Tone.Noise(`brown`).start();
+    this.windNoise.volume.value -= 14;
+
+    //make an autofilter to shape the noise
+    this.windNoiseAutoFilter = new Tone.AutoFilter({
+      frequency: `8m`,
+      type: `sine`,
+      depth: 1,
+      baseFrequency: 200,
+      octaves: 2.6,
+      min: 800,
+      max: 900,
+      filter: {
+        type: `lowpass`,
+        rolloff: - 12,
+        Q: 1
+      }
+    }).connect(Tone.Master);
+
+    //connect the noise
+    this.windNoise.connect(this.windNoiseAutoFilter);
+    //start the autofilter LFO
+    this.windNoiseAutoFilter.start();
+  }
 }
+
+
+    //NOTE: JS setInterval not so accurate, wich is important for Sound
+    //Therefore on Tone.event emit  beat has been played for pulsating world
+    //Instead of a setInterval in script.js wich triggers beat and pulsating world
+    // this.beat = new Tone.Event((time, pitch) => {
+    //   this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
+    //   this.emit(`tonecontrollerbeatplayed`, pitch);
+    // }, `C0`);
+    //
+    // this.beat.set({
+    //   loop: true,
+    //   loopEnd: `2n`
+    // });
+    //
+    // this.beat.humanize = `64n`;
+    //
+    // this.beat.start(`1m`);
+
 
 
     // const keys = new Tone.Players({

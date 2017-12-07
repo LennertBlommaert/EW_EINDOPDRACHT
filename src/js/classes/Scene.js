@@ -65,7 +65,7 @@ export default class Scene extends THREE.Scene {
       name: `Terrain`,
       easing: THREE.Terrain.Linear,
       frequency: 2.5,
-      heightmap: THREE.Terrain.DiamondSquare,
+      heightmap: THREE.Terrain.PerlinDiamond,
       material: new THREE.MeshPhongMaterial({color: this.groundColor, flatShading: true}),
       maxHeight: 10,
       minHeight: - 10,
@@ -149,7 +149,10 @@ export default class Scene extends THREE.Scene {
     //LOOK FOR TREES THAT ALREADY EXIST BUT WERE SHRUNK
     const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
 
-    if (deadTree) return deadTree.animateGrowth();
+    if (deadTree) {
+      deadTree.wiggle();
+      return deadTree.animateGrowth();
+    }
 
     //IF NO SHRUNKEN TREES WERE FOUND, CREATE A NEW TREE
     const newTree = new Tree(this.loadedData.treeData[0], position);
