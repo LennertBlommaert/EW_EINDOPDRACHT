@@ -14,10 +14,10 @@ export default class ToneController extends EventEmitter2 {
 
     //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
     this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `6n`);
-    this.seq.start(`6n`);
+    this.seq.start();
 
-    this.loop = new Tone.Loop(time => {
-      this.emit(`tonecontrollernewmeasure`, time);
+    this.loop = new Tone.Loop(() => {
+      this.emit(`tonecontrollernewmeasure`, Tone.Transport.position);
     }, `1m`);
     this.loop.start();
 
@@ -35,9 +35,53 @@ export default class ToneController extends EventEmitter2 {
   }
 
   _createSynths = () => {
-    this.midiSunth;
 
-    this.midiSynth = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
+    this.midiSynth = new Tone.PolySynth(4, Tone.DuoSynth).toMaster();
+    this.midiSynth.set(
+      {
+        vibratoAmount: 0.2,
+        vibratoRate: 1,
+        harmonicity: 1.5,
+        voice0: {
+          volume: - 10,
+          portamento: 0,
+          oscillator: {
+            type: `square`
+          },
+          filterEnvelope: {
+            attack: 0.01,
+            decay: 0.1,
+            sustain: 0.5,
+            release: 0.5
+          },
+          envelope: {
+            attack: 0.01,
+            decay: 0,
+            sustain: 1,
+            release: 0.5
+          }
+        },
+        voice1: {
+          volume: - 10,
+          portamento: 0,
+          oscillator: {
+            type: `sawtooth`
+          },
+          filterEnvelope: {
+            attack: 0.01,
+            decay: 0,
+            sustain: 1,
+            release: 0.5
+          },
+          envelope: {
+            attack: 0.01,
+            decay: 0,
+            sustain: 1,
+            release: 0.5
+          }
+        }
+      }
+    );
 
     // TOMS AND KICK
     this.membraneSynth = new Tone.MembraneSynth({

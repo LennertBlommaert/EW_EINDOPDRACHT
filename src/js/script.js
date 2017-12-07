@@ -130,7 +130,6 @@ const getKeyCodeData = keyCode => {
 
   const keyCodeData = Constants.KEY_NOTE_FREQUENCY.filter(d => d.keyCode === keyCode)[0];
 
-
   if (keyCodeData !== undefined) return keyCodeData;
 
   return {};
@@ -170,10 +169,20 @@ const initThree = () => {
 
   window.addEventListener(`resize`, handleWindowResize, false);
 
-  window.addEventListener(`keydown`, ({keyCode}) => handleControllerKeyDown(getKeyCodeData(keyCode)));
-  window.addEventListener(`keyup`, ({keyCode}) => handleControllerKeyUp(getKeyCodeData(keyCode)));
-
   loop();
+};
+
+const toggleFullScreen = () => {
+  if (!document.fullscreenElement) {
+    console.log(document.querySelector(`.world`));
+    document.querySelector(`.world`).requestFullscreen();
+    handleWindowResize();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+      handleWindowResize();
+    }
+  }
 };
 
 const init = () => {
@@ -188,6 +197,19 @@ const init = () => {
   toneController.on(`tonecontrollernewmeasure`, handleToneControllerOnNewMeasure);
 
   getMIDIAccess();
+
+  const $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`);
+  $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
+
+  window.addEventListener(`keydown`, ({keyCode}) => {
+    if (keyCode === 13 || keyCode === 27) return;
+    handleControllerKeyDown(getKeyCodeData(keyCode));
+  });
+  window.addEventListener(`keyup`, ({keyCode}) => {
+    if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
+    handleControllerKeyUp(getKeyCodeData(keyCode));
+  });
+
 };
 
 init();

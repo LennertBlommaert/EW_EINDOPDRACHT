@@ -102,15 +102,13 @@ export default class Scene extends THREE.Scene {
   this.mesh.position.x = getRandomArbitrary(- 500, 500);
   this.mesh.position.y = getRandomArbitrary(- 10, - 5);
   */
-  createObjectOnNote = (note = 0, cameraRotation = {}) => {
+  createObjectOnNote = (note = 0) => {
 
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 60) {
       return this.raiseTerrain();
     }
-
-    console.log(cameraRotation);
 
     const position = {};
 
@@ -132,7 +130,6 @@ export default class Scene extends THREE.Scene {
 
 
   addCloud = (position = {x: 0, y: 0, z: 0}) => {
-    console.log(this.loadedData);
 
     const deadCloud = this.clouds.find(cloud => cloud.scaleFactor === 1);
     if (deadCloud) return deadCloud.animateGrowth();

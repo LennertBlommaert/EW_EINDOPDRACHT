@@ -12,8 +12,6 @@ export default class ThreeController {
     this.camera = new Camera({});
     this.controls = new Controls({camera: this.camera});
 
-    console.log(`SCENE:`, this.scene);
-
     this.linkGUIControls();
 
     // does not work - PROBLEM w/ Camera + orbitcontrols
@@ -28,7 +26,6 @@ export default class ThreeController {
     this.$resetButton.addEventListener(`click`, this.scene.emptyScene);
 
     this.$autoRotateButton = document.querySelector(`.auto-rotation-button`);
-    console.log(this.$autoRotateButton);
     this.$autoRotateButton.addEventListener(`click`, this.controls.toggleAutorotate);
 
     this.$autRotateSpeedRange = document.querySelector(`#auto-rotation-speed`);
