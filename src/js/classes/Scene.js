@@ -2,7 +2,7 @@ import Cloud from '../classes/Cloud';
 import Tree from '../classes/Tree';
 import Colors from '../objects/Colors';
 
-import Constants from '../objects/Constants';
+//import Constants from '../objects/Constants';
 
 import getRandomArbitrary from '../lib/getRandomArbitrary';
 
@@ -20,6 +20,7 @@ export default class Scene extends THREE.Scene {
     this.background = new THREE.Color(this.skyColor);
 
     this.trees = [];
+    this.clouds = [];
 
     window.setInterval(this.removeChildren, 1500);
 
@@ -35,7 +36,7 @@ export default class Scene extends THREE.Scene {
   }
 
   createShadowLight = () => {
-    const shadowLight = new THREE.DirectionalLight(0xffffff, .5);
+    const shadowLight = new THREE.DirectionalLight(0xBF7004, .7);
     // const shadowLight = new THREE.SpotLight(0xffffff, .9);
 
     shadowLight.position.set(150, 350, 350);
@@ -52,9 +53,6 @@ export default class Scene extends THREE.Scene {
 
     shadowLight.shadow.mapSize.width = 2048;
     shadowLight.shadow.mapSize.height = 2048;
-
-    const shadowCameraHelper = new THREE.CameraHelper(shadowLight.shadow.camera);
-    this.add(shadowCameraHelper);
 
     return shadowLight;
   }
@@ -99,43 +97,54 @@ export default class Scene extends THREE.Scene {
 
     this.add(terrain);
   }
-
-  createObjectOnNote = (note = 0) => {
+  /*
+  this.mesh.position.z = getRandomArbitrary(- 500, 500);
+  this.mesh.position.x = getRandomArbitrary(- 500, 500);
+  this.mesh.position.y = getRandomArbitrary(- 10, - 5);
+  */
+  createObjectOnNote = (note = 0, cameraRotation = {}) => {
 
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 60) {
-      this.raiseTerrain();
+      return this.raiseTerrain();
     }
+
+    console.log(cameraRotation);
+
+    const position = {};
+
+    position.z = getRandomArbitrary(- 500, 500);
+    position.x = getRandomArbitrary(- 500, 500);
+    position.y = getRandomArbitrary(- 10, - 5);
 
     // W/Z on keyboard
     if (note === 62) {
-      this.addTree();
+      return this.addTree(position);
     }
 
     if (note === 69) {
-      this.addCloud();
+      return this.addCloud(position);
     }
 
     //console.log(this.getObjectByName(`Terrain`).minHeight);
   };
 
 
-  addCloud = () => {
-    const cloud = new Cloud();
+  addCloud = (position = {x: 0, y: 0, z: 0}) => {
+    console.log(this.loadedData);
 
-    cloud.mesh.position.y = getRandomArbitrary(0, Constants.HEIGHT / 2);
-    cloud.mesh.position.x = getRandomArbitrary(0, Constants.WIDTH / 2) - Constants.WIDTH / 2;
+    const deadCloud = this.clouds.find(cloud => cloud.scaleFactor === 1);
+    if (deadCloud) return deadCloud.animateGrowth();
 
-    cloud.mesh.position.z = - 400 - Math.random() * 400;
+    const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], position);
 
-    const s = 1 + Math.random() * 2;
-    cloud.mesh.scale.set(s, s, s);
+    this.clouds.push(newCloud);
+    this.add(newCloud.mesh);
 
-    this.add(cloud.mesh);
   };
 
-  addTree = () => {
+  addTree = (position = {x: 0, y: 0, z: 0}) => {
 
     //LOOK FOR TREES THAT ALREADY EXIST BUT WERE SHRUNK
     const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
@@ -143,7 +152,7 @@ export default class Scene extends THREE.Scene {
     if (deadTree) return deadTree.animateGrowth();
 
     //IF NO SHRUNKEN TREES WERE FOUND, CREATE A NEW TREE
-    const newTree = new Tree(this.loadedData.treeData[0]);
+    const newTree = new Tree(this.loadedData.treeData[0], position);
 
     this.trees.push(newTree);
 
@@ -173,7 +182,7 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeVertexNormals();
   }
 
-  lowerTerrain = (distanceFromCamera = 400) => {
+  lowerTerrain = (distanceFromCamera = 400, lowerSubstraction = 0.4) => {
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
 
@@ -181,7 +190,7 @@ export default class Scene extends THREE.Scene {
 
     terrainGeom.vertices.forEach(v => {
       if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
-        v.z -= 0.25;
+        v.z -= lowerSubstraction;
       }
     });
 
@@ -235,12 +244,12 @@ export default class Scene extends THREE.Scene {
 
   removeChildren = () => {
 
-    const cloud = this.getObjectByName(`Cloud`);
-    if (cloud) this.removeChild(cloud);
-
     // "POOLING" possibility?
     const livingTree = this.trees.find(tree => tree.scaleFactor >= 100);
     if (livingTree) livingTree.animateShrink();
+
+    const livingCloud = this.clouds.find(tree => tree.scaleFactor >= 100);
+    if (livingCloud) livingCloud.animateShrink();
 
     // const tree = this.getObjectByName(`Tree`);
     // if (tree) this.tree.removeChild(tree);

@@ -12,6 +12,7 @@ export default class ThreeController {
     this.camera = new Camera({});
     this.controls = new Controls({camera: this.camera});
 
+    console.log(`SCENE:`, this.scene);
 
     this.linkGUIControls();
 

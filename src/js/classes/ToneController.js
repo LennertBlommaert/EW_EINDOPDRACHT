@@ -73,7 +73,7 @@ export default class ToneController extends EventEmitter2 {
       this.membraneSynth.triggerAttackRelease(note, `2n`);
 
     }, [`C0`, 0, 0, `C0`, `C0`, 0], `8n`);
-    this.seq.start(`1m`);
+    //this.seq.start(`1m`);
 
 
     Tone.Transport.start();
@@ -94,7 +94,8 @@ export default class ToneController extends EventEmitter2 {
     this.membraneSynth.volume.value = volume - volume / 3;
   }
 
-  toggleBeat = () => this.beat.loop = !this.beat.loop;
+  toggleBeat = () => this.seq.loop = !this.seq.loop;
+  // toggleBeat = () => this.beat.loop = !this.beat.loop;
 }
 
 

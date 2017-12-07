@@ -8,9 +8,16 @@ export default class Camera extends THREE.PerspectiveCamera {
     this.rotation.y = - 1;
   }
 
-  move() {
-    //this.position.z ++;
-    this.updateProjectionMatrix();
+  moveUp() {
+    this.position.y += .1;
+    if (this.position.y < 50) window.requestAnimationFrame(() => this.moveUp());
+    //window.requestAnimationFrame(() => this.moveUp());
+  }
+
+  bounce() {
+    if (this.position.y < 5) return;
+    this.position.y -= 4;
+    window.requestAnimationFrame(() => this.moveUp());
   }
 
   //NOT IN USE

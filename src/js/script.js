@@ -68,15 +68,24 @@ const checkChordType = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
+  console.log(`SCENE:`, threeController.scene);
+
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
-  threeController.scene.createObjectOnNote(note);
+  threeController.scene.createObjectOnNote(note, threeController.camera.rotation);
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
   toneController.synth.triggerAttack(pushedFrequencies, undefined, velocity);
 
   //threeController.camera.lookAt(threeController.scene.children[threeController.scene.children.length - 1]);
   //Only check when multiple keys are being pressed
+  //
+  // console.log(threeController.camera.getEffectiveFOV());
+  // console.log(threeController.camera.getFilmHeight());
+  // console.log(threeController.camera.getFilmWidth());
+  // console.log(threeController.camera);
+  // console.log(threeController.renderer);
+
   if (pushedNotes.length > 1) checkChordType();
 };
 
@@ -100,6 +109,7 @@ const handleToneControllerBeatPlayed = () => {
   //NOTE: can be replaced by something
   //Seemed like a fun effect in the moment
   threeController.scene.raiseTerrain(500, 20);
+  //threeController.camera.bounce();
 };
 
 const loop = () => {
@@ -108,7 +118,6 @@ const loop = () => {
   //threeController.camera.rotate();
   threeController.controls.update();
   threeController.scene.moveShadowLight();
-
   threeController.scene.lowerTerrain();
 
   window.requestAnimationFrame(loop);
