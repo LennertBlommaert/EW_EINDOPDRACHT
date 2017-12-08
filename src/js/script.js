@@ -111,8 +111,8 @@ const handleToneControllerBeatPlayed = () => {
   //threeController.camera.bounce();
 };
 
-const handleToneControllerOnNewMeasure = time => {
-  console.log(`HANDLETONECONTROLLERONNEWMEASURE - time: ${time}`);
+const handleToneControllerOnNewHalfMeasure = position => {
+  console.log(`HANDLETONECONTROLLERONNEWHALFMEASURE - position: ${position}`);
 };
 
 const loop = () => {
@@ -194,7 +194,7 @@ const init = () => {
 
   toneController = new ToneController();
   toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
-  toneController.on(`tonecontrollernewmeasure`, handleToneControllerOnNewMeasure);
+  toneController.on(`tonecontrollernewhalfmeasure`, handleToneControllerOnNewHalfMeasure);
 
   getMIDIAccess();
 

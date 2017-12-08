@@ -16,8 +16,8 @@ export default class ToneController extends EventEmitter2 {
     this.seq.start();
 
     this.loop = new Tone.Loop(() => {
-      this.emit(`tonecontrollernewmeasure`, Tone.Transport.position);
-    }, `1m`);
+      this.emit(`tonecontrollernewhalfmeasure`, Tone.Transport.position);
+    }, `2n`);
     this.loop.start();
 
     this.createWind();
@@ -170,29 +170,29 @@ export default class ToneController extends EventEmitter2 {
 
     //initialize the noise and start
     //“pink”, “white”, and “brown”
-    this.windNoise = new Tone.Noise(`brown`).start();
-    this.windNoise.volume.value -= 14;
-
-    //make an autofilter to shape the noise
-    this.windNoiseAutoFilter = new Tone.AutoFilter({
-      frequency: `8m`,
-      type: `sine`,
-      depth: 1,
-      baseFrequency: 200,
-      octaves: 2.6,
-      min: 800,
-      max: 900,
-      filter: {
-        type: `lowpass`,
-        rolloff: - 12,
-        Q: 1
-      }
-    }).connect(Tone.Master);
-
-    //connect the noise
-    this.windNoise.connect(this.windNoiseAutoFilter);
-    //start the autofilter LFO
-    this.windNoiseAutoFilter.start();
+    //this.windNoise = new Tone.Noise(`brown`).start();
+    // this.windNoise.volume.value -= 14;
+    //
+    // //make an autofilter to shape the noise
+    // this.windNoiseAutoFilter = new Tone.AutoFilter({
+    //   frequency: `8m`,
+    //   type: `sine`,
+    //   depth: 1,
+    //   baseFrequency: 200,
+    //   octaves: 2.6,
+    //   min: 800,
+    //   max: 900,
+    //   filter: {
+    //     type: `lowpass`,
+    //     rolloff: - 12,
+    //     Q: 1
+    //   }
+    // }).connect(Tone.Master);
+    //
+    // //connect the noise
+    // this.windNoise.connect(this.windNoiseAutoFilter);
+    // //start the autofilter LFO
+    // this.windNoiseAutoFilter.start();
   }
 }
 
