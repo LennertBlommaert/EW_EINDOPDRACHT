@@ -111,8 +111,8 @@ const handleToneControllerBeatPlayed = () => {
   //threeController.camera.bounce();
 };
 
-const handleToneControllerOnNewHalfMeasure = position => {
-  console.log(`HANDLETONECONTROLLERONNEWHALFMEASURE - position: ${position}`);
+const handleToneControllerOnNewHalfMeasure = () => {
+  // console.log(`HANDLETONECONTROLLERONNEWHALFMEASURE - position: ${position}`);
 };
 
 const loop = () => {
@@ -142,7 +142,7 @@ const loadJSONFiles = () => {
   return new Promise(resolve => {
 
     loader.load(
-      `assets/data/tree.json`,
+      `assets/data/tree_animated2.json`,
       (geom, mat) => {
         loadedData.treeData = [geom, mat];
         resolve();

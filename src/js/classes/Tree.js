@@ -6,7 +6,7 @@ class Tree extends WorldElement {
   constructor(geom, position = {x: 0, y: 0, z: 0}) {
 
     const mats = [
-      new THREE.MeshPhongMaterial({color: Colors.brownDark, flatShading: THREE.FlatShading}),
+      new THREE.MeshPhongMaterial({color: Colors.brownDark, flatShading: THREE.FlatShading, morphTargets: true}),
       new THREE.MeshPhongMaterial({color: Colors.crownGreen, flatShading: THREE.FlatShading})
     ];
 
@@ -22,9 +22,9 @@ class Tree extends WorldElement {
 
   wiggle() {
 
-    this.mesh.rotation.x += this.wiggleAddition;
-
-    if (this.mesh.rotation.x > Math.PI / 12 || this.mesh.rotation.x < - Math.PI / 12) this.wiggleAddition = - this.wiggleAddition;
+    // this.mesh.rotation.x += this.wiggleAddition;
+    //
+    // if (this.mesh.rotation.x > Math.PI / 12 || this.mesh.rotation.x < - Math.PI / 12) this.wiggleAddition = - this.wiggleAddition;
 
     if (this.mesh.visible) {
       window.requestAnimationFrame(() => this.wiggle());
