@@ -7,9 +7,8 @@ export default class WorldElement {
     this.mats = mats;
     this.position = position;
 
-
     this._constructMesh();
-    this._getAnimations();
+    this._setupAnimations();
 
     this.animateGrowth();
   }
@@ -23,24 +22,28 @@ export default class WorldElement {
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
   }
 
-  _getAnimations = () => {
+  _setupAnimations = () => {
     this.mixer = new THREE.AnimationMixer(this.mesh);
-    this.clip = this.mesh.geometry.animations[0];
+    this.clips = this.mesh.geometry.animations;
+    console.log(this.clips);
+    this.clock = new THREE.Clock();
+
+    // this.clip = this.mesh.geometry.animations[0];
     // this.clip = THREE.AnimationClip.createFromMorphTargetSequence(this.geom.morphTargets, 30);
     // this.mixer.clipAction(this.clip).setDuratation(5).play();
-    console.log(this.clip);
-
   }
 
   toggleMeshVisibility = () => this.mesh.visible = !this.mesh.visible;
 
   animateGrowth = () => {
     if (!this.mesh.visible) this.toggleMeshVisibility;
-    this.mixer.clipAction(this.clip).play();
-    window.requestAnimationFrame(this.animateGrowth);
 
+    this.clip = THREE.AnimationClip.findByName(this.clips, `animation_`);
+    this.action = this.mixer.clipAction(this.clip);
+    this.action.clampWhenFinished = true;
+    this.action.play();
 
-
+    window.requestAnimationFrame(() => this.updateAnimationMixer());
 
     // this.scaleFactor += this.scaleFactorIncreasement;
     // this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
@@ -48,6 +51,14 @@ export default class WorldElement {
     // if (this.scaleFactor < 100) {
     //   window.requestAnimationFrame(this.animateGrowth);
     // }
+  }
+
+  updateAnimationMixer = () => {
+    this.mixer.update(this.clock.getDelta());
+
+    if (this.action.isRunning()) {
+      window.requestAnimationFrame(() => this.updateAnimationMixer());
+    }
   }
 
   animateShrink = () => {

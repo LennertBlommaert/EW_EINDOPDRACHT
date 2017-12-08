@@ -118,7 +118,7 @@ export default class Scene extends THREE.Scene {
 
     // W/Z on keyboard
     if (note === 62) {
-      return this.addTree(position);
+      return this.addTree();
     }
 
     if (note === 69) {
@@ -155,6 +155,8 @@ export default class Scene extends THREE.Scene {
     const newTree = new Tree(this.loadedData.treeData[0], position);
 
     this.trees.push(newTree);
+
+    console.log(this.children);
 
     // console.log(`New tree mesh position y`, newTree.mesh.position.y);
     // console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);

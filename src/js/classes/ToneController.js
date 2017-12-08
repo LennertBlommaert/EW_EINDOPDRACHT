@@ -23,7 +23,7 @@ export default class ToneController extends EventEmitter2 {
     this.createWind();
     this._createSynths();
 
-    Tone.Transport.start();
+    //Tone.Transport.start();
 
     this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
     this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
@@ -167,10 +167,10 @@ export default class ToneController extends EventEmitter2 {
   // toggleBeat = () => this.beat.loop = !this.beat.loop;
 
   createWind = () => {
-
-    //initialize the noise and start
-    //“pink”, “white”, and “brown”
-    //this.windNoise = new Tone.Noise(`brown`).start();
+    //
+    // // initialize the noise and start
+    // // “pink”, “white”, and “brown”
+    // this.windNoise = new Tone.Noise(`brown`).start();
     // this.windNoise.volume.value -= 14;
     //
     // //make an autofilter to shape the noise

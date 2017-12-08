@@ -142,7 +142,7 @@ const loadJSONFiles = () => {
   return new Promise(resolve => {
 
     loader.load(
-      `assets/data/tree_animated2.json`,
+      `assets/data/tree_01_animated4.json`,
       (geom, mat) => {
         loadedData.treeData = [geom, mat];
         resolve();
@@ -185,16 +185,20 @@ const toggleFullScreen = () => {
   }
 };
 
-const init = () => {
-
-  loadJSONFiles()
-    .then(() => initThree())
-    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
-
-
+const initTone = () => {
   toneController = new ToneController();
   toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
   toneController.on(`tonecontrollernewhalfmeasure`, handleToneControllerOnNewHalfMeasure);
+};
+
+const init = () => {
+
+  loadJSONFiles()
+    .then(() => {
+      initThree();
+      initTone();
+    })
+    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
 
   getMIDIAccess();
 
@@ -210,6 +214,7 @@ const init = () => {
     handleControllerKeyUp(getKeyCodeData(keyCode));
   });
 
+  console.log([- 0.421478, 0.903092, - 0.13137, - 0.00461831, 1.41483, 0.437521, - 0.264021, 1.41483, - 0.349951, 0.248387, 1.41483, - 0.352031, 0.408707, 1.41483, 0.134654, - 0.0934184, 1.67712, - 0.0615906, - 0.0379565, 0.827779, 0.393319, 0.407614, 0.903092, 0.138018, 0.0806472, 0.640801, - 0.0615906, - 0.350765, 0.801675, 0.121923, 0.503548, 1.18514, 0.00164211, 0.151193, 1.18514, 0.486618, - 0.441055, 1.33322, 0.256114, - 0.16322, 1.0783, - 0.481045, - 0.516319, 1.13278, 0.00164211, 0.278952, 0.982612, - 0.387682, 0.159166, 1.62677, 0.121922, - 0.00638558, - 0.00408745, - 0.106665, - 0.00638558, 1.06192, - 0.0531996, 0.0874113, - 0.00408745, - 0.0525115, 0.0411088, 1.06192, - 0.0257788, 0.0874113, - 0.00408745, 0.0557958, 0.0411088, 1.06192, 0.029063, - 0.00638559, - 0.00408745, 0.109949, - 0.00638559, 1.06192, 0.0564839, - 0.100182, - 0.00408745, 0.0557958, - 0.0538799, 1.06192, 0.029063, - 0.100182, - 0.00408745, - 0.0525115, - 0.0538799, 1.06192, - 0.0257788].length);
 };
 
 init();
