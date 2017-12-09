@@ -68,7 +68,7 @@ const checkChordType = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-
+  console.log(note);
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
   threeController.scene.createObjectOnNote(note, threeController.camera.rotation);
@@ -141,7 +141,7 @@ const loadJSONFiles = () => {
   return new Promise(resolve => {
 
     loader.load(
-      `assets/data/tree_01_animated4.json`,
+      `assets/data/tree_01_animated6.json`,
       (geom, mat) => {
         loadedData.treeData = [geom, mat];
         resolve();
@@ -152,9 +152,31 @@ const loadJSONFiles = () => {
   .then(
 
     loader.load(
-      `assets/data/cloud.json`,
+      `assets/data/cloud2.json`,
       (geom, mat) => {
         loadedData.cloudData = [geom, mat];
+        return;
+      }
+    )
+
+  )
+  .then(
+
+    loader.load(
+      `assets/data/rock.json`,
+      (geom, mat) => {
+        loadedData.rockData = [geom, mat];
+        return;
+      }
+    )
+
+  )
+  .then(
+
+    loader.load(
+      `assets/data/mushroom.json`,
+      (geom, mat) => {
+        loadedData.mushroomData = [geom, mat];
         return;
       }
     )

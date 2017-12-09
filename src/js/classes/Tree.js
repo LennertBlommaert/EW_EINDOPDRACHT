@@ -1,14 +1,15 @@
-import Colors from '../objects/Colors';
+// import Colors from '../objects/Colors';
 import WorldElement from './WorldElement';
 
 class Tree extends WorldElement {
 
-  constructor(geom, position = {x: 0, y: 0, z: 0}) {
+  constructor(geom, mats, position = {x: 0, y: 0, z: 0}) {
+  // constructor(geom, position = {x: 0, y: 0, z: 0}) {
 
-    const mats = [
-      new THREE.MeshPhongMaterial({color: Colors.brownDark, flatShading: THREE.FlatShading, morphTargets: true}),
-      new THREE.MeshPhongMaterial({color: Colors.crownGreen, flatShading: THREE.FlatShading})
-    ];
+    // const mats = [
+    //   new THREE.MeshPhongMaterial({color: Colors.treeTrunk, flatShading: THREE.FlatShading, morphTargets: true}),
+    //   new THREE.MeshPhongMaterial({color: Colors.treeCrown, flatShading: THREE.FlatShading, morphTargets: true})
+    // ];
 
     super({geom, mats, position});
 

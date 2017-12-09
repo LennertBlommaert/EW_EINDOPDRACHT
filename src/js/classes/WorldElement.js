@@ -5,6 +5,12 @@ export default class WorldElement {
 
     this.geom = geom;
     this.mats = mats;
+
+    for (let i = 0;i < mats.length;i ++) {
+      mats[i].morphTargets = true;
+      mats[i].flatShading = THREE.FlatShading;
+    }
+
     this.position = position;
 
     this._constructMesh();
