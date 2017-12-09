@@ -18,7 +18,7 @@ export default class Scene extends THREE.Scene {
     this.fog = new THREE.Fog(this.skyColor, fogNear, fogFar);
     this.addLights();
     this.addTerrain();
-    this.addParticles();
+    //this.addParticles();
     this.background = new THREE.Color(this.skyColor);
 
     this.trees = [];
@@ -164,7 +164,8 @@ export default class Scene extends THREE.Scene {
     const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
 
     if (deadTree) {
-      deadTree.wiggle();
+      //deadTree.wiggle();
+      console.log(deadTree);
       return deadTree.animateGrowth();
     }
 
@@ -172,8 +173,6 @@ export default class Scene extends THREE.Scene {
     const newTree = new Tree(this.loadedData.treeData[0], position);
 
     this.trees.push(newTree);
-
-    console.log(this.children);
 
     // console.log(`New tree mesh position y`, newTree.mesh.position.y);
     // console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);
@@ -196,7 +195,6 @@ export default class Scene extends THREE.Scene {
 
     terrainGeom.verticesNeedUpdate = true;
 
-    // Could be fix for shadow problem => no effect
     terrainGeom.computeFaceNormals();
     terrainGeom.computeVertexNormals();
   }
@@ -215,28 +213,11 @@ export default class Scene extends THREE.Scene {
 
     terrainGeom.verticesNeedUpdate = true;
 
-    // Could be fix for shadow problem => no effect
     terrainGeom.computeFaceNormals();
     terrainGeom.computeVertexNormals();
   }
 
   emptyScene = () => {
-
-
-    // while (this.children.length > 3) {
-    //
-    //   if (this.children[0].name !== `Terrain` || this.children[0].type !== `DirectionalLight` || this.children[0].type !== `HemisphereLight`) {
-    //
-    //     if (this.children[0].length) {
-    //       this.children[0].children.forEach(c => {
-    //         c.material.dispose();
-    //         c.geometry.dispose();
-    //       });
-    //
-    //     }
-    //
-    //     this.remove(this.children[0]);
-    //   }
 
     while (this.children.length > 0) {
 

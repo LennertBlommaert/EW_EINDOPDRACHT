@@ -8,6 +8,8 @@ export default class WorldElement {
     this.position = position;
 
     this._constructMesh();
+    this.toggleMeshVisibility();
+
     this._setupAnimations();
 
     this.animateGrowth();
@@ -23,10 +25,19 @@ export default class WorldElement {
   }
 
   _setupAnimations = () => {
+    console.log(`SETUP ANIMATIONS`);
     this.mixer = new THREE.AnimationMixer(this.mesh);
-    this.clips = this.mesh.geometry.animations;
-    console.log(this.clips);
+    //this.clips = this.mesh.geometry.animations;
     this.clock = new THREE.Clock();
+
+    //this.clips = THREE.AnimationClip.CreateClipsFromMorphTargetSequences(`animation_`, this.mesh.geometry.morphTargets, 24, true);
+
+    //this.growthClip = THREE.AnimationClip.findByName(this.clips, `animation_`);
+    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`animation_`, this.mesh.geometry.morphTargets, 24, true);
+
+    this.growthAction = this.mixer.clipAction(this.growthClip);
+    this.growthAction.setLoop(THREE.LoopOnce);
+    this.growthAction.clampWhenFinished = true;
 
     // this.clip = this.mesh.geometry.animations[0];
     // this.clip = THREE.AnimationClip.createFromMorphTargetSequence(this.geom.morphTargets, 30);
@@ -36,17 +47,7 @@ export default class WorldElement {
   toggleMeshVisibility = () => this.mesh.visible = !this.mesh.visible;
 
   animateGrowth = () => {
-    if (!this.mesh.visible) this.toggleMeshVisibility;
-
-    this.clip = THREE.AnimationClip.findByName(this.clips, `animation_`);
-    this.action = this.mixer.clipAction(this.clip);
-    // this.action.clampWhenFinished = true;
-    // console.log(`stop looping: ${this.action.clampWhenFinished}`);
-    this.action.setDuration(0.8);
-    this.action.play();
-    this.action.setLoop(THREE.LoopOnce);
-
-
+    this.growthAction.play();
     window.requestAnimationFrame(() => this.updateAnimationMixer());
 
     // this.scaleFactor += this.scaleFactorIncreasement;
@@ -60,9 +61,11 @@ export default class WorldElement {
   updateAnimationMixer = () => {
     this.mixer.update(this.clock.getDelta());
 
-    if (this.action.isRunning()) {
+    if (this.growthAction.isRunning()) {
       window.requestAnimationFrame(() => this.updateAnimationMixer());
     }
+
+    if (!this.mesh.visible) this.toggleMeshVisibility();
   }
 
   animateShrink = () => {

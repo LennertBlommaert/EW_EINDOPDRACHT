@@ -18,8 +18,6 @@ class Tree extends WorldElement {
     this.wiggleAddition = 0.0025;
 
     //this.wiggle();
-
-    console.log(this);
   }
 
   wiggle() {

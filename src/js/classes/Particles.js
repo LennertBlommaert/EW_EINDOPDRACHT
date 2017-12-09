@@ -39,7 +39,7 @@ class Particles {
   }
 
   moveParticles () {
-    console.log(this.particleGeometry.vertices);
+    //onsole.log(this.particleGeometry.vertices);
     this.particleGeometry.vertices.forEach(particle => {
       particle.add(new THREE.Vector3(
         Math.random() * 2 - 1,
