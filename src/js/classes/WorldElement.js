@@ -40,8 +40,12 @@ export default class WorldElement {
 
     this.clip = THREE.AnimationClip.findByName(this.clips, `animation_`);
     this.action = this.mixer.clipAction(this.clip);
-    this.action.clampWhenFinished = true;
+    // this.action.clampWhenFinished = true;
+    // console.log(`stop looping: ${this.action.clampWhenFinished}`);
+    this.action.setDuration(0.8);
     this.action.play();
+    this.action.setLoop(THREE.LoopOnce);
+
 
     window.requestAnimationFrame(() => this.updateAnimationMixer());
 

@@ -1,6 +1,7 @@
 import Cloud from '../classes/Cloud';
 import Tree from '../classes/Tree';
 import Colors from '../objects/Colors';
+import Particles from '../classes/Particles';
 
 //import Constants from '../objects/Constants';
 
@@ -17,6 +18,7 @@ export default class Scene extends THREE.Scene {
     this.fog = new THREE.Fog(this.skyColor, fogNear, fogFar);
     this.addLights();
     this.addTerrain();
+    this.addParticles();
     this.background = new THREE.Color(this.skyColor);
 
     this.trees = [];
@@ -118,7 +120,7 @@ export default class Scene extends THREE.Scene {
 
     // W/Z on keyboard
     if (note === 62) {
-      return this.addTree();
+      return this.addTree(position);
     }
 
     if (note === 69) {
@@ -138,6 +140,21 @@ export default class Scene extends THREE.Scene {
 
     this.clouds.push(newCloud);
     this.add(newCloud.mesh);
+
+  };
+
+  addParticles = () => {
+    const particles = new Particles();
+
+    particles.particleSystem.position.y = 10;
+    particles.particleSystem.position.x = 0;
+    particles.particleSystem.position.z = 0;
+    particles.particleSystem.rotation.x = Math.random() * 6;
+    particles.particleSystem.rotation.y = Math.random() * 6;
+    particles.particleSystem.rotation.z = Math.random() * 6;
+    this.add(particles.particleSystem);
+    particles.moveParticles();
+    // console.log(particles.particles.position);
 
   };
 

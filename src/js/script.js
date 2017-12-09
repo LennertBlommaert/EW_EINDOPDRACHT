@@ -122,7 +122,6 @@ const loop = () => {
   threeController.controls.update();
   threeController.scene.moveShadowLight();
   threeController.scene.lowerTerrain();
-
   window.requestAnimationFrame(loop);
 };
 
