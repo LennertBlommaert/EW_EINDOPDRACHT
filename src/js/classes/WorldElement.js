@@ -33,7 +33,7 @@ export default class WorldElement {
     //this.clips = THREE.AnimationClip.CreateClipsFromMorphTargetSequences(`animation_`, this.mesh.geometry.morphTargets, 24, true);
 
     //this.growthClip = THREE.AnimationClip.findByName(this.clips, `animation_`);
-    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`animation_`, this.mesh.geometry.morphTargets, 24, true);
+    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`animation_`, this.mesh.geometry.morphTargets, 60, true);
 
     this.growthAction = this.mixer.clipAction(this.growthClip);
     this.growthAction.setLoop(THREE.LoopOnce);
@@ -69,6 +69,9 @@ export default class WorldElement {
   }
 
   animateShrink = () => {
+
+    console.log(`WorldElement.js - Animate shrink`);
+
     // this.scaleFactor -= this.scaleFactorIncreasement;
     // this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     // if (this.scaleFactor > 1) {

@@ -245,7 +245,7 @@ export default class Scene extends THREE.Scene {
   removeChildren = () => {
 
     // "POOLING" possibility?
-    const livingTree = this.trees.find(tree => tree.scaleFactor >= 100);
+    const livingTree = this.trees.find(tree => tree.mesh.visible === true);
     if (livingTree) livingTree.animateShrink();
 
     const livingCloud = this.clouds.find(tree => tree.scaleFactor >= 100);
