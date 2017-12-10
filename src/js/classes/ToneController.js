@@ -1,4 +1,5 @@
 import EventEmitter2 from '../vendors/eventemitter2';
+import AmbientNoise from './AmbientNoise';
 import Tone from 'tone';
 
 export default class ToneController extends EventEmitter2 {
@@ -20,7 +21,7 @@ export default class ToneController extends EventEmitter2 {
     }, `2n`);
     this.loop.start();
 
-    this.createWind();
+    //this.createWind();
     this._createSynths();
 
     Tone.Transport.start();
@@ -30,7 +31,11 @@ export default class ToneController extends EventEmitter2 {
     this.drumBeatRepresentations = Array.from(document.querySelectorAll(`.drum-beat-representation`));
     this._setDrumBeatRepresentationssetInitialClasses();
 
+    this.echoSynth = new Tone.AMSynth().toMaster();
+
     this._linkControls();
+
+    this.createAmbientNoises(130.81, 146.83, 164.81, 174.61, 195.99, 220, 246.94);
   }
 
   _createSynths = () => {
@@ -142,11 +147,6 @@ export default class ToneController extends EventEmitter2 {
       this.emit(`tonecontrollerplayedtom`, note);
     }
 
-    // this.noiseSynth.triggerAttack();
-
-    // const vel = Math.random() * 0.5 + 0.5;
-    // this.metalSynth.triggerAttack(vel);
-
     this.membraneSynth.triggerAttackRelease(note, `2n`);
   }
 
@@ -193,6 +193,17 @@ export default class ToneController extends EventEmitter2 {
     this.windNoise.connect(this.windNoiseAutoFilter);
     //start the autofilter LFO
     this.windNoiseAutoFilter.start();
+  }
+
+  createAmbientNoises = (...frequencies) => {
+    this.ambientNoises = frequencies.map(freq => this.ambientNoises = new AmbientNoise(freq));
+    //this.echoSynth.triggerAttackRelease(frequency, `8n`, `+0.5`);
+  }
+
+  turnAmbientNoiseUp = frequency => {
+    this.ambientNoise = this.ambientNoises.find(noise => noise.baseFrequency === frequency);
+    console.log(this.ambientNoise);
+    if (this.ambientNoise) this.ambientNoise.turnNoiseUp(1);
   }
 }
 

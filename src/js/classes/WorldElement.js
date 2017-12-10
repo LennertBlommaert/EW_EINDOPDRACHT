@@ -21,6 +21,8 @@ export default class WorldElement {
     this._setupAnimations();
 
     this.animateGrowth();
+
+    this.wiggleAddition = 0.0025;
   }
 
   _constructMesh = () => {
@@ -116,4 +118,12 @@ export default class WorldElement {
 
     if (!this.mesh.visible) this.toggleMeshVisibility();
   }
+
+  wiggle() {
+
+    this.mesh.rotation.x += this.wiggleAddition;
+
+    if (this.mesh.rotation.x > Math.PI / 12 || this.mesh.rotation.x < - Math.PI / 12) this.wiggleAddition = - this.wiggleAddition;
+  }
+
 }

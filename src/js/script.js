@@ -82,10 +82,10 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
 
-  console.log(note);
   const positionVector = getRandomPositionVector();
 
   threeController.scene.createObjectOnNote(note % 12, positionVector);
+  toneController.turnAmbientNoiseUp(frequency);
 
   //threeController.camera.lookAt(positionVector);
 

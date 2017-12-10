@@ -12,17 +12,22 @@ export default class Camera extends THREE.PerspectiveCamera {
     this.pointLight.position.set(1, 1, 2);
     this.add(this.pointLight);
 
-    this.moveYAddition = 0.15;
+    //this.moveYAddition = 0.15;
+    this.moveYTarget = 70;
   }
 
   moveY() {
-    this.position.y += this.moveYAddition;
-    //if (this.position.y < 50) window.requestAnimationFrame(() => this.moveUp());
-    //window.requestAnimationFrame(() => this.moveUp());
+    //this.position.y += this.moveYAddition;
+
+    const dy = this.moveYTarget - this.position.y;
+    this.position.y += dy * 0.005;
   }
 
   toggleMoveYDirection() {
-    this.moveYAddition = - this.moveYAddition;
+    //this.moveYAddition = - this.moveYAddition;
+
+    if (this.moveYTarget === 70) return this.moveYTarget = 1;
+    this.moveYTarget = 70;
   }
 
   bounce() {
