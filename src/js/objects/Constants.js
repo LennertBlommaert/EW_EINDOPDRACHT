@@ -7,83 +7,83 @@ const Constants = {
   KEY_TO_FREQ: [
     {
       key: `Q`,
-      keyCode: 81,
-      freq: 261.63
+      keyCode: 48,
+      freq: 130.81
     },
     {
       key: `W`,
-      keyCode: 87,
-      freq: 293.66
+      keyCode: 50,
+      freq: 146.83
     },
     {
       key: `E`,
-      keyCode: 69,
-      freq: 329.63
+      keyCode: 52,
+      freq: 164.81
     },
     {
       key: `R`,
-      keyCode: 82,
-      freq: 349.23
+      keyCode: 53,
+      freq: 174.61
     },
     {
       key: `T`,
-      keyCode: 84,
-      freq: 392.00
+      keyCode: 55,
+      freq: 195.99
     },
     {
       key: `U`,
-      keyCode: 89,
-      freq: 440.00
+      keyCode: 57,
+      freq: 220.00
     },
     {
       key: `I`,
-      keyCode: 85,
-      freq: 493.88
+      keyCode: 59,
+      freq: 246.94
     },
     {
       key: `O`,
-      keyCode: 73,
-      freq: 523.25
+      keyCode: 60,
+      freq: 261.62
     },
   ],
   KEY_NOTE_FREQUENCY: [
     {
       keyCode: 81,
-      frequency: 261.63,
+      frequency: 130.81,
       note: 60
     },
     {
       keyCode: 87,
-      frequency: 293.66,
+      frequency: 146.83,
       note: 62
     },
     {
       keyCode: 65,
-      frequency: 261.63,
+      frequency: 164.81,
       note: 60
     },
     {
       keyCode: 90,
-      frequency: 293.66,
+      frequency: 174.61,
       note: 62
     },
     {
       keyCode: 69,
-      frequency: 329.63,
+      frequency: 195.99,
     },
     {
       keyCode: 82,
-      frequency: 349.23,
+      frequency: 220.00,
       note: 65
     },
     {
       keyCode: 84,
-      frequency: 392.00,
+      frequency: 246.94,
       note: 67
     },
     {
       keyCode: 89,
-      frequency: 440.00,
+      frequency: 261.62,
       note: 69
     },
     {

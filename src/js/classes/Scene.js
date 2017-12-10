@@ -105,27 +105,27 @@ export default class Scene extends THREE.Scene {
 
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
-    if (note === 60) {
+    if (note === 0) {
       return this.raiseTerrain();
     }
 
     // W/Z on keyboard
-    if (note === 62) {
+    if (note === 2) {
       return this.addTree(positionVector);
     }
 
     // E on keyboard
-    if (note === 69) {
+    if (note === 4) {
       return this.addCloud(positionVector);
     }
 
     // R on keyboard
-    if (note === 65) {
+    if (note === 5) {
       return this.addRock(positionVector);
     }
 
     // T on keyboard
-    if (note === 67) {
+    if (note === 7) {
       return this.addMushroom(positionVector);
     }
     //console.log(this.getObjectByName(`Terrain`).minHeight);

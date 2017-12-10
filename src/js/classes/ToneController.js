@@ -45,19 +45,19 @@ export default class ToneController extends EventEmitter2 {
           volume: - 10,
           portamento: 0,
           oscillator: {
-            type: `square`
+            type: `triangle`
           },
           filterEnvelope: {
-            attack: 0.01,
+            attack: 0.02,
             decay: 0.1,
             sustain: 0.5,
-            release: 0.5
+            release: 0.2
           },
           envelope: {
             attack: 0.01,
             decay: 0,
             sustain: 1,
-            release: 0.5
+            release: 0.2
           }
         },
         voice1: {
@@ -70,13 +70,13 @@ export default class ToneController extends EventEmitter2 {
             attack: 0.01,
             decay: 0,
             sustain: 1,
-            release: 0.5
+            release: 0.2
           },
           envelope: {
             attack: 0.01,
             decay: 0,
             sustain: 1,
-            release: 0.5
+            release: 0.2
           }
         }
       }

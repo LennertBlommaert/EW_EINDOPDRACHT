@@ -79,13 +79,13 @@ const getRandomPositionVector = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-  console.log(note);
+  console.log(frequency);
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
 
   const positionVector = getRandomPositionVector();
 
-  threeController.scene.createObjectOnNote(note, positionVector);
+  threeController.scene.createObjectOnNote(note % 12, positionVector);
 
   //threeController.camera.lookAt(positionVector);
 
