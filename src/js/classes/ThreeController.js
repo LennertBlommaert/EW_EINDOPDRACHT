@@ -12,6 +12,8 @@ export default class ThreeController {
     this.camera = new Camera({});
     this.controls = new Controls({camera: this.camera});
 
+    this.scene.add(this.camera);
+
     this.linkGUIControls();
 
     // does not work - PROBLEM w/ Camera + orbitcontrols

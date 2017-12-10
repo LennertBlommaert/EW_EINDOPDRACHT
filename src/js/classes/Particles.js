@@ -1,9 +1,11 @@
+import Colors from '../objects/Colors';
+
 class Particles {
 
   constructor() {
 
     this.particleGeometry = new THREE.Geometry();
-    this.particleMaterial = new THREE.PointsMaterial({color: 0xffffff, size: .4});
+    this.particleMaterial = new THREE.PointsMaterial({color: Colors.white, size: 1.5});
     // this.particleSystem = new THREE.GPUParticleSystem({maxParticles: 250000});
     // this.options = {
     //   position: new THREE.Vector3(),
@@ -23,28 +25,40 @@ class Particles {
     //   verticalSpeed: 1.33,
     //   timeScale: 1
     // };
-
-    for (let i = 0;i < 1000;i ++) {
+    for (let i = 0;i < 500;i ++) {
 
       const particle = new THREE.Vector3();
-      particle.x = THREE.Math.randFloatSpread(200);
-      particle.y = THREE.Math.randFloatSpread(200);
-      particle.z = THREE.Math.randFloatSpread(200);
+      particle.x =  THREE.Math.randFloatSpread(1500);
+      particle.y =  THREE.Math.randFloatSpread(1500);
+      particle.z =  THREE.Math.randFloatSpread(1500);
 
       this.particleGeometry.vertices.push(particle);
 
     }
 
     this.particleSystem = new THREE.Points(this.particleGeometry, this.particleMaterial);
+    this.particleSystem.position.y = 10;
+    this.particleSystem.position.x = 0;
+    this.particleSystem.position.z = 0;
+    this.particleSystem.rotation.x = Math.random() * 6;
+    this.particleSystem.rotation.y = Math.random() * 6;
+    this.particleSystem.rotation.z = Math.random() * 6;
+
   }
 
-  moveParticles () {
+  move () {
     //onsole.log(this.particleGeometry.vertices);
+    //console.log(Math.random() * 2 - 1);
+    const vectorX = Math.random() * 2 - 1;
+    const vectorY = Math.random() * 2 - 1;
+    const vectorZ = Math.random() * 2 - 1;
+
+
     this.particleGeometry.vertices.forEach(particle => {
       particle.add(new THREE.Vector3(
-        Math.random() * 2 - 1,
-        Math.random() * 2 - 1,
-        Math.random() * 2 - 1
+        vectorX,
+        vectorY,
+        vectorZ
       ));
     });
     this.clock = new THREE.Clock();
@@ -68,7 +82,7 @@ class Particles {
     // }
     // this.particleSystem.update(this.tick);
 
-    window.requestAnimationFrame(() => this.moveParticles());
+    window.requestAnimationFrame(() => this.move());
 
   }
 

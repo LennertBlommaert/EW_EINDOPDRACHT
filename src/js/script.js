@@ -22,7 +22,7 @@ const loadedData = {};
 
 let pushedFrequencies = [], pushedNotes = [];
 import ToneController from './classes/ToneController.js';
-let toneController;
+let toneController, currentTonePosition = [0, 0, 0];
 
 import Constants from './objects/Constants';
 
@@ -79,7 +79,6 @@ const getRandomPositionVector = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-  console.log(frequency);
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
 
@@ -115,11 +114,19 @@ const handleWindowResize = () => {
 const handleToneControllerBeatPlayed = () => {
   //NOTE: can be replaced by something
   //Seemed like a fun effect in the moment
-  threeController.scene.raiseTerrain(500, 20);
+  threeController.scene.raiseTerrain(500, 10);
   //threeController.camera.bounce();
 };
 
-const handleToneControllerOnNewHalfMeasure = () => {
+const handleToneControllerOnNewHalfMeasure = position => {
+  const newTonePosition = position.split(`:`).map(e => parseInt(e, 10));
+
+  if (newTonePosition[0] === currentTonePosition[0] + 1) {
+    currentTonePosition = newTonePosition;
+
+    threeController.camera.toggleMoveYDirection();
+  }
+
   // console.log(`HANDLETONECONTROLLERONNEWHALFMEASURE - position: ${position}`);
 };
 
@@ -130,6 +137,7 @@ const loop = () => {
   threeController.controls.update();
   threeController.scene.moveShadowLight();
   threeController.scene.lowerTerrain();
+  threeController.camera.moveY();
   window.requestAnimationFrame(loop);
 };
 

@@ -88,15 +88,15 @@ export default class ToneController extends EventEmitter2 {
       octaves: 20,
       oscillator: {
         type: `triangle`,
-        frequency: 110,
+        frequency: 60,
         detune: 0,
         phase: 0,
       },
       envelope: {
         attack: 0.01,
         decay: 0.1,
-        sustain: 0.5,
-        release: 1.2,
+        sustain: 0.4,
+        release: 1.4,
         attackCurve: `exponential`,
         //releaseCurve: `exponential`
       }
@@ -175,7 +175,7 @@ export default class ToneController extends EventEmitter2 {
 
     //make an autofilter to shape the noise
     this.windNoiseAutoFilter = new Tone.AutoFilter({
-      frequency: `8m`,
+      frequency: `8aaaaaam`,
       type: `sine`,
       depth: 1,
       baseFrequency: 200,

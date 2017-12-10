@@ -17,7 +17,7 @@ export default class Scene extends THREE.Scene {
     this.fog = new THREE.Fog(this.skyColor, fogNear, fogFar);
     this.addLights();
     this.addTerrain();
-    //this.addParticles();
+    this.addParticles();
     this.background = new THREE.Color(this.skyColor);
 
     this.trees = [];
@@ -66,14 +66,14 @@ export default class Scene extends THREE.Scene {
       frequency: 2.5,
       heightmap: THREE.Terrain.PerlinDiamond,
       material: new THREE.MeshPhongMaterial({color: this.groundColor, flatShading: true, shininess: 0}),
-      maxHeight: 10,
-      minHeight: - 10,
+      maxHeight: 15,
+      minHeight: - 15,
       steps: 1,
       useBufferGeometry: false,
       xSegments: xS,
-      xSize: 2000,
+      xSize: 2200,
       ySegments: yS,
-      ySize: 2000,
+      ySize: 2200,
     });
 
     // const geometry = new THREE.PlaneGeometry(1024, 1024, 63, 63);
@@ -133,15 +133,8 @@ export default class Scene extends THREE.Scene {
 
   addParticles = () => {
     const particles = new Particles();
-
-    particles.particleSystem.position.y = 10;
-    particles.particleSystem.position.x = 0;
-    particles.particleSystem.position.z = 0;
-    particles.particleSystem.rotation.x = Math.random() * 6;
-    particles.particleSystem.rotation.y = Math.random() * 6;
-    particles.particleSystem.rotation.z = Math.random() * 6;
     this.add(particles.particleSystem);
-    particles.moveParticles();
+    //particles.move();
     // console.log(particles.particles.position);
 
   };
@@ -198,6 +191,10 @@ export default class Scene extends THREE.Scene {
       if (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera) {
         v.z += increasement - Math.random() * (increasement * 4 / 5);
       }
+
+      // if (v.x > distanceFromCamera) {
+      //   v.z += increasement - Math.random() * (increasement * 4 / 5) + (v.x - distanceFromCamera) / 20;
+      // }
     });
 
     terrainGeom.verticesNeedUpdate = true;
@@ -216,6 +213,10 @@ export default class Scene extends THREE.Scene {
       if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
         v.z -= lowerSubstraction;
       }
+
+      // if (v.z >= 0 && v.x > distanceFromCamera) {
+      //   v.z -= (lowerSubstraction + (v.x - distanceFromCamera) / 10);
+      // }
     });
 
     terrainGeom.verticesNeedUpdate = true;

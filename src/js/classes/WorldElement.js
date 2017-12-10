@@ -65,6 +65,21 @@ export default class WorldElement {
     //   window.requestAnimationFrame(this.animateGrowth);
     // }
   }
+  animateShrink = () => {
+
+    console.log(`WorldElement.js - Animate shrink`);
+    this.growthAction.timeScale = - 1;
+    this.growthAction.play();
+    window.requestAnimationFrame(() => this.updateAnimationMixer());
+
+      // this.scaleFactor -= this.scaleFactorIncreasement;
+      // this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+      // if (this.scaleFactor > 1) {
+      //   window.requestAnimationFrame(this.animateShrink);
+      // } else {
+      //   this.toggleMeshVisibility();
+      // }
+  }
 
   updateAnimationMixer = () => {
     this.mixer.update(this.clock.getDelta());
@@ -74,18 +89,5 @@ export default class WorldElement {
     }
 
     if (!this.mesh.visible) this.toggleMeshVisibility();
-  }
-
-  animateShrink = () => {
-
-    console.log(`WorldElement.js - Animate shrink`);
-
-    // this.scaleFactor -= this.scaleFactorIncreasement;
-    // this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    // if (this.scaleFactor > 1) {
-    //   window.requestAnimationFrame(this.animateShrink);
-    // } else {
-    //   this.toggleMeshVisibility();
-    // }
   }
 }
