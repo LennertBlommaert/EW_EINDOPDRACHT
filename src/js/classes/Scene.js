@@ -7,9 +7,6 @@ import Particles from '../classes/Particles';
 
 //import Constants from '../objects/Constants';
 
-import getRandomArbitrary from '../lib/getRandomArbitrary';
-
-
 export default class Scene extends THREE.Scene {
 
   constructor({skyColor = Colors.sky, groundColor = Colors.grass, fogNear = 300, fogFar = 950, loadedData = []}) {
@@ -74,9 +71,9 @@ export default class Scene extends THREE.Scene {
       steps: 1,
       useBufferGeometry: false,
       xSegments: xS,
-      xSize: 1024,
+      xSize: 2000,
       ySegments: yS,
-      ySize: 1024,
+      ySize: 2000,
     });
 
     // const geometry = new THREE.PlaneGeometry(1024, 1024, 63, 63);
@@ -104,7 +101,7 @@ export default class Scene extends THREE.Scene {
   this.mesh.position.x = getRandomArbitrary(- 500, 500);
   this.mesh.position.y = getRandomArbitrary(- 10, - 5);
   */
-  createObjectOnNote = (note = 0) => {
+  createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
 
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
@@ -112,31 +109,24 @@ export default class Scene extends THREE.Scene {
       return this.raiseTerrain();
     }
 
-    const position = {};
-
-    position.z = getRandomArbitrary(- 500, 500);
-    position.x = getRandomArbitrary(- 500, 500);
-    position.y = getRandomArbitrary(- 10, - 5);
-
     // W/Z on keyboard
     if (note === 62) {
-      return this.addTree(position);
+      return this.addTree(positionVector);
     }
 
     // E on keyboard
     if (note === 69) {
-      console.log(`add clouds`);
-      return this.addCloud(position);
+      return this.addCloud(positionVector);
     }
 
     // R on keyboard
     if (note === 65) {
-      return this.addRock(position);
+      return this.addRock(positionVector);
     }
 
     // T on keyboard
     if (note === 67) {
-      return this.addMushroom(position);
+      return this.addMushroom(positionVector);
     }
     //console.log(this.getObjectByName(`Terrain`).minHeight);
   };
@@ -156,31 +146,31 @@ export default class Scene extends THREE.Scene {
 
   };
 
-  addCloud = (position = {x: 0, y: 0, z: 0}) => {
+  addCloud = positionVector => {
     const deadCloud = this.clouds.find(cloud => cloud.scaleFactor === 1);
     if (deadCloud) return deadCloud.animateGrowth();
-    const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], position);
+    const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], positionVector);
     this.clouds.push(newCloud);
     this.add(newCloud.mesh);
   };
 
-  addRock = (position = {x: 0, y: 0, z: 0}) => {
+  addRock = positionVector => {
     const deadRock = this.rocks.find(rock => rock.scaleFactor === 1);
     if (deadRock) return deadRock.animateGrowth();
-    const newRock = new Rock(this.loadedData.rockData[0], this.loadedData.rockData[1], position);
+    const newRock = new Rock(this.loadedData.rockData[0], this.loadedData.rockData[1], positionVector);
     this.rocks.push(newRock);
     this.add(newRock.mesh);
   };
 
-  addMushroom = (position = {x: 0, y: 0, z: 0}) => {
+  addMushroom = positionVector => {
     const deadMushroom = this.mushrooms.find(mushroom => mushroom.scaleFactor === 1);
     if (deadMushroom) return deadMushroom.animateGrowth();
-    const newMushroom = new Mushroom(this.loadedData.mushroomData[0], this.loadedData.mushroomData[1], position);
+    const newMushroom = new Mushroom(this.loadedData.mushroomData[0], this.loadedData.mushroomData[1], positionVector);
     this.mushrooms.push(newMushroom);
     this.add(newMushroom.mesh);
   };
 
-  addTree = (position = {x: 0, y: 0, z: 0}) => {
+  addTree = positionVector => {
     //LOOK FOR TREES THAT ALREADY EXIST BUT WERE SHRUNK
     const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
     if (deadTree) {
@@ -190,7 +180,7 @@ export default class Scene extends THREE.Scene {
     }
     //IF NO SHRUNKEN TREES WERE FOUND, CREATE A NEW TREE
     console.log(this.loadedData.treeData);
-    const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], position);
+    const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);
     this.trees.push(newTree);
     // console.log(`New tree mesh position y`, newTree.mesh.position.y);
     // console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);

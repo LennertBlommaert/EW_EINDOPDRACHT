@@ -3,7 +3,7 @@ import WorldElement from './WorldElement';
 
 class Tree extends WorldElement {
 
-  constructor(geom, mats, position = {x: 0, y: 0, z: 0}) {
+  constructor(geom, mats, positionVector) {
   // constructor(geom, position = {x: 0, y: 0, z: 0}) {
 
     // const mats = [
@@ -11,7 +11,7 @@ class Tree extends WorldElement {
     //   new THREE.MeshPhongMaterial({color: Colors.treeCrown, flatShading: THREE.FlatShading, morphTargets: true})
     // ];
 
-    super({geom, mats, position});
+    super({geom, mats, positionVector});
 
     this.mesh.name = `Tree`;
     this.mesh.rotation.y = Math.random() * Math.PI * 2;

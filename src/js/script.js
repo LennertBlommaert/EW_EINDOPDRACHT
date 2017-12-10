@@ -4,6 +4,9 @@
 // import Keyboard from './classes/Keyboard';
 // let keyboard;
 
+import getRandomArbitrary from './lib/getRandomArbitrary';
+
+
 import MIDIController from './classes/MIDIController';
 let midiController;
 
@@ -67,23 +70,28 @@ const checkChordType = () => {
   if (infer[0].type === ``) return majorChordPlayed();
 };
 
+const getRandomPositionVector = () => {
+  const z = getRandomArbitrary(- 500, 500);
+  const x = getRandomArbitrary(- 500, 500);
+  const y = getRandomArbitrary(- 10, - 5);
+
+  return new THREE.Vector3(x, y, z);
+};
+
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
   console.log(note);
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
-  threeController.scene.createObjectOnNote(note, threeController.camera.rotation);
+
+  const positionVector = getRandomPositionVector();
+
+  threeController.scene.createObjectOnNote(note, positionVector);
+
+  //threeController.camera.lookAt(positionVector);
+
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
   toneController.midiSynth.triggerAttack(pushedFrequencies, undefined, velocity);
-
-  //threeController.camera.lookAt(threeController.scene.children[threeController.scene.children.length - 1]);
-  //Only check when multiple keys are being pressed
-  //
-  // console.log(threeController.camera.getEffectiveFOV());
-  // console.log(threeController.camera.getFilmHeight());
-  // console.log(threeController.camera.getFilmWidth());
-  // console.log(threeController.camera);
-  // console.log(threeController.renderer);
 
   if (pushedNotes.length > 1) checkChordType();
 };

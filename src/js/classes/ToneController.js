@@ -23,7 +23,7 @@ export default class ToneController extends EventEmitter2 {
     this.createWind();
     this._createSynths();
 
-    //Tone.Transport.start();
+    Tone.Transport.start();
 
     this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
     this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
@@ -168,31 +168,31 @@ export default class ToneController extends EventEmitter2 {
 
   createWind = () => {
     //
-    // // initialize the noise and start
-    // // “pink”, “white”, and “brown”
-    // this.windNoise = new Tone.Noise(`brown`).start();
-    // this.windNoise.volume.value -= 14;
-    //
-    // //make an autofilter to shape the noise
-    // this.windNoiseAutoFilter = new Tone.AutoFilter({
-    //   frequency: `8m`,
-    //   type: `sine`,
-    //   depth: 1,
-    //   baseFrequency: 200,
-    //   octaves: 2.6,
-    //   min: 800,
-    //   max: 900,
-    //   filter: {
-    //     type: `lowpass`,
-    //     rolloff: - 12,
-    //     Q: 1
-    //   }
-    // }).connect(Tone.Master);
-    //
-    // //connect the noise
-    // this.windNoise.connect(this.windNoiseAutoFilter);
-    // //start the autofilter LFO
-    // this.windNoiseAutoFilter.start();
+    // initialize the noise and start
+    // “pink”, “white”, and “brown”
+    this.windNoise = new Tone.Noise(`brown`).start();
+    this.windNoise.volume.value -= 14;
+
+    //make an autofilter to shape the noise
+    this.windNoiseAutoFilter = new Tone.AutoFilter({
+      frequency: `8m`,
+      type: `sine`,
+      depth: 1,
+      baseFrequency: 200,
+      octaves: 2.6,
+      min: 800,
+      max: 900,
+      filter: {
+        type: `lowpass`,
+        rolloff: - 12,
+        Q: 1
+      }
+    }).connect(Tone.Master);
+
+    //connect the noise
+    this.windNoise.connect(this.windNoiseAutoFilter);
+    //start the autofilter LFO
+    this.windNoiseAutoFilter.start();
   }
 }
 

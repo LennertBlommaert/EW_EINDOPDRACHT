@@ -3,6 +3,7 @@ export default class Controls extends THREE.OrbitControls {
     super(camera, document.querySelector(domElementClassName));
 
     this.autoRotate = true;
+    this.autoRotateSpeed = 10;
 
     this.keys = {
       LEFT: 37, //left arrow

@@ -1,7 +1,9 @@
 export default class WorldElement {
-  constructor({geom, mats, position}) {
+  constructor({geom, mats, positionVector}) {
     this.scaleFactor = 100;
     this.scaleFactorIncreasement = 1;
+    this.positionVector = positionVector;
+    console.log(positionVector);
 
     this.geom = geom;
     this.mats = mats;
@@ -11,7 +13,7 @@ export default class WorldElement {
       mats[i].flatShading = THREE.FlatShading;
     }
 
-    this.position = position;
+    this.positionVector = positionVector;
 
     this._constructMesh();
     this.toggleMeshVisibility();
@@ -25,8 +27,8 @@ export default class WorldElement {
     this.mesh = new THREE.Mesh(this.geom, this.mats);
     this.mesh.receiveShadow = true;
     this.mesh.castShadow = true;
-
-    this.mesh.position.set(this.position.x, this.position.y, this.position.z);
+    this.mesh.position.set(this.positionVector.x, this.positionVector.y, this.positionVector.z);
+    console.log(this.mesh);
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
   }
 
