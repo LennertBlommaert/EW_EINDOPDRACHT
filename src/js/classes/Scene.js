@@ -25,7 +25,7 @@ export default class Scene extends THREE.Scene {
     this.rocks = [];
     this.mushrooms = [];
 
-    window.setInterval(this.removeChildren, 1500);
+    window.setInterval(this.shrinkChildren, 1500);
 
   }
 
@@ -164,15 +164,9 @@ export default class Scene extends THREE.Scene {
   };
 
   addTree = positionVector => {
-    //LOOK FOR TREES THAT ALREADY EXIST BUT WERE SHRUNK
     const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
-    if (deadTree) {
-      //deadTree.wiggle();
-      console.log(deadTree);
-      return deadTree.animateGrowth();
-    }
-    //IF NO SHRUNKEN TREES WERE FOUND, CREATE A NEW TREE
-    console.log(this.loadedData.treeData);
+    if (deadTree) return deadTree.animateGrowth();
+
     const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);
     this.trees.push(newTree);
     // console.log(`New tree mesh position y`, newTree.mesh.position.y);
@@ -228,7 +222,6 @@ export default class Scene extends THREE.Scene {
   emptyScene = () => {
 
     while (this.children.length > 0) {
-
       this.children[0].children.forEach(c => {
         c.material.dispose();
         c.geometry.dispose();
@@ -250,13 +243,13 @@ export default class Scene extends THREE.Scene {
     console.info(`DARKEN THE WORLD DOWN`);
   }
 
-  removeChildren = () => {
+  shrinkChildren = () => {
 
     // "POOLING" possibility?
     const livingTree = this.trees.find(tree => tree.mesh.visible === true);
     if (livingTree) livingTree.animateShrink();
 
-    const livingCloud = this.clouds.find(tree => tree.scaleFactor >= 100);
+    const livingCloud = this.clouds.find(cloud => cloud.mesh.visible === true);
     if (livingCloud) livingCloud.animateShrink();
 
     // const tree = this.getObjectByName(`Tree`);
@@ -283,5 +276,4 @@ export default class Scene extends THREE.Scene {
   //       this.remove(child);
   //     }
   //   });
-
 }

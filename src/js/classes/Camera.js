@@ -22,7 +22,6 @@ export default class Camera extends THREE.PerspectiveCamera {
   }
 
   toggleMoveYDirection() {
-    console.log(`CAMERA: toggleMoveYDirection`);
     this.moveYAddition = - this.moveYAddition;
   }
 

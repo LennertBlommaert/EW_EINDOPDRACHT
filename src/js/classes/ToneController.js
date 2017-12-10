@@ -175,7 +175,7 @@ export default class ToneController extends EventEmitter2 {
 
     //make an autofilter to shape the noise
     this.windNoiseAutoFilter = new Tone.AutoFilter({
-      frequency: `8aaaaaam`,
+      frequency: `8m`,
       type: `sine`,
       depth: 1,
       baseFrequency: 200,

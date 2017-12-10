@@ -44,6 +44,8 @@ export default class WorldElement {
     this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`animation_`, this.mesh.geometry.morphTargets, 60, true);
 
     this.growthAction = this.mixer.clipAction(this.growthClip);
+    //this.growthAction.repetitions = 0;
+    //NOTE: Dirty fix with LoopPingPong, trying to pause the ping ponged animation at the right time
     this.growthAction.setLoop(THREE.LoopOnce);
     this.growthAction.clampWhenFinished = true;
 
@@ -55,7 +57,12 @@ export default class WorldElement {
   toggleMeshVisibility = () => this.mesh.visible = !this.mesh.visible;
 
   animateGrowth = () => {
+    // NOTE: adaption of best fix, causes element to snap away
+    //this.growthAction.reset();
+
     this.growthAction.play();
+    //this.growthAction.timeScale = 1;
+
     window.requestAnimationFrame(() => this.updateAnimationMixer());
 
     // this.scaleFactor += this.scaleFactorIncreasement;
@@ -67,9 +74,21 @@ export default class WorldElement {
   }
   animateShrink = () => {
 
-    console.log(`WorldElement.js - Animate shrink`);
-    this.growthAction.timeScale = - 1;
-    this.growthAction.play();
+    // NOTE:
+    //Is normally best fix, does only work while animation action is running
+    //this.growthAction.play(); does not start animation action, because it only loops once
+    //and has already reached its final state
+    //this.growthAction.play();
+    //this.growthAction.timeScale = - 1;
+
+    // NOTE: adaption of best fix, causes element to snap away
+    // this.growthAction.paused = false;
+    // this.growthAction.play();
+    // this.growthAction.timeScale = - 1;
+
+    //NOTE: FOR DIRTY FIX WITH LoopPingPong
+    //this.growthAction.paused = false;
+
     window.requestAnimationFrame(() => this.updateAnimationMixer());
 
       // this.scaleFactor -= this.scaleFactorIncreasement;
@@ -85,6 +104,13 @@ export default class WorldElement {
     this.mixer.update(this.clock.getDelta());
 
     if (this.growthAction.isRunning()) {
+
+      //NOTE: FOR DIRTY FIX WITH LoopPingPong
+      // if (parseFloat(this.growthAction.time).toFixed(1) === parseFloat(this.growthAction._clip.duration).toFixed(1) || parseFloat(this.growthAction.time).toFixed(1) === 0.1) {
+      //   console.log(parseFloat(this.growthAction.time).toFixed(1));
+      //   this.growthAction.paused = true;
+      // }
+
       window.requestAnimationFrame(() => this.updateAnimationMixer());
     }
 
