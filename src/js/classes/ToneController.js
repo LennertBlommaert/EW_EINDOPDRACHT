@@ -19,7 +19,7 @@ export default class ToneController extends EventEmitter2 {
     }, `2n`);
     this.loop.start();
 
-    //this.createWind();
+    this.createWind();
     this._createSynths();
 
     Tone.Transport.start();
@@ -33,13 +33,39 @@ export default class ToneController extends EventEmitter2 {
 
     this._linkControls();
 
-    this.createAmbientNoises(130.81, 146.83, 164.81, 174.61, 195.99, 220, 246.94);
+    Tone.Listener.setPosition(0, 0, 0);
+
+
+    //this.createAmbientNoises(130.81, 146.83, 164.81, 174.61, 195.99, 220, 246.94);
+  }
+
+  setListenerPosition = (position, orientation, up) => {
+    Tone.Listener.setPosition(position.x, position.y, position.z);
+    Tone.Listener.setOrientation(orientation.x, orientation.y, orientation.z, up.x, up.y, up.z);
+    console.log(Tone.Listener);
   }
 
   _createSynths = () => {
 
-    this.midiSynth = new Tone.PolySynth(4, Tone.DuoSynth).toMaster();
-    this.midiSynth.set(
+    this.autoWahEffect = new Tone.AutoWah(50, 10, - 30);
+    // this.autoWahEffect.toMaster();
+
+    this.chorusEffect = new Tone.Chorus();
+    // this.chorusEffect.connect(this.autoWahEffect);
+
+    // this.panner = new Tone.Panner3D({coneOuterGain: 10}).connect(this.autoWahEffect);
+    this.panner = new Tone.Panner3D({coneOuterGain: 10});
+    this.pannerSynth = new Tone.PolySynth(4, Tone.PluckySynth).connect(this.panner);
+    this.pannerSynth.volume.value = 40;
+
+    // this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth).connect(this.autoWahEffect);
+    this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth);
+    this.mainSynth.volume.value = 10;
+
+    this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
+    this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
+
+    this.mainSynth.set(
       {
         vibratoAmount: 0.2,
         vibratoRate: 1,
@@ -154,6 +180,17 @@ export default class ToneController extends EventEmitter2 {
 
     this.$autoRotateButton = document.querySelector(`.drum-beat-button`);
     this.$autoRotateButton.addEventListener(`click`, this.toggleBeat);
+  }
+
+  updateEffects = (x, y) => {
+    x = x / window.innerWidth;
+    y = y / window.innerHeight;
+
+    this.autoWahEffect.wet.value = x;
+    this.chorusEffect.wet.value = y;
+
+    console.log(this.autoWahEffect.wet.value, this.chorusEffect.wet.value);
+
   }
 
   handleVolumeRangeInput = volume => {

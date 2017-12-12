@@ -37,56 +37,69 @@ export default class WorldElement {
   _setupAnimations = () => {
     console.log(`SETUP ANIMATIONS`);
     this.mixer = new THREE.AnimationMixer(this.mesh);
+    //this.clips = this.mesh.geometry.animations;
     this.clock = new THREE.Clock();
 
-    this.growMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`grow_`));
-    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`grow_`, this.growMorphTargs, 60, true);
+    //this.clips = THREE.AnimationClip.CreateClipsFromMorphTargetSequences(`animation_`, this.mesh.geometry.morphTargets, 24, true);
+
+    //this.growthClip = THREE.AnimationClip.findByName(this.clips, `animation_`);
+    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`animation_`, this.mesh.geometry.morphTargets, 60, true);
+
     this.growthAction = this.mixer.clipAction(this.growthClip);
-    console.log(this.growMorphTargs);
+    //this.growthAction.repetitions = 0;
+    //NOTE: Dirty fix with LoopPingPong, trying to pause the ping ponged animation at the right time
     this.growthAction.setLoop(THREE.LoopOnce);
     this.growthAction.clampWhenFinished = true;
 
-    this.wiggleMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`wiggle_`));
-    this.wiggleClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`wiggle_`, this.wiggleMorphTargs, 60, false);
-    this.wiggleAction = this.mixer.clipAction(this.wiggleClip);
-    this.wiggleAction.setLoop(THREE.LoopRepeat);
-    this.wiggleAction.clampWhenFinished = false;
-    // this.wiggleAction.timeScale = .1;
-    //
-    // this.shrinkMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`shrink_`));
-    // this.shrinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`shrink_`, this.shrinkMorphTargs, 60, false);
-    // this.shrinkAction = this.mixer.clipAction(this.shrinkClip);
-    // this.shrinkAction.setLoop(THREE.LoopOnce);
-    // this.shrinkAction.clampWhenFinished = true;
+    // this.clip = this.mesh.geometry.animations[0];
+    // this.clip = THREE.AnimationClip.createFromMorphTargetSequence(this.geom.morphTargets, 30);
+    // this.mixer.clipAction(this.clip).setDuratation(5).play();
   }
 
   toggleMeshVisibility = () => this.mesh.visible = !this.mesh.visible;
 
   animateGrowth = () => {
+    // NOTE: adaption of best fix, causes element to snap away
+    //this.growthAction.reset();
 
     this.growthAction.play();
-    if (this.wiggleClip) {
-      this.growthAction.crossFadeTo(this.wiggleAction, 5, true);
-    }
-
+    //this.growthAction.timeScale = 1;
 
     window.requestAnimationFrame(() => this.updateAnimationMixer());
-  }
 
-  animateWiggle = () => {
-    this.wiggleAction.play();
-    window.requestAnimationFrame(() => this.updateAnimationMixer());
+    // this.scaleFactor += this.scaleFactorIncreasement;
+    // this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+    //
+    // if (this.scaleFactor < 100) {
+    //   window.requestAnimationFrame(this.animateGrowth);
+    // }
   }
-
   animateShrink = () => {
 
-    // this.shrinkAction.play();
-    // if (this.wiggleClip) {
-    //   this.shrinkAction.crossFadeFrom(this.wiggleAction, 5, true);
-    // }
+    // NOTE:
+    //Is normally best fix, does only work while animation action is running
+    //this.growthAction.play(); does not start animation action, because it only loops once
+    //and has already reached its final state
+    //this.growthAction.play();
+    //this.growthAction.timeScale = - 1;
+
+    // NOTE: adaption of best fix, causes element to snap away
+    // this.growthAction.paused = false;
+    // this.growthAction.play();
+    // this.growthAction.timeScale = - 1;
+
+    //NOTE: FOR DIRTY FIX WITH LoopPingPong
+    //this.growthAction.paused = false;
 
     window.requestAnimationFrame(() => this.updateAnimationMixer());
 
+      // this.scaleFactor -= this.scaleFactorIncreasement;
+      // this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+      // if (this.scaleFactor > 1) {
+      //   window.requestAnimationFrame(this.animateShrink);
+      // } else {
+      //   this.toggleMeshVisibility();
+      // }
   }
 
   updateAnimationMixer = () => {
@@ -94,15 +107,23 @@ export default class WorldElement {
 
     if (this.growthAction.isRunning()) {
 
-      window.requestAnimationFrame(() => this.updateAnimationMixer());
+      //NOTE: FOR DIRTY FIX WITH LoopPingPong
+      // if (parseFloat(this.growthAction.time).toFixed(1) === parseFloat(this.growthAction._clip.duration).toFixed(1) || parseFloat(this.growthAction.time).toFixed(1) === 0.1) {
+      //   console.log(parseFloat(this.growthAction.time).toFixed(1));
+      //   this.growthAction.paused = true;
+      // }
 
-    } else {
-      if (this.wiggleClip) {
-        this.animateWiggle();
-      }
+      window.requestAnimationFrame(() => this.updateAnimationMixer());
     }
 
     if (!this.mesh.visible) this.toggleMeshVisibility();
+  }
+
+  wiggle() {
+
+    this.mesh.rotation.x += this.wiggleAddition;
+
+    if (this.mesh.rotation.x > Math.PI / 12 || this.mesh.rotation.x < - Math.PI / 12) this.wiggleAddition = - this.wiggleAddition;
   }
 
 }

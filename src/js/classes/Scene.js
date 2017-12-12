@@ -106,11 +106,10 @@ export default class Scene extends THREE.Scene {
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 0) {
-      return this.raiseTerrain();
+      return this.raiseTerrain(500, 5);
     }
 
-    const newObject = this.createObjectOnNote(note, positionVector);
-    console.log(newObject);
+    this.createObjectOnNote(note, positionVector);
   };
 
   createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
@@ -139,7 +138,6 @@ export default class Scene extends THREE.Scene {
   addParticles = () => {
     this.particles = new Particles();
     this.add(this.particles.particleSystem);
-    // console.log(particles.particles.position);
   };
 
   createCloud = positionVector => {
@@ -187,12 +185,10 @@ export default class Scene extends THREE.Scene {
 
     this.add(newTree.mesh);
 
-    console.log(newTree);
-
     return newTree;
   }
 
-  raiseTerrain = (distanceFromCamera = 0, increasement = 5) => {
+  raiseTerrain = (distanceFromCamera = 0, increasement = 10) => {
 
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;

@@ -86,13 +86,19 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   const positionVector = getRandomPositionVector();
 
   threeController.scene.manipulateWorldOnNote(note % 12, positionVector);
-  toneController.turnAmbientNoiseUp(frequency);
+  //toneController.turnAmbientNoiseUp(frequency);
+
+  toneController.setListenerPosition(threeController.camera.position, threeController.camera.rotation, threeController.camera.up);
+  toneController.panner.setPosition(positionVector.x, positionVector.y, positionVector.z);
+  //console.log(toneController.panner, toneController.listener);
+
 
   //threeController.camera.lookAt(positionVector);
 
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
-  toneController.midiSynth.triggerAttack(pushedFrequencies, undefined, velocity);
+  toneController.pannerSynth.triggerAttack(pushedFrequencies, undefined, velocity);
+  toneController.mainSynth.triggerAttack(pushedFrequencies, undefined, velocity);
 
   if (pushedNotes.length > 1) checkChordType();
 
@@ -102,7 +108,8 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
   pushedNotes = pushedNotes.filter(n => n !== note);
-  toneController.midiSynth.triggerRelease([frequency]);
+  toneController.pannerSynth.triggerRelease([frequency]);
+  toneController.mainSynth.triggerRelease([frequency]);
 
   controllerKeyIsDown = false;
 };
@@ -120,7 +127,7 @@ const handleWindowResize = () => {
 const handleToneControllerBeatPlayed = () => {
   //NOTE: can be replaced by something
   //Seemed like a fun effect in the moment
-  threeController.scene.raiseTerrain(0, 10);
+  threeController.scene.raiseTerrain(0, 5);
   //threeController.camera.bounce();
 };
 
@@ -144,7 +151,7 @@ const loop = () => {
   //threeController.camera.rotate();
   threeController.controls.update();
   threeController.scene.moveShadowLight();
-  threeController.scene.lowerTerrain(0, 0.4);
+  threeController.scene.lowerTerrain();
   threeController.camera.moveY();
   //threeController.checkIntersections();
 
@@ -173,7 +180,7 @@ const handleOnThreeControllerIntersection = objectName => {
 
   console.log(frequency);
 
-  toneController.midiSynth.triggerAttackRelease(frequency, `8n`);
+  toneController.pannerSynth.triggerAttackRelease(frequency, `8n`);
 };
 
 const initThree = () => {
@@ -210,6 +217,8 @@ const handleMouseMove = e => {
 
   threeController.mouse.x = (x / window.innerWidth) * 2 - 1;
   threeController.mouse.y = (y / window.innerHeight) * 2 - 1;
+
+  toneController.updateEffects(x, y);
 };
 
 const handleCanvasClick = () =>  threeController.checkIntersections();
@@ -239,7 +248,7 @@ const init = () => {
       initTone();
       initEventListeners();
     })
-    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
+    .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
 
   getMIDIAccess();
 };
