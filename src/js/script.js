@@ -127,11 +127,15 @@ const handleToneControllerBeatPlayed = () => {
 const handleToneControllerOnNewHalfMeasure = position => {
   const newTonePosition = position.split(`:`).map(e => parseInt(e, 10));
 
+  //FULL MEASURE
   if (newTonePosition[0] === currentTonePosition[0] + 1) {
     currentTonePosition = newTonePosition;
-
     threeController.camera.toggleMoveYDirection();
+    threeController.scene.particles.toggleMoveDirection();
   }
+
+  // if (newTonePosition[0] === currentTonePosition[0] + 8) {
+  // }
 
   // console.log(`HANDLETONECONTROLLERONNEWHALFMEASURE - position: ${position}`);
 };
@@ -143,6 +147,8 @@ const loop = () => {
   threeController.scene.lowerTerrain(20, 0.6);
   threeController.camera.moveY();
   //threeController.checkIntersections();
+
+  threeController.scene.particles.move();
 
   if (controllerKeyIsDown) {
     threeController.scene.inflateLastChild();

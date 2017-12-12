@@ -137,9 +137,8 @@ export default class Scene extends THREE.Scene {
   }
 
   addParticles = () => {
-    const particles = new Particles();
-    this.add(particles.particleSystem);
-    //particles.move();
+    this.particles = new Particles();
+    this.add(this.particles.particleSystem);
     // console.log(particles.particles.position);
   };
 

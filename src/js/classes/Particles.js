@@ -44,27 +44,50 @@ class Particles {
     this.particleSystem.rotation.y = Math.random() * 6;
     this.particleSystem.rotation.z = Math.random() * 6;
 
+    //GETS TOGGLED FROM POS TO NEG IN handleToneControllerOnNewHalfMeasure
+    this.moveTarget = 60;
+    this.moveEasing = 0.01;
   }
 
-  move () {
-    //onsole.log(this.particleGeometry.vertices);
+  toggleMoveDirection = () => {
+    //this.translateFactor = 0;
+    this.moveTarget  = - this.moveTarget;
+  }
+
+
+  move = () => {
+
+    let dx = this.moveTarget - this.particleSystem.position.x;
+    if (dx > this.moveTarget / 2) dx = dx / 2;
+    this.particleSystem.position.x += dx * this.moveEasing;
+
+    //this.particleSystem.translateOnAxis(position, this.translateIncreasement);
+
+
+    //console.log(this.particleGeometry.vertices);
     //console.log(Math.random() * 2 - 1);
-    const vectorX = Math.random() * 2 - 1;
-    const vectorY = Math.random() * 2 - 1;
-    const vectorZ = Math.random() * 2 - 1;
+    // const vectorX = Math.random() * 2 - 1;
+    // const vectorY = Math.random() * 2 - 1;
+    // const vectorZ = Math.random() * 2 - 1;
+    //
+    //
+    // this.particleGeometry.vertices.forEach(particle => {
+    //   particle.add(new THREE.Vector3(
+    //     vectorX,
+    //     vectorY,
+    //     vectorZ
+    //   ));
+    // });
+    // this.clock = new THREE.Clock();
+    // this.delta = this.clock.getDelta();
+    // this.particleSystem.rotation.y += this.delta;
+    // this.particleGeometry.verticesNeedUpdate = true;
 
+    //this.translateFactor += this.translateIncreasement;
+    //console.log(this.translateFactor);
+    //console.log(position);
 
-    this.particleGeometry.vertices.forEach(particle => {
-      particle.add(new THREE.Vector3(
-        vectorX,
-        vectorY,
-        vectorZ
-      ));
-    });
-    this.clock = new THREE.Clock();
-    this.delta = this.clock.getDelta();
-    this.particleSystem.rotation.y += this.delta;
-    this.particleGeometry.verticesNeedUpdate = true;
+    // this.particleSystem.translateOnAxis(this.particleSystem.worldToLocal(position), this.translateFactor);
 
     // this.tick = 0;
     // this.delta = this.clock.getDelta() * this.spawnerOptions.timeScale;
@@ -81,9 +104,6 @@ class Particles {
     //   }
     // }
     // this.particleSystem.update(this.tick);
-
-    window.requestAnimationFrame(() => this.move());
-
   }
 
 }

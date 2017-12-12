@@ -15,6 +15,8 @@ export default class Camera extends THREE.PerspectiveCamera {
     //this.moveYAddition = 0.15;
     this.moveYTarget = 70;
     this.easing = 0.001;
+
+    console.log(this.position);
   }
 
   moveY() {
