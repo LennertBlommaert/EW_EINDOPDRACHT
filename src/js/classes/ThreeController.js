@@ -28,6 +28,16 @@ export default class ThreeController extends EventEmitter2 {
     //this.controls.update();
   }
 
+  darken() {
+    this.scene.darken();
+    this.camera.pointLight.intensity -= 0.1;
+  }
+
+  brighten() {
+    this.camera.pointLight.intensity += 0.1;
+    this.scene.brighten();
+  }
+
 
   checkIntersections = () => {
 

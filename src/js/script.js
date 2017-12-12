@@ -52,11 +52,11 @@ const MIDISucces = MIDIAccess => {
 };
 
 const minorChordPlayed = () => {
-  threeController.scene.darken();
+  threeController.darken();
 };
 
 const majorChordPlayed = () => {
-  threeController.scene.brighten();
+  threeController.brighten();
 };
 
 const checkChordType = () => {
@@ -120,7 +120,7 @@ const handleWindowResize = () => {
 const handleToneControllerBeatPlayed = () => {
   //NOTE: can be replaced by something
   //Seemed like a fun effect in the moment
-  threeController.scene.raiseTerrain(20, 10);
+  threeController.scene.raiseTerrain(0, 10);
   //threeController.camera.bounce();
 };
 
@@ -144,7 +144,7 @@ const loop = () => {
   //threeController.camera.rotate();
   threeController.controls.update();
   threeController.scene.moveShadowLight();
-  threeController.scene.lowerTerrain(20, 0.6);
+  threeController.scene.lowerTerrain(0, 0.4);
   threeController.camera.moveY();
   //threeController.checkIntersections();
 

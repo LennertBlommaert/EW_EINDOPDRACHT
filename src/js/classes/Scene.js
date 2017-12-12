@@ -192,7 +192,7 @@ export default class Scene extends THREE.Scene {
     return newTree;
   }
 
-  raiseTerrain = (distanceFromCamera = 400, increasement = 5) => {
+  raiseTerrain = (distanceFromCamera = 0, increasement = 5) => {
 
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
@@ -215,7 +215,7 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeVertexNormals();
   }
 
-  lowerTerrain = (distanceFromCamera = 400, lowerSubstraction = 0.4) => {
+  lowerTerrain = (distanceFromCamera = 0, lowerSubstraction = 0.4) => {
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
 
