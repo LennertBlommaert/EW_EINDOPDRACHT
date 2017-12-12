@@ -5,6 +5,7 @@ class Cloud extends WorldElement {
 
     super({geom, mats, positionVector});
     this.mesh.name = `Cloud`;
+    this.mesh.position.y = 290;
     this.mesh.rotation.y = Math.random() * Math.PI * 2;
     this.mesh.receiveShadow = false;
   }

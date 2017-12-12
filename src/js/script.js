@@ -233,7 +233,7 @@ const loadJSONFiles = () => {
   return new Promise(resolve => {
 
     loader.load(
-      `assets/data/tree_01_animated6.json`,
+      `assets/data/tree.json`,
       (geom, mat) => {
         loadedData.treeData = [geom, mat];
         resolve();
@@ -244,7 +244,7 @@ const loadJSONFiles = () => {
   .then(
 
     loader.load(
-      `assets/data/cloud2.json`,
+      `assets/data/cloud.json`,
       (geom, mat) => {
         loadedData.cloudData = [geom, mat];
         return;
