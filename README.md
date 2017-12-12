@@ -7,7 +7,9 @@ Ray
 Moving mouse changes sounds filters
 
 ## VRAGEN CONSULT
-- interessante manier van werken "pooling" trees?
+- Algemene codes tonen
+- 1 raf op heel project best practice?
+- Manier van last child scale goed?
 
 ## Feedback consults
 mss standaard al een drum track die afspeelt

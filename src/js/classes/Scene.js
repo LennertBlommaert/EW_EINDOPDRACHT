@@ -101,7 +101,7 @@ export default class Scene extends THREE.Scene {
   this.mesh.position.x = getRandomArbitrary(- 500, 500);
   this.mesh.position.y = getRandomArbitrary(- 10, - 5);
   */
-  createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
+  manipulateWorldOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
 
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
@@ -109,69 +109,88 @@ export default class Scene extends THREE.Scene {
       return this.raiseTerrain();
     }
 
+    const newObject = this.createObjectOnNote(note, positionVector);
+    console.log(newObject);
+  };
+
+  createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
     // W/Z on keyboard
+
     if (note === 2) {
-      return this.addTree(positionVector);
+      return this.createTree(positionVector);
     }
 
     // E on keyboard
     if (note === 4) {
-      return this.addCloud(positionVector);
+      return this.createCloud(positionVector);
     }
 
     // R on keyboard
     if (note === 5) {
-      return this.addRock(positionVector);
+      return this.createRock(positionVector);
     }
 
     // T on keyboard
     if (note === 7) {
-      return this.addMushroom(positionVector);
+      return this.createMushroom(positionVector);
     }
-    //console.log(this.getObjectByName(`Terrain`).minHeight);
-  };
+  }
 
   addParticles = () => {
     const particles = new Particles();
     this.add(particles.particleSystem);
     //particles.move();
     // console.log(particles.particles.position);
-
   };
 
-  addCloud = positionVector => {
+  createCloud = positionVector => {
     const deadCloud = this.clouds.find(cloud => cloud.scaleFactor === 1);
     if (deadCloud) return deadCloud.animateGrowth();
+
     const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], positionVector);
     this.clouds.push(newCloud);
+
     this.add(newCloud.mesh);
+
+    return newCloud;
   };
 
-  addRock = positionVector => {
+  createRock = positionVector => {
     const deadRock = this.rocks.find(rock => rock.scaleFactor === 1);
     if (deadRock) return deadRock.animateGrowth();
+
     const newRock = new Rock(this.loadedData.rockData[0], this.loadedData.rockData[1], positionVector);
     this.rocks.push(newRock);
+
     this.add(newRock.mesh);
+
+    return newRock;
   };
 
-  addMushroom = positionVector => {
+  createMushroom = positionVector => {
     const deadMushroom = this.mushrooms.find(mushroom => mushroom.scaleFactor === 1);
     if (deadMushroom) return deadMushroom.animateGrowth();
+
     const newMushroom = new Mushroom(this.loadedData.mushroomData[0], this.loadedData.mushroomData[1], positionVector);
     this.mushrooms.push(newMushroom);
+
     this.add(newMushroom.mesh);
+
+    return newMushroom;
   };
 
-  addTree = positionVector => {
+  createTree = positionVector => {
     const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
     if (deadTree) return deadTree.animateGrowth();
 
     const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);
     this.trees.push(newTree);
-    // console.log(`New tree mesh position y`, newTree.mesh.position.y);
-    // console.log(`New tree mesh geometry vertices[0] y`, newTree.mesh.geometry.vertices[0].y);
+
     this.add(newTree.mesh);
+
+    console.log(newTree);
+
+    return newTree;
   }
 
   raiseTerrain = (distanceFromCamera = 400, increasement = 5) => {
@@ -263,6 +282,17 @@ export default class Scene extends THREE.Scene {
       block.geometry.dispose();
     });
     this.remove(child);
+  }
+
+  inflateLastChild = (scaleIncreasement = 1) => {
+    //work with pushed notes.length
+    const lastChild = this.children[this.children.length - 1];
+
+    if (lastChild.type !== `Mesh`) return;
+
+    lastChild.scale.x += scaleIncreasement;
+    lastChild.scale.y += scaleIncreasement;
+    lastChild.scale.z += scaleIncreasement;
   }
 
   //   this.children.forEach(child => {

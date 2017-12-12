@@ -32,6 +32,7 @@ import Constants from './objects/Constants';
 import teoria from 'teoria';
 import piu from 'piu';
 
+let controllerKeyIsDown = false;
 
 const getMIDIAccess = () => {
   if (navigator.requestMIDIAccess) {
@@ -84,7 +85,7 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 
   const positionVector = getRandomPositionVector();
 
-  threeController.scene.createObjectOnNote(note % 12, positionVector);
+  threeController.scene.manipulateWorldOnNote(note % 12, positionVector);
   toneController.turnAmbientNoiseUp(frequency);
 
   //threeController.camera.lookAt(positionVector);
@@ -94,12 +95,16 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   toneController.midiSynth.triggerAttack(pushedFrequencies, undefined, velocity);
 
   if (pushedNotes.length > 1) checkChordType();
+
+  controllerKeyIsDown = true;
 };
 
 const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedFrequencies = pushedFrequencies.filter(freq => freq !== frequency);
   pushedNotes = pushedNotes.filter(n => n !== note);
   toneController.midiSynth.triggerRelease([frequency]);
+
+  controllerKeyIsDown = false;
 };
 
 const handleWindowResize = () => {
@@ -115,7 +120,7 @@ const handleWindowResize = () => {
 const handleToneControllerBeatPlayed = () => {
   //NOTE: can be replaced by something
   //Seemed like a fun effect in the moment
-  threeController.scene.raiseTerrain(500, 10);
+  threeController.scene.raiseTerrain(20, 10);
   //threeController.camera.bounce();
 };
 
@@ -135,13 +140,16 @@ const loop = () => {
   //threeController.camera.rotate();
   threeController.controls.update();
   threeController.scene.moveShadowLight();
-  threeController.scene.lowerTerrain();
+  threeController.scene.lowerTerrain(20, 0.6);
   threeController.camera.moveY();
   //threeController.checkIntersections();
-  window.requestAnimationFrame(loop);
+
+  if (controllerKeyIsDown) {
+    threeController.scene.inflateLastChild();
+  }
 
   threeController.renderer.render(threeController.scene, threeController.camera);
-
+  window.requestAnimationFrame(loop);
 };
 
 const getKeyCodeData = keyCode => {
@@ -196,21 +204,11 @@ const handleMouseMove = e => {
 
   threeController.mouse.x = (x / window.innerWidth) * 2 - 1;
   threeController.mouse.y = (y / window.innerHeight) * 2 - 1;
-
-  threeController.checkIntersections();
 };
 
-const init = () => {
+const handleCanvasClick = () =>  threeController.checkIntersections();
 
-  loadJSONFiles()
-    .then(() => {
-      initThree();
-      initTone();
-    })
-    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
-
-  getMIDIAccess();
-
+const initEventListeners = () => {
   const $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`);
   $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
 
@@ -224,6 +222,20 @@ const init = () => {
   });
 
   window.addEventListener(`mousemove`, handleMouseMove);
+  document.querySelector(`canvas`).addEventListener(`click`, handleCanvasClick);
+};
+
+const init = () => {
+
+  loadJSONFiles()
+    .then(() => {
+      initThree();
+      initTone();
+      initEventListeners();
+    })
+    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
+
+  getMIDIAccess();
 };
 
 const loadJSONFiles = () => {
