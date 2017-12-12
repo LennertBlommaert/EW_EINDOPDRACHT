@@ -14,13 +14,14 @@ export default class Camera extends THREE.PerspectiveCamera {
 
     //this.moveYAddition = 0.15;
     this.moveYTarget = 70;
+    this.easing = 0.001;
   }
 
   moveY() {
     //this.position.y += this.moveYAddition;
 
     const dy = this.moveYTarget - this.position.y;
-    this.position.y += dy * 0.005;
+    this.position.y += dy * this.easing;
   }
 
   toggleMoveYDirection() {

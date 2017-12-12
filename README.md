@@ -1,5 +1,11 @@
 # The_Creation
 
+##IDEAS
+Game
+3D Sound
+Ray
+Moving mouse changes sounds filters
+
 ## VRAGEN CONSULT
 - interessante manier van werken "pooling" trees?
 

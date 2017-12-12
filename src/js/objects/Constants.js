@@ -3,74 +3,36 @@ const Constants = {
   HEIGHT: window.innerHeight,
   MIDI_KEY_UP_COMMAND: 8,
   MIDI_KEY_DOWN_COMMAND: 9,
-  //UNUSED - KEYS INCORRECT TOO
-  KEY_TO_FREQ: [
-    {
-      key: `Q`,
-      keyCode: 48,
-      freq: 130.81
-    },
-    {
-      key: `W`,
-      keyCode: 50,
-      freq: 146.83
-    },
-    {
-      key: `E`,
-      keyCode: 52,
-      freq: 164.81
-    },
-    {
-      key: `R`,
-      keyCode: 53,
-      freq: 174.61
-    },
-    {
-      key: `T`,
-      keyCode: 55,
-      freq: 195.99
-    },
-    {
-      key: `U`,
-      keyCode: 57,
-      freq: 220.00
-    },
-    {
-      key: `I`,
-      keyCode: 59,
-      freq: 246.94
-    },
-    {
-      key: `O`,
-      keyCode: 60,
-      freq: 261.62
-    },
-  ],
-  KEY_NOTE_FREQUENCY: [
+  KEY_NOTE_FREQUENCY_OBJECTNAME: [
     {
       keyCode: 81,
       frequency: 130.81,
-      note: 60
+      note: 60,
+      objectName: `Terrain`
     },
     {
       keyCode: 87,
       frequency: 146.83,
-      note: 62
+      note: 62,
+      objectName: `Tree`
     },
     {
       keyCode: 65,
       frequency: 164.81,
-      note: 60
+      note: 60,
+      objectName: `Cloud`
     },
     {
       keyCode: 90,
       frequency: 174.61,
-      note: 62
+      note: 62,
+      objectName: `Rock`
     },
     {
       keyCode: 69,
       frequency: 195.99,
-      note: 64
+      note: 64,
+      objectName: `Mushroom`
     },
     {
       keyCode: 82,

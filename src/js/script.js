@@ -132,20 +132,98 @@ const handleToneControllerOnNewHalfMeasure = position => {
 };
 
 const loop = () => {
-  threeController.renderer.render(threeController.scene, threeController.camera);
-
   //threeController.camera.rotate();
   threeController.controls.update();
   threeController.scene.moveShadowLight();
   threeController.scene.lowerTerrain();
   threeController.camera.moveY();
+  //threeController.checkIntersections();
   window.requestAnimationFrame(loop);
+
+  threeController.renderer.render(threeController.scene, threeController.camera);
+
 };
 
 const getKeyCodeData = keyCode => {
-  const keyCodeData = Constants.KEY_NOTE_FREQUENCY.filter(d => d.keyCode === keyCode)[0];
+  const keyCodeData = Constants.KEY_NOTE_FREQUENCY_OBJECTNAME.find(d => d.keyCode === keyCode);
+
   if (keyCodeData !== undefined) return keyCodeData;
   return {};
+};
+
+const handleOnThreeControllerIntersection = objectName => {
+
+  const frequency = Constants.KEY_NOTE_FREQUENCY_OBJECTNAME.find(d => d.objectName === objectName).frequency;
+
+  if (frequency === undefined) return;
+
+  console.log(frequency);
+
+  toneController.midiSynth.triggerAttackRelease(frequency, `8n`);
+};
+
+const initThree = () => {
+
+  threeController = new ThreeController(loadedData);
+  threeController.on(`threeControllerOnIntersection`, handleOnThreeControllerIntersection);
+
+  window.addEventListener(`resize`, handleWindowResize, false);
+
+  loop();
+};
+
+const toggleFullScreen = () => {
+  if (!document.fullscreenElement) {
+    console.log(document.querySelector(`.world`));
+    document.querySelector(`.world`).requestFullscreen();
+    handleWindowResize();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+      handleWindowResize();
+    }
+  }
+};
+
+const initTone = () => {
+  toneController = new ToneController();
+  toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
+  toneController.on(`tonecontrollernewhalfmeasure`, handleToneControllerOnNewHalfMeasure);
+};
+
+const handleMouseMove = e => {
+  const {x = e.clientX, y = e.clientY} = e;
+
+  threeController.mouse.x = (x / window.innerWidth) * 2 - 1;
+  threeController.mouse.y = (y / window.innerHeight) * 2 - 1;
+
+  threeController.checkIntersections();
+};
+
+const init = () => {
+
+  loadJSONFiles()
+    .then(() => {
+      initThree();
+      initTone();
+    })
+    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
+
+  getMIDIAccess();
+
+  const $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`);
+  $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
+
+  window.addEventListener(`keydown`, ({keyCode}) => {
+    if (keyCode === 13 || keyCode === 27) return;
+    handleControllerKeyDown(getKeyCodeData(keyCode));
+  });
+  window.addEventListener(`keyup`, ({keyCode}) => {
+    if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
+    handleControllerKeyUp(getKeyCodeData(keyCode));
+  });
+
+  window.addEventListener(`mousemove`, handleMouseMove);
 };
 
 const loadJSONFiles = () => {
@@ -196,58 +274,6 @@ const loadJSONFiles = () => {
     )
 
   );
-};
-
-const initThree = () => {
-
-  threeController = new ThreeController(loadedData);
-
-  window.addEventListener(`resize`, handleWindowResize, false);
-
-  loop();
-};
-
-const toggleFullScreen = () => {
-  if (!document.fullscreenElement) {
-    console.log(document.querySelector(`.world`));
-    document.querySelector(`.world`).requestFullscreen();
-    handleWindowResize();
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-      handleWindowResize();
-    }
-  }
-};
-
-const initTone = () => {
-  toneController = new ToneController();
-  toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
-  toneController.on(`tonecontrollernewhalfmeasure`, handleToneControllerOnNewHalfMeasure);
-};
-
-const init = () => {
-
-  loadJSONFiles()
-    .then(() => {
-      initThree();
-      initTone();
-    })
-    .catch(reason => console.error(`Loading JSON files vor three objects failed: ${reason}`));
-
-  getMIDIAccess();
-
-  const $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`);
-  $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
-
-  window.addEventListener(`keydown`, ({keyCode}) => {
-    if (keyCode === 13 || keyCode === 27) return;
-    handleControllerKeyDown(getKeyCodeData(keyCode));
-  });
-  window.addEventListener(`keyup`, ({keyCode}) => {
-    if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
-    handleControllerKeyUp(getKeyCodeData(keyCode));
-  });
 };
 
 init();

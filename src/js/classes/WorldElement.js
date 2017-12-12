@@ -3,7 +3,6 @@ export default class WorldElement {
     this.scaleFactor = 100;
     this.scaleFactorIncreasement = 1;
     this.positionVector = positionVector;
-    console.log(positionVector);
 
     this.geom = geom;
     this.mats = mats;
@@ -30,12 +29,10 @@ export default class WorldElement {
     this.mesh.receiveShadow = true;
     this.mesh.castShadow = true;
     this.mesh.position.set(this.positionVector.x, this.positionVector.y, this.positionVector.z);
-    console.log(this.mesh);
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
   }
 
   _setupAnimations = () => {
-    console.log(`SETUP ANIMATIONS`);
     this.mixer = new THREE.AnimationMixer(this.mesh);
     //this.clips = this.mesh.geometry.animations;
     this.clock = new THREE.Clock();

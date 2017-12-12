@@ -6,8 +6,6 @@ export default class ToneController extends EventEmitter2 {
   constructor() {
     super({});
 
-    console.log(Tone.now());
-
     this.beatNote = `C0`;
     this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
 
@@ -202,7 +200,6 @@ export default class ToneController extends EventEmitter2 {
 
   turnAmbientNoiseUp = frequency => {
     this.ambientNoise = this.ambientNoises.find(noise => noise.baseFrequency === frequency);
-    console.log(this.ambientNoise);
     if (this.ambientNoise) this.ambientNoise.turnNoiseUp(1);
   }
 }
