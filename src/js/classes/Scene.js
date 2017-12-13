@@ -196,8 +196,13 @@ export default class Scene extends THREE.Scene {
     //const terrainGeom = this.getObjectByName(`Terrain`).geometry;
 
     terrainGeom.vertices.forEach(v => {
-      if (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera) {
-        v.z += increasement - Math.random() * (increasement * 4 / 5);
+      if (v.x > distanceFromCamera || v.x < - distanceFromCamera) {
+        v.z += increasement - Math.random() * (increasement * 4 / 5) + (Math.abs(v.x) - distanceFromCamera) / 50;
+      }
+
+
+      if (v.y > distanceFromCamera || v.y < - distanceFromCamera) {
+        v.z += increasement - Math.random() * (increasement * 4 / 5)  + (Math.abs(v.y) - distanceFromCamera) / 50;
       }
 
       // if (v.x > distanceFromCamera) {
@@ -218,7 +223,17 @@ export default class Scene extends THREE.Scene {
     //const terrainGeom = this.getObjectByName(`Terrain`).geometry;
 
     terrainGeom.vertices.forEach(v => {
-      if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
+      // if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
+      //   v.z -= lowerSubstraction;
+      // }
+
+      if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera)) {
+        // v.z -= (lowerSubstraction + (Math.abs(v.x) - distanceFromCamera) / 200);
+        v.z -= lowerSubstraction;
+      }
+
+      if (v.z >= 0 && (v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
+        // v.z -= (lowerSubstraction + (Math.abs(v.y) - distanceFromCamera) / 200);
         v.z -= lowerSubstraction;
       }
 
@@ -265,6 +280,12 @@ export default class Scene extends THREE.Scene {
 
     const livingCloud = this.clouds.find(cloud => cloud.mesh.visible === true);
     if (livingCloud) livingCloud.animateShrink();
+
+    const livingMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === true);
+    if (livingMushroom) livingMushroom.animateShrink();
+
+    const livingRock = this.rocks.find(rock => rock.mesh.visible === true);
+    if (livingRock) livingRock.animateShrink();
 
     // const tree = this.getObjectByName(`Tree`);
     // if (tree) this.tree.removeChild(tree);
