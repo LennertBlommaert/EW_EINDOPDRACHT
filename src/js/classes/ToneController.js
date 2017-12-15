@@ -1,12 +1,13 @@
 import EventEmitter2 from '../vendors/eventemitter2';
 import AmbientNoise from './AmbientNoise';
+import Constants from '../objects/Constants';
 import Tone from 'tone';
 
 export default class ToneController extends EventEmitter2 {
   constructor() {
     super({});
 
-    this.beatNote = `C0`;
+    this.beatNote = Constants.BEAT_NOTE;
     this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
 
 
@@ -55,11 +56,11 @@ export default class ToneController extends EventEmitter2 {
     // this.panner = new Tone.Panner3D({coneOuterGain: 10}).connect(this.autoWahEffect);
     this.panner = new Tone.Panner3D({coneOuterGain: 10});
     this.pannerSynth = new Tone.PolySynth(4, Tone.PluckySynth).connect(this.panner);
-    this.pannerSynth.volume.value = 40;
+    this.pannerSynth.volume.value = 10;
 
     // this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth).connect(this.autoWahEffect);
     this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth);
-    this.mainSynth.volume.value = 10;
+    this.mainSynth.volume.value = - 10;
 
     this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
     this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
@@ -201,29 +202,7 @@ export default class ToneController extends EventEmitter2 {
     //
     // initialize the noise and start
     // “pink”, “white”, and “brown”
-    this.windNoise = new Tone.Noise(`brown`).start();
-    this.windNoise.volume.value -= 14;
-
-    //make an autofilter to shape the noise
-    this.windNoiseAutoFilter = new Tone.AutoFilter({
-      frequency: `8m`,
-      type: `sine`,
-      depth: 1,
-      baseFrequency: 200,
-      octaves: 2.6,
-      min: 800,
-      max: 900,
-      filter: {
-        type: `lowpass`,
-        rolloff: - 12,
-        Q: 1
-      }
-    }).connect(Tone.Master);
-
-    //connect the noise
-    this.windNoise.connect(this.windNoiseAutoFilter);
-    //start the autofilter LFO
-    this.windNoiseAutoFilter.start();
+    this.windNoise = new AmbientNoise();
   }
 
   createAmbientNoises = (...frequencies) => {
@@ -236,76 +215,3 @@ export default class ToneController extends EventEmitter2 {
     if (this.ambientNoise) this.ambientNoise.turnNoiseUp(1);
   }
 }
-
-
-    //NOTE: JS setInterval not so accurate, wich is important for Sound
-    //Therefore on Tone.event emit  beat has been played for pulsating world
-    //Instead of a setInterval in script.js wich triggers beat and pulsating world
-    // this.beat = new Tone.Event((time, pitch) => {
-    //   this.membraneSynth.triggerAttackRelease(pitch, `8n`, time);
-    //   this.emit(`tonecontrollerbeatplayed`, pitch);
-    // }, `C0`);
-    //
-    // this.beat.set({
-    //   loop: true,
-    //   loopEnd: `2n`
-    // });
-    //
-    // this.beat.humanize = `64n`;
-    //
-    // this.beat.start(`1m`);
-
-
-
-    // const keys = new Tone.Players({
-    //   A: `./audio/casio/A1.[mp3|ogg]`,
-    //   "C#": `./audio/casio/Cs2.[mp3|ogg]`,
-    //   E: `./audio/casio/E2.[mp3|ogg]`,
-    //   "F#": `./audio/casio/Fs2.[mp3|ogg]`,
-    // }, {
-    //   volume: - 10,
-    //   fadeOut: `64n`,
-    // }).toMaster();
-    // //the notes
-    // const noteNames = [`F#`, `E`, `C#`, `A`];
-    // const loop = new Tone.Sequence(function(time, col) {
-    //   const column = matrix1.matrix[col];
-    //   for (let i = 0;i < 4;i ++) {
-    //     if (column[i] === 1) {
-    //       //slightly randomized velocities
-    //       const vel = Math.random() * 0.5 + 0.5;
-    //       keys.get(noteNames[i]).start(time, 0, `32n`, 0, vel);
-    //     }
-    //   }
-    // }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], `16n`);
-    // Tone.Transport.start();
-
-    // Tone.Transport.schedule(time => {
-    //   console.log(time);
-    // }, `1m`);
-
-    // const keys = new Tone.Players({
-    //   A: `./audio/casio/A1.[mp3|ogg]`,
-    //   "C#": `./audio/casio/Cs2.[mp3|ogg]`,
-    //   E: `./audio/casio/E2.[mp3|ogg]`,
-    //   "F#": `./audio/casio/Fs2.[mp3|ogg]`,
-    // }, {
-    //   volume: - 10,
-    //   fadeOut: `64n`,
-    // }).toMaster();
-    //
-    // const noteNames = [`F#`, `E`, `C#`, `A`];
-
-    // CYMBALS
-    /*const metalSynth = new Tone.MetalSynth({
-      frequency  : 200 ,
-      envelope  : {
-      attack  : 0.001 ,
-      decay  : 1.4 ,
-      release  : 0.2
-      }  ,
-      harmonicity  : 5.1 ,
-      modulationIndex  : 32 ,
-      resonance  : 4000 ,
-      octaves  : 1.5
-    }).toMaster();*/

@@ -1,9 +1,11 @@
+import Constants from '../objects/Constants';
+
 export default class Controls extends THREE.OrbitControls {
-  constructor({camera = {}, domElementClassName = `.world`}) {
+  constructor({camera = {}, domElementClassName = `.world`, autoRotateSpeed = Constants.CONTROLS_AUTROTATE_SPEED}) {
     super(camera, document.querySelector(domElementClassName));
 
-    //this.autoRotate = true;
-    this.autoRotateSpeed = 10;
+    this.autoRotate = true;
+    this.autoRotateSpeed = autoRotateSpeed;
 
     this.keys = {
       LEFT: 37, //left arrow

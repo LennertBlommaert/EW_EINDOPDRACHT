@@ -4,12 +4,11 @@ import Rock from '../classes/Rock';
 import Mushroom from '../classes/Mushroom';
 import Colors from '../objects/Colors';
 import Particles from '../classes/Particles';
-
-//import Constants from '../objects/Constants';
+import Constants from '../objects/Constants';
 
 export default class Scene extends THREE.Scene {
 
-  constructor({skyColor = Colors.sky, groundColor = Colors.grass, fogNear = 300, fogFar = 950, loadedData = []}) {
+  constructor({skyColor = Colors.sky, groundColor = Colors.grass, fogNear = Constants.SCENE_FOG_NEAR, fogFar = Constants.SCENE_FOG_FAR, loadedData = []}) {
     super();
     this.loadedData = loadedData;
     this.groundColor = groundColor;
@@ -27,7 +26,7 @@ export default class Scene extends THREE.Scene {
     this.rocks = [];
     this.mushrooms = [];
 
-    window.setInterval(this.shrinkChildren, 3000);
+    window.setInterval(this.shrinkChildren, Constants.SCENE_SHRINK_CHILDREN_INTERVAL);
 
   }
 
@@ -39,7 +38,7 @@ export default class Scene extends THREE.Scene {
   }
 
   createShadowLight = () => {
-    const shadowLight = new THREE.DirectionalLight(Colors.sun, .9);
+    const shadowLight = new THREE.DirectionalLight(Colors.sun, Constants.SCENE_SHADOWLIGHT_INTENSITY);
     // const shadowLight = new THREE.SpotLight(0xffffff, .9);
     shadowLight.position.set(150, 350, 350);
     shadowLight.castShadow = true;
@@ -61,7 +60,6 @@ export default class Scene extends THREE.Scene {
   moveShadowLight = () => {}
 
   addTerrain = () => {
-    const xS = 63, yS = 63;
     const terrain = THREE.Terrain({
       name: `Terrain`,
       easing: THREE.Terrain.Linear,
@@ -72,10 +70,10 @@ export default class Scene extends THREE.Scene {
       minHeight: - 15,
       steps: 1,
       useBufferGeometry: false,
-      xSegments: xS,
-      xSize: 2200,
-      ySegments: yS,
-      ySize: 2200,
+      xSegments: Constants.SCENE_XSEGMENTS,
+      xSize: Constants.SCENE_TERRIAN_DIMENSION,
+      ySegments: Constants.SCENE_TERRIAN_YSEGMENTS,
+      ySize: Constants.SCENE_TERRIAN_DIMENSION,
     });
 
     // const geometry = new THREE.PlaneGeometry(1024, 1024, 63, 63);
@@ -108,7 +106,7 @@ export default class Scene extends THREE.Scene {
     // A/Q key on keyboard
     //console.log(this.getObjectByName(`Terrain`));
     if (note === 0) {
-      return this.raiseTerrain(500, 5);
+      return this.raiseTerrain(Constants.SCENE_TERRIAN_DIMENSION / 4, 5);
     }
 
     this.createObjectOnNote(note, positionVector);
@@ -143,7 +141,7 @@ export default class Scene extends THREE.Scene {
   };
 
   createCloud = positionVector => {
-    const deadCloud = this.clouds.find(cloud => cloud.scaleFactor === 1);
+    const deadCloud = this.clouds.find(cloud => cloud.mesh.visible === false);
     if (deadCloud) return deadCloud.animateGrowth();
 
     const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], positionVector);
@@ -155,7 +153,7 @@ export default class Scene extends THREE.Scene {
   };
 
   createRock = positionVector => {
-    const deadRock = this.rocks.find(rock => rock.scaleFactor === 1);
+    const deadRock = this.rocks.find(rock => rock.mesh.visible === false);
     if (deadRock) return deadRock.animateGrowth();
 
     const newRock = new Rock(this.loadedData.rockData[0], this.loadedData.rockData[1], positionVector);
@@ -167,7 +165,7 @@ export default class Scene extends THREE.Scene {
   };
 
   createMushroom = positionVector => {
-    const deadMushroom = this.mushrooms.find(mushroom => mushroom.scaleFactor === 1);
+    const deadMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === false);
     if (deadMushroom) return deadMushroom.animateGrowth();
 
     const newMushroom = new Mushroom(this.loadedData.mushroomData[0], this.loadedData.mushroomData[1], positionVector);
@@ -179,7 +177,7 @@ export default class Scene extends THREE.Scene {
   };
 
   createTree = positionVector => {
-    const deadTree = this.trees.find(tree => tree.scaleFactor === 1);
+    const deadTree = this.trees.find(tree => tree.mesh.visible === false);
     if (deadTree) return deadTree.animateGrowth();
 
     const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);

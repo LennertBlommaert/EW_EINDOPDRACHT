@@ -10,8 +10,6 @@ import getRandomArbitrary from './lib/getRandomArbitrary';
 import MIDIController from './classes/MIDIController';
 let midiController;
 
-import onMIDIFailure from './lib/onMIDIFailure';
-
 import ThreeController from './classes/ThreeController.js';
 let threeController;
 const loadedData = {};
@@ -38,7 +36,7 @@ const getMIDIAccess = () => {
   if (navigator.requestMIDIAccess) {
 
     return navigator.requestMIDIAccess()
-    .then(MIDISucces, onMIDIFailure);
+    .then(MIDISucces, e => console.log(e));
 
   } else {
     console.log(`Your browser does not support the Web Midi API`);

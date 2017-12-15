@@ -1,9 +1,10 @@
 import Tone from 'tone';
+import Constants from '../objects/Constants';
 
 export default class AmbientNoise {
-  constructor(baseFrequency = 200, type = `brown`) {
+  constructor(baseFrequency = Constants.AMBIENT_NOISE_BASE_FREQUENCY, volume = Constants.AMBIENT_NOISE_VOLUME, type = Constants.AMBIENT_NOISE_TYPE) {
     this.noise = new Tone.Noise(type).start();
-    this.noise.volume.value -= 25;
+    this.noise.volume.value = - volume;
     this.baseFrequency = baseFrequency;
 
     //make an autofilter to shape the noise

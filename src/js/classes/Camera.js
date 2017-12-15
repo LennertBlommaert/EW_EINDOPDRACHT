@@ -1,5 +1,7 @@
+import Constants from '../objects/Constants';
+
 export default class Camera extends THREE.PerspectiveCamera {
-  constructor({aspectRatio = 1, fieldOfView = 100, near = 1, far = 2000, x = 0, y = 100, z = 0}) {
+  constructor({aspectRatio = Constants.CAMERA_ASPECTRATIO, fieldOfView = Constants.CAMERA_FIELD_OF_VIEW, near = Constants.CAMERA_NEAR, far = Constants.CAMERA_FAR, x = Constants.CAMERA_POSITION.x, y = Constants.CAMERA_POSITION.y, z = Constants.CAMERA_POSITION.z}) {
     super(fieldOfView, aspectRatio, near, far);
     this.position.x = x;
     this.position.y = y;

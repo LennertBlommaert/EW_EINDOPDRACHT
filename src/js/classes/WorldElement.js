@@ -106,5 +106,4 @@ export default class WorldElement {
     if (!this.growthAction.isRunning() &&  !this.wiggleAction.isRunning() && !this.shrinkAction.isRunning()) return;
     this.mixer.update(this.clock.getDelta());
   }
-
 }

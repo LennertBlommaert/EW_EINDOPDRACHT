@@ -3,6 +3,7 @@ import Renderer from './Renderer';
 import Camera from './Camera';
 import Controls from './Controls';
 import EventEmitter2 from '../vendors/eventemitter2';
+import Constants from '../objects/Constants';
 
 export default class ThreeController extends EventEmitter2 {
   constructor(loadedData = {}) {
@@ -30,11 +31,11 @@ export default class ThreeController extends EventEmitter2 {
 
   darken() {
     this.scene.darken();
-    this.camera.pointLight.intensity -= 0.1;
+    this.camera.pointLight.intensity -= Constants.CAMERA_POINTLIGHT_INTENSITY_CHANGE;
   }
 
   brighten() {
-    this.camera.pointLight.intensity += 0.1;
+    this.camera.pointLight.intensity += Constants.CAMERA_POINTLIGHT_INTENSITY_CHANGE;
     this.scene.brighten();
   }
 

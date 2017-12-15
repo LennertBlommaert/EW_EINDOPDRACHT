@@ -1,4 +1,5 @@
 import Colors from '../objects/Colors';
+import Constants from '../objects/Constants';
 
 class Particles {
 
@@ -25,12 +26,12 @@ class Particles {
     //   verticalSpeed: 1.33,
     //   timeScale: 1
     // };
-    for (let i = 0;i < 500;i ++) {
+    for (let i = 0;i < Constants.PARTICLES_AMOUNT;i ++) {
 
       const particle = new THREE.Vector3();
-      particle.x =  THREE.Math.randFloatSpread(1500);
-      particle.y =  THREE.Math.randFloatSpread(1500);
-      particle.z =  THREE.Math.randFloatSpread(1500);
+      particle.x =  THREE.Math.randFloatSpread(Constants.PARTICLES_SPREAD);
+      particle.y =  THREE.Math.randFloatSpread(Constants.PARTICLES_SPREAD);
+      particle.z =  THREE.Math.randFloatSpread(Constants.PARTICLES_SPREAD);
 
       this.particleGeometry.vertices.push(particle);
 
