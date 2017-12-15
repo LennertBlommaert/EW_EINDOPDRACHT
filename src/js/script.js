@@ -103,13 +103,11 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   toneController.pannerSynth.triggerAttack(pushedFrequencies, undefined, velocity);
   toneController.mainSynth.triggerAttack(pushedFrequencies, undefined, velocity);
 
-
   if (pushedNotes.length > 1) checkChordType();
 
   controllerKeyIsDown = true;
 
   if (Constants.GAME_MODUS_ACTIVATED) {
-    console.log(getNotesInfo(pushedNotes));
     if (getNotesInfo(pushedNotes).root) return gameController.checkNotePlayed(getNotesInfo(pushedNotes).root);
     gameController.checkNotePlayed(getNoteInfo(note));
   }
@@ -159,7 +157,8 @@ const loop = () => {
   threeController.scene.updateAnimationMixerWorldElements();
 
   if (controllerKeyIsDown) {
-    threeController.scene.inflateLastChild();
+    threeController.scene.inflateLastChildren(pushedNotes.length);
+    // threeController.scene.inflateLastChild();
   }
 
   threeController.renderer.render(threeController.scene, threeController.camera);

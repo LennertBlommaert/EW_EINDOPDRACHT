@@ -37,7 +37,6 @@ export default class ToneController extends EventEmitter2 {
 
     Tone.Listener.setPosition(0, 0, 0);
 
-
     //this.createAmbientNoises(130.81, 146.83, 164.81, 174.61, 195.99, 220, 246.94);
   }
 
@@ -54,12 +53,10 @@ export default class ToneController extends EventEmitter2 {
     this.chorusEffect = new Tone.Chorus();
     // this.chorusEffect.connect(this.autoWahEffect);
 
-    // this.panner = new Tone.Panner3D({coneOuterGain: 10}).connect(this.autoWahEffect);
     this.panner = new Tone.Panner3D({coneOuterGain: 10});
     this.pannerSynth = new Tone.PolySynth(4, Tone.PluckySynth).connect(this.panner);
     this.pannerSynth.volume.value = 10;
 
-    // this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth).connect(this.autoWahEffect);
     this.mainSynth = new MainSynth();
 
     this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);

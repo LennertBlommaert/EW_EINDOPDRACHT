@@ -317,15 +317,17 @@ export default class Scene extends THREE.Scene {
     lastChild.scale.z += scaleIncreasement;
   }
 
-  //   this.children.forEach(child => {
-  //     console.info(child.name, child.type);
-  //     if (child.name !== `Terrain` || child.type !== `DirectionalLight` || child.type !== `HemisphereLight`) {
-  //       child.children.forEach(c => {
-  //         c.material.dispose();
-  //         c.geometry.dispose();
-  //       });
-  //
-  //       this.remove(child);
-  //     }
-  //   });
+  inflateLastChildren = (numberToInflate, scaleIncreasement = 2) => {
+    const lastChilds = this.children.slice(this.children.length - numberToInflate);
+
+    lastChilds.forEach(child => {
+      if (child.type !== `Mesh`) return;
+
+      if (child.scale.x <= 200) {
+        child.scale.x += scaleIncreasement - (child.scale.x / 100);
+        child.scale.y += scaleIncreasement - (child.scale.x / 100);
+        child.scale.z += scaleIncreasement - (child.scale.x / 100);
+      }
+    });
+  }
 }
