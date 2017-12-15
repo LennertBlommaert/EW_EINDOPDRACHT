@@ -1,11 +1,5 @@
 //import parseMidiMessage from './lib/parseMidiMessage';
-
-//QUESTION overkill in onze toepassing?
-// import Keyboard from './classes/Keyboard';
-// let keyboard;
-
 import getRandomArbitrary from './lib/getRandomArbitrary';
-
 
 import MIDIController from './classes/MIDIController';
 let midiController;
@@ -14,15 +8,14 @@ import ThreeController from './classes/ThreeController.js';
 let threeController;
 const loadedData = {};
 
-//aimport createObjectOnNote from './lib/createObjectOnNote.js';
-
-// import createmidiSynth from './lib/createmidiSynth';
-
 let pushedFrequencies = [], pushedNotes = [];
 import ToneController from './classes/ToneController.js';
 let toneController, currentTonePosition = [0, 0, 0];
 
 import Constants from './objects/Constants';
+
+import GameController from './classes/GameController.js';
+let gameController;
 
 // Currently unavailable, yet promising
 //import {chord} from 'tonal-detect';
@@ -57,16 +50,20 @@ const majorChordPlayed = () => {
   threeController.brighten();
 };
 
-const checkChordType = () => {
-  const teoriaNotes = pushedNotes.map(teoria.note.fromMIDI);
+const getNotesInfo = notes => {
+  const teoriaNotes = notes.map(teoria.note.fromMIDI);
   // const triads = piu.triads(teoriaNotes);
-  const infer = piu.infer(teoriaNotes);
+  return piu.infer(teoriaNotes);
+};
+
+const checkChordType = () => {
+  const notesInfo = getNotesInfo(pushedNotes);
 
   // Check if a chord is recognised
-  if (infer.length === 0) return;
+  if (notesInfo.length === 0) return;
 
-  if (infer[0].type === `m`) return minorChordPlayed();
-  if (infer[0].type === ``) return majorChordPlayed();
+  if (notesInfo[0].type === `m`) return minorChordPlayed();
+  if (notesInfo[0].type === ``) return majorChordPlayed();
 };
 
 const getRandomPositionVector = () => {
@@ -88,17 +85,19 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 
   toneController.setListenerPosition(threeController.camera.position, threeController.camera.rotation, threeController.camera.up);
   toneController.panner.setPosition(positionVector.x, positionVector.y, positionVector.z);
-  //console.log(toneController.panner, toneController.listener);
-
-
-  //threeController.camera.lookAt(positionVector);
 
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
   toneController.pannerSynth.triggerAttack(pushedFrequencies, undefined, velocity);
   toneController.mainSynth.triggerAttack(pushedFrequencies, undefined, velocity);
 
+
   if (pushedNotes.length > 1) checkChordType();
+
+  if (Constants.GAME_MODUS_ACTIVATED) {
+    gameController.checkNotePlayed(teoria.note.fromMIDI(note).name().toUpperCase());
+  }
+
 
   controllerKeyIsDown = true;
 };
@@ -172,13 +171,8 @@ const getKeyCodeData = keyCode => {
 };
 
 const handleOnThreeControllerIntersection = objectName => {
-
   const frequency = Constants.KEY_NOTE_FREQUENCY_OBJECTNAME.find(d => d.objectName === objectName).frequency;
-
   if (frequency === undefined) return;
-
-  console.log(frequency);
-
   toneController.pannerSynth.triggerAttackRelease(frequency, `8n`);
 };
 
@@ -205,6 +199,11 @@ const toggleFullScreen = () => {
   }
 };
 
+const toggleGameModus = () => {
+  Constants.GAME_MODUS_ACTIVATED = !Constants.GAME_MODUS_ACTIVATED;
+  gameController.start();
+};
+
 const initTone = () => {
   toneController = new ToneController();
   toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
@@ -226,6 +225,9 @@ const initEventListeners = () => {
   const $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`);
   $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
 
+  const $toggleGameModusButton = document.querySelector(`.toggle-game-modus`);
+  $toggleGameModusButton.addEventListener(`click`, toggleGameModus);
+
   window.addEventListener(`keydown`, ({keyCode}) => {
     if (keyCode === 13 || keyCode === 27) return;
     handleControllerKeyDown(getKeyCodeData(keyCode));
@@ -246,6 +248,7 @@ const init = () => {
       initThree();
       initTone();
       initEventListeners();
+      gameController = new GameController(`game-notes`);
     })
     .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
 

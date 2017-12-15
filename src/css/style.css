@@ -62,3 +62,31 @@ body {
     background: #d8d0d1;
   }
 }
+
+.game-notes-container {
+  color: white;
+  font-size: 5rem;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  background: none;
+  transform: translate(.5, .5);
+  width: 18.2rem;
+  overflow: hidden;
+}
+
+.game-notes {
+  transition: all .5s .1s ease;
+  display: flex;
+
+  & li {
+    padding: 2rem;
+    opacity: .5;
+    transition: all ease .5s;
+  }
+
+  & .active {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}

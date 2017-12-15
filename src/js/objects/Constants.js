@@ -33,6 +33,7 @@ const Constants = {
   MIDI_KEY_UP_COMMAND: 8,
   MIDI_KEY_DOWN_COMMAND: 9,
   //GLOBAL
+  GAME_MODUS_ACTIVATED: false,
   WIDTH: window.innerWidth,
   HEIGHT: window.innerHeight,
   KEY_NOTE_FREQUENCY_OBJECTNAME: [

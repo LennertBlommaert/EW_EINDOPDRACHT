@@ -1,5 +1,6 @@
 import EventEmitter2 from '../vendors/eventemitter2';
 import AmbientNoise from './AmbientNoise';
+import BeatSynth from './BeatSynth';
 import Constants from '../objects/Constants';
 import Tone from 'tone';
 
@@ -11,7 +12,6 @@ export default class ToneController extends EventEmitter2 {
     this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
 
 
-    //NOTE: INSTEAD OF TONE.EVENT: MORE OF A DRUM TRACK THAN A BEAT
     this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `6n`);
     this.seq.start();
 
@@ -23,7 +23,7 @@ export default class ToneController extends EventEmitter2 {
     this.createWind();
     this._createSynths();
 
-    //Tone.Transport.start();
+    Tone.Transport.start();
 
     this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
     this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
@@ -112,40 +112,7 @@ export default class ToneController extends EventEmitter2 {
     );
 
     // TOMS AND KICK
-    this.membraneSynth = new Tone.MembraneSynth({
-      pitchDecay: 0.05,
-      octaves: 20,
-      oscillator: {
-        type: `triangle`,
-        frequency: 60,
-        detune: 0,
-        phase: 0,
-      },
-      envelope: {
-        attack: 0.01,
-        decay: 0.1,
-        sustain: 0.4,
-        release: 1.4,
-        attackCurve: `exponential`,
-        //releaseCurve: `exponential`
-      }
-    }).toMaster();
-
-    // CYMBALS
-    this.metalSynth = new Tone.MetalSynth({
-      frequency: 200,
-      envelope: {
-        attack: 0.001,
-        decay: 2,
-        release: 0.2
-      },
-      harmonicity: 5.1,
-      modulationIndex: 32,
-      resonance: 4000,
-      octaves: 1.5
-    }).toMaster();
-
-    this.metalSynth.volume.value = - 25;
+    this.membraneSynth = new BeatSynth();
   }
 
   handleOnDrumBeatRepresentationsListClick = ({target}) => {
@@ -196,12 +163,8 @@ export default class ToneController extends EventEmitter2 {
   }
 
   toggleBeat = () => this.seq.loop = !this.seq.loop;
-  // toggleBeat = () => this.beat.loop = !this.beat.loop;
 
   createWind = () => {
-    //
-    // initialize the noise and start
-    // “pink”, “white”, and “brown”
     this.windNoise = new AmbientNoise();
   }
 
