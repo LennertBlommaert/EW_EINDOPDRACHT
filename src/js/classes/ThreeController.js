@@ -63,8 +63,8 @@ export default class ThreeController extends EventEmitter2 {
     this.$autoRotateButton = document.querySelector(`.auto-rotation-button`);
     this.$autoRotateButton.addEventListener(`click`, this.controls.toggleAutorotate);
 
-    this.$autRotateSpeedRange = document.querySelector(`#auto-rotation-speed`);
-    this.$autRotateSpeedRange.addEventListener(`input`, ({currentTarget}) => this.controls.setAutorationSpeed(parseFloat(currentTarget.value, 10)));
+  //   this.$autRotateSpeedRange = document.querySelector(`#auto-rotation-speed`);
+  //   this.$autRotateSpeedRange.addEventListener(`input`, ({currentTarget}) => this.controls.setAutorationSpeed(parseFloat(currentTarget.value, 10)));
   }
 
 }

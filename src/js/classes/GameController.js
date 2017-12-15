@@ -2,11 +2,22 @@ export default class GameController {
   constructor(noteContainerDomElementClassName) {
     this.$noteContainer = document.querySelector(`.${noteContainerDomElementClassName}`);
     this.notes = [
-      `B`, `D`, `B`, `D`, `B`, `D`,
-      `A`, `D`, `A`, `D`, `A`, `D`,
-      `G`, `D`, `G`, `D`, `G`, `D`,
-      `F#`, `D`, `F#`, `D`, `F#`, `D`,
+      `B`, `D`
     ];
+
+    this.notes.forEach((f, i) => {
+      const $li = document.createElement(`li`);
+      $li.textContent = f;
+      $li.dataset.index = i;
+      this.$noteContainer.appendChild($li);
+    });
+
+    // this.notes = [
+    //   `B`, `D`, `B`, `D`, `B`, `D`,
+    //   `A`, `D`, `A`, `D`, `A`, `D`,
+    //   `G`, `D`, `G`, `D`, `G`, `D`,
+    //   `F#`, `D`, `F#`, `D`, `F#`, `D`,
+    // ];
     this.currentNoteIndex = 0;
 
     // this.song = [
@@ -23,12 +34,9 @@ export default class GameController {
   }
 
   start = () => {
-    this.notes.forEach((f, i) => {
-      const $li = document.createElement(`li`);
-      $li.textContent = f;
-      $li.dataset.index = i;
-      this.$noteContainer.appendChild($li);
-    });
+    this.currentNoteIndex = 0;
+    this.$noteContainer.parentNode.classList.remove(`game-over`);
+    this.$noteContainer.parentNode.classList.toggle(`game-inactive`);
     this.displayCurrentNote();
   }
 
@@ -50,6 +58,7 @@ export default class GameController {
 
   gameWon = () => {
     console.log(`YOU WON!`);
+    this.$noteContainer.parentNode.classList.toggle(`game-over`);
   }
 
   displayCurrentNote = () => {

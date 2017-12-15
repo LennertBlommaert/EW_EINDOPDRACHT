@@ -72,7 +72,32 @@ body {
   background: none;
   transform: translate(.5, .5);
   width: 18.2rem;
+  height: 9rem;
   overflow: hidden;
+
+  & div {
+    font-size: 3.5rem;
+    transition: all .5s .1s ease;
+    opacity: 0;
+  }
+
+  &.game-inactive {
+    opacity: 0;
+  }
+
+  &.game-over {
+    opacity: 1;
+
+    & li {
+      transform: translateY(-7rem);
+      opacity: 0;
+    }
+
+    & .congratulations {
+      transform: translateY(-7rem);
+      opacity: 1;
+    }
+  }
 }
 
 .game-notes {

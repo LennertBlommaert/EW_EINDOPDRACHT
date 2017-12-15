@@ -1,5 +1,8 @@
 //import parseMidiMessage from './lib/parseMidiMessage';
 import getRandomArbitrary from './lib/getRandomArbitrary';
+import mapNumber from './lib/mapNumber';
+
+const $speedSlider = document.querySelector(`#bpm-range`);
 
 import MIDIController from './classes/MIDIController';
 let midiController;
@@ -56,6 +59,15 @@ const getNotesInfo = notes => {
   return piu.infer(teoriaNotes);
 };
 
+const getNoteInfo = note => {
+  const teoriaNote = teoria.note.fromMIDI(note);
+  const noteName = teoriaNote.name().toUpperCase();
+  const noteAccidental = teoriaNote.accidental();
+  const noteScientific = teoriaNote.scientific();
+  console.log(noteScientific);
+  return `${noteName}${noteAccidental}`;
+};
+
 const checkChordType = () => {
   const notesInfo = getNotesInfo(pushedNotes);
 
@@ -67,8 +79,8 @@ const checkChordType = () => {
 };
 
 const getRandomPositionVector = () => {
-  const z = getRandomArbitrary(- 500, 500);
-  const x = getRandomArbitrary(- 500, 500);
+  const z = getRandomArbitrary(- Constants.WORLD_ELEMENT_POSITION_SPREAD, Constants.WORLD_ELEMENT_POSITION_SPREAD);
+  const x = getRandomArbitrary(- Constants.WORLD_ELEMENT_POSITION_SPREAD, Constants.WORLD_ELEMENT_POSITION_SPREAD);
   const y = getRandomArbitrary(- 10, - 5);
 
   return new THREE.Vector3(x, y, z);
@@ -94,12 +106,13 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 
   if (pushedNotes.length > 1) checkChordType();
 
-  if (Constants.GAME_MODUS_ACTIVATED) {
-    gameController.checkNotePlayed(teoria.note.fromMIDI(note).name().toUpperCase());
-  }
-
-
   controllerKeyIsDown = true;
+
+  if (Constants.GAME_MODUS_ACTIVATED) {
+    console.log(getNotesInfo(pushedNotes));
+    if (getNotesInfo(pushedNotes).root) return gameController.checkNotePlayed(getNotesInfo(pushedNotes).root);
+    gameController.checkNotePlayed(getNoteInfo(note));
+  }
 };
 
 const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
@@ -122,10 +135,7 @@ const handleWindowResize = () => {
 };
 
 const handleToneControllerBeatPlayed = () => {
-  //NOTE: can be replaced by something
-  //Seemed like a fun effect in the moment
   threeController.scene.raiseTerrain(0, 5);
-  //threeController.camera.bounce();
 };
 
 const handleToneControllerOnNewHalfMeasure = position => {
@@ -137,20 +147,13 @@ const handleToneControllerOnNewHalfMeasure = position => {
     threeController.camera.toggleMoveYDirection();
     threeController.scene.particles.toggleMoveDirection();
   }
-
-  // if (newTonePosition[0] === currentTonePosition[0] + 8) {
-  // }
-
-  // console.log(`HANDLETONECONTROLLERONNEWHALFMEASURE - position: ${position}`);
 };
 
 const loop = () => {
-  //threeController.camera.rotate();
   threeController.controls.update();
   threeController.scene.moveShadowLight();
   threeController.scene.lowerTerrain();
   threeController.camera.moveY();
-  //threeController.checkIntersections();
 
   threeController.scene.particles.move();
   threeController.scene.updateAnimationMixerWorldElements();
@@ -174,6 +177,13 @@ const handleOnThreeControllerIntersection = objectName => {
   const frequency = Constants.KEY_NOTE_FREQUENCY_OBJECTNAME.find(d => d.objectName === objectName).frequency;
   if (frequency === undefined) return;
   toneController.pannerSynth.triggerAttackRelease(frequency, `8n`);
+};
+
+
+const setWorldSpeed = value => {
+  $speedSlider.value = value;
+  threeController.controls.setAutorationSpeed(value / 10);
+  toneController.setBPM(value);
 };
 
 const initThree = () => {
@@ -211,7 +221,12 @@ const initTone = () => {
 };
 
 const handleMouseMove = e => {
-  const {x = e.clientX, y = e.clientY} = e;
+  const {x = e.clientX, y = e.clientY, shiftKey} = e;
+
+  if (shiftKey) {
+    const mappedX = mapNumber(x, 0, window.innerWidth, Constants.BPM_MIN, Constants.BPM_MAX);
+    setWorldSpeed(mappedX);
+  }
 
   threeController.mouse.x = (x / window.innerWidth) * 2 - 1;
   threeController.mouse.y = (y / window.innerHeight) * 2 - 1;
@@ -239,6 +254,11 @@ const initEventListeners = () => {
 
   window.addEventListener(`mousemove`, handleMouseMove);
   document.querySelector(`canvas`).addEventListener(`click`, handleCanvasClick);
+
+  $speedSlider.addEventListener(`input`, e => {
+    const value = parseInt(e.target.value, 10);
+    setWorldSpeed(value);
+  });
 };
 
 const init = () => {

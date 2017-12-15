@@ -1,6 +1,7 @@
 import EventEmitter2 from '../vendors/eventemitter2';
 import AmbientNoise from './AmbientNoise';
 import BeatSynth from './BeatSynth';
+import MainSynth from './MainSynth';
 import Constants from '../objects/Constants';
 import Tone from 'tone';
 
@@ -9,8 +10,7 @@ export default class ToneController extends EventEmitter2 {
     super({});
 
     this.beatNote = Constants.BEAT_NOTE;
-    this.seqEvents = [this.beatNote, 0, 0, this.beatNote, this.beatNote, 0];
-
+    this.seqEvents = [this.beatNote, 0, 0, this.beatNote, 0, 0];
 
     this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `6n`);
     this.seq.start();
@@ -24,6 +24,7 @@ export default class ToneController extends EventEmitter2 {
     this._createSynths();
 
     Tone.Transport.start();
+    Tone.Transport.bpm.value = Constants.BPM;
 
     this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
     this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
@@ -59,57 +60,10 @@ export default class ToneController extends EventEmitter2 {
     this.pannerSynth.volume.value = 10;
 
     // this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth).connect(this.autoWahEffect);
-    this.mainSynth = new Tone.PolySynth(4, Tone.DuoSynth);
-    this.mainSynth.volume.value = - 10;
+    this.mainSynth = new MainSynth();
 
     this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
     this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
-
-    this.mainSynth.set(
-      {
-        vibratoAmount: 0.2,
-        vibratoRate: 1,
-        harmonicity: 1.5,
-        voice0: {
-          volume: - 10,
-          portamento: 0,
-          oscillator: {
-            type: `triangle`
-          },
-          filterEnvelope: {
-            attack: 0.02,
-            decay: 0.1,
-            sustain: 0.5,
-            release: 0.2
-          },
-          envelope: {
-            attack: 0.01,
-            decay: 0,
-            sustain: 1,
-            release: 0.2
-          }
-        },
-        voice1: {
-          volume: - 10,
-          portamento: 0,
-          oscillator: {
-            type: `sawtooth`
-          },
-          filterEnvelope: {
-            attack: 0.01,
-            decay: 0,
-            sustain: 1,
-            release: 0.2
-          },
-          envelope: {
-            attack: 0.01,
-            decay: 0,
-            sustain: 1,
-            release: 0.2
-          }
-        }
-      }
-    );
 
     // TOMS AND KICK
     this.membraneSynth = new BeatSynth();
@@ -136,9 +90,8 @@ export default class ToneController extends EventEmitter2 {
   _playNote = (time, note) => {
     if (note !== 0) {
       this.emit(`tonecontrollerplayedtom`, note);
+      this.membraneSynth.triggerAttackRelease(note, `2n`);
     }
-
-    this.membraneSynth.triggerAttackRelease(note, `2n`);
   }
 
   _linkControls = () => {
@@ -158,11 +111,16 @@ export default class ToneController extends EventEmitter2 {
   }
 
   handleVolumeRangeInput = volume => {
-    this.synth.volume.value = volume;
+    this.mainSynth.volume.value = volume;
     this.membraneSynth.volume.value = volume - volume / 3;
   }
 
   toggleBeat = () => this.seq.loop = !this.seq.loop;
+
+  setBPM = bpm => {
+    console.log(bpm);
+    Tone.Transport.bpm.rampTo(bpm, 2);
+  }
 
   createWind = () => {
     this.windNoise = new AmbientNoise();
