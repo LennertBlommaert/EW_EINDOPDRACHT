@@ -18,6 +18,8 @@ export default class Scene extends THREE.Scene {
     this.addLights();
     this.addTerrain();
     this.addParticles();
+    this.clock = new THREE.Clock();
+
     this.background = new THREE.Color(this.skyColor);
 
     this.trees = [];
@@ -25,7 +27,7 @@ export default class Scene extends THREE.Scene {
     this.rocks = [];
     this.mushrooms = [];
 
-    window.setInterval(this.shrinkChildren, 1500);
+    window.setInterval(this.shrinkChildren, 3000);
 
   }
 
@@ -193,8 +195,6 @@ export default class Scene extends THREE.Scene {
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
 
-    //const terrainGeom = this.getObjectByName(`Terrain`).geometry;
-
     terrainGeom.vertices.forEach(v => {
       if (v.x > distanceFromCamera || v.x < - distanceFromCamera) {
         v.z += increasement - Math.random() * (increasement * 4 / 5) + (Math.abs(v.x) - distanceFromCamera) / 50;
@@ -248,6 +248,17 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeVertexNormals();
   }
 
+  updateAnimationMixerWorldElements = () => {
+    const deltaSeconds = this.clock.getDelta();
+
+    this.trees.forEach(tree => {
+      tree.updateAnimationMixer(deltaSeconds);
+    });
+    this.clouds.forEach(cloud => cloud.updateAnimationMixer(deltaSeconds));
+    this.rocks.forEach(rock => rock.updateAnimationMixer(deltaSeconds));
+    this.mushrooms.forEach(mushroom => mushroom.updateAnimationMixer(deltaSeconds));
+  }
+
   emptyScene = () => {
 
     while (this.children.length > 0) {
@@ -286,9 +297,6 @@ export default class Scene extends THREE.Scene {
 
     const livingRock = this.rocks.find(rock => rock.mesh.visible === true);
     if (livingRock) livingRock.animateShrink();
-
-    // const tree = this.getObjectByName(`Tree`);
-    // if (tree) this.tree.removeChild(tree);
 
   }
 

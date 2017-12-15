@@ -2,7 +2,7 @@ export default class Controls extends THREE.OrbitControls {
   constructor({camera = {}, domElementClassName = `.world`}) {
     super(camera, document.querySelector(domElementClassName));
 
-    this.autoRotate = true;
+    //this.autoRotate = true;
     this.autoRotateSpeed = 10;
 
     this.keys = {
@@ -14,7 +14,6 @@ export default class Controls extends THREE.OrbitControls {
   }
 
   toggleAutorotate = () => {
-    console.log(`alleez`);
     this.autoRotate = !this.autoRotate;
   }
 

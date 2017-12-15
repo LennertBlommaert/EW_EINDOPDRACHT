@@ -22,7 +22,7 @@ export default class ToneController extends EventEmitter2 {
     this.createWind();
     this._createSynths();
 
-    Tone.Transport.start();
+    //Tone.Transport.start();
 
     this.drumBeatRepresentationsList = document.querySelector(`.drum-beat-representations`);
     this.drumBeatRepresentationsList.addEventListener(`click`, e => this.handleOnDrumBeatRepresentationsListClick(e));
@@ -42,7 +42,6 @@ export default class ToneController extends EventEmitter2 {
   setListenerPosition = (position, orientation, up) => {
     Tone.Listener.setPosition(position.x, position.y, position.z);
     Tone.Listener.setOrientation(orientation.x, orientation.y, orientation.z, up.x, up.y, up.z);
-    console.log(Tone.Listener);
   }
 
   _createSynths = () => {
@@ -188,9 +187,6 @@ export default class ToneController extends EventEmitter2 {
 
     this.autoWahEffect.wet.value = x;
     this.chorusEffect.wet.value = y;
-
-    console.log(this.autoWahEffect.wet.value, this.chorusEffect.wet.value);
-
   }
 
   handleVolumeRangeInput = volume => {

@@ -156,6 +156,7 @@ const loop = () => {
   //threeController.checkIntersections();
 
   threeController.scene.particles.move();
+  threeController.scene.updateAnimationMixerWorldElements();
 
   if (controllerKeyIsDown) {
     threeController.scene.inflateLastChild();
