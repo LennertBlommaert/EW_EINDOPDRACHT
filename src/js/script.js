@@ -1,36 +1,35 @@
-//import parseMidiMessage from './lib/parseMidiMessage';
-import getRandomArbitrary from './lib/getRandomArbitrary';
-import mapNumber from './lib/mapNumber';
-
-const $speedSlider = document.querySelector(`#bpm-range`);
-
-import MIDIController from './classes/MIDIController';
-let midiController;
-
-import VisualKeyboardController from './classes/VisualKeyboardController';
-let visualKeyboardController;
-
 import ThreeController from './classes/ThreeController.js';
-let threeController;
-const loadedData = {};
-
-let pushedFrequencies = [], pushedNotes = [];
 import ToneController from './classes/ToneController.js';
-let toneController, currentTonePosition = [0, 0, 0];
-
-import Constants from './objects/Constants';
-
+import MIDIController from './classes/MIDIController';
 import GameController from './classes/GameController.js';
-let gameController;
+import VisualKeyboardController from './classes/VisualKeyboardController';
 
-// Currently unavailable, yet promising
-//import {chord} from 'tonal-detect';
+import getRandomPositionVector from './lib/getRandomPositionVector';
+import mapNumber from './lib/mapNumber';
 
 import teoria from 'teoria';
 import piu from 'piu';
 
+import Constants from './objects/Constants';
+
+let threeController;
+let midiController;
+let gameController;
+let visualKeyboardController;
+let toneController;
+
 let controllerKeyIsDown = false;
 let gameModusIsActive = false;
+
+let currentTonePosition = [0, 0, 0];
+let pushedFrequencies = [];
+let pushedNotes = [];
+
+const $speedSlider = document.querySelector(`#bpm-range`);
+const loadedData = {};
+
+// Currently unavailable, yet promising
+//import {chord} from 'tonal-detect';
 
 const getMIDIAccess = () => {
   if (navigator.requestMIDIAccess) {
@@ -51,11 +50,13 @@ const MIDISucces = MIDIAccess => {
 
 const minorChordPlayed = () => {
   //MORE / LESS DISTORTION
+  toneController.distort();
   threeController.darken();
 };
 
 const majorChordPlayed = () => {
   //MORE / LESS DISTORTION
+  toneController.clean();
   threeController.brighten();
 };
 
@@ -83,18 +84,8 @@ const checkChordType = () => {
   if (notesInfo[0].type === ``) return majorChordPlayed();
 };
 
-const getRandomPositionVector = () => {
-  const z = getRandomArbitrary(- Constants.WORLD_ELEMENT_POSITION_SPREAD, Constants.WORLD_ELEMENT_POSITION_SPREAD);
-  const x = getRandomArbitrary(- Constants.WORLD_ELEMENT_POSITION_SPREAD, Constants.WORLD_ELEMENT_POSITION_SPREAD);
-  const y = getRandomArbitrary(- 10, - 5);
-
-  return new THREE.Vector3(x, y, z);
-};
-
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-  const positionVector = getRandomPositionVector();
-
-  console.log(note);
+  const positionVector = getRandomPositionVector(Constants.WORLD_ELEMENT_POSITION_SPREAD);
 
   threeController.scene.manipulateWorldOnNote(note, positionVector);
   //toneController.turnAmbientNoiseUp(frequency);
@@ -104,6 +95,7 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 
   pushedFrequencies.push(frequency);
   pushedNotes.push(note);
+
   toneController.pannerSynth.triggerAttack(pushedFrequencies, undefined, velocity);
   toneController.mainSynth.triggerAttack(pushedFrequencies, undefined, velocity);
 
@@ -184,7 +176,6 @@ const handleOnThreeControllerIntersection = objectName => {
   toneController.pannerSynth.triggerAttackRelease(frequency, `8n`);
 };
 
-
 const setWorldSpeed = value => {
   $speedSlider.value = value;
   threeController.controls.setAutorationSpeed(value / 10);
@@ -237,6 +228,9 @@ const handleMouseMove = e => {
   if (shiftKey) {
     const mappedX = mapNumber(x, 0, window.innerWidth, Constants.BPM_MIN, Constants.BPM_MAX);
     setWorldSpeed(mappedX);
+
+    const mappedY = mapNumber(y, 0, window.innerHeight, Constants.MASTER_VOLUME_MIN, Constants.MASTER_VOLUME_MAX);
+    toneController.setMasterVolume(mappedY);
   }
 
   threeController.mouse.x = (x / window.innerWidth) * 2 - 1;

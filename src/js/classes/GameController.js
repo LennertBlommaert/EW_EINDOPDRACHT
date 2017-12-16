@@ -1,8 +1,16 @@
 export default class GameController {
   constructor(noteContainerDomElementClassName) {
     this.$noteContainer = document.querySelector(`.${noteContainerDomElementClassName}`);
+    // this.notes = [
+    //   `B`, `D`
+    // ];
+
+
     this.notes = [
-      `B`, `D`
+      `B`, `D`, `B`, `D`, `B`, `D`,
+      `A`, `D`, `A`, `D`, `A`, `D`,
+      `G`, `D`, `G`, `D`, `G`, `D`,
+      `F#`, `D`, `F#`, `D`, `F#`, `D`,
     ];
 
     this.notes.forEach((f, i) => {
@@ -12,12 +20,6 @@ export default class GameController {
       this.$noteContainer.appendChild($li);
     });
 
-    // this.notes = [
-    //   `B`, `D`, `B`, `D`, `B`, `D`,
-    //   `A`, `D`, `A`, `D`, `A`, `D`,
-    //   `G`, `D`, `G`, `D`, `G`, `D`,
-    //   `F#`, `D`, `F#`, `D`, `F#`, `D`,
-    // ];
     this.currentNoteIndex = 0;
 
     // this.song = [

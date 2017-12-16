@@ -21,7 +21,7 @@ export default class AmbientNoise {
         rolloff: - 12,
         Q: 1
       }
-    }).connect(Tone.Master);
+    });
 
     //connect the noise
     this.noise.connect(this.autoFilter);

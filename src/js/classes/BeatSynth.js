@@ -19,6 +19,6 @@ export default class BeatSynth extends Tone.MembraneSynth {
         attackCurve: `exponential`,
         //releaseCurve: `exponential`
       }
-    }).toMaster();
+    });
   }
 }

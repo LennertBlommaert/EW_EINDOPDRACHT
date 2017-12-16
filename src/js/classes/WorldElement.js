@@ -18,11 +18,7 @@ export default class WorldElement {
 
     this.setupAnimations();
 
-    //this.animateWiggle();
-
     this.toggleMeshVisibility();
-
-    this.clock = new THREE.Clock();
   }
 
   _constructMesh = () => {
@@ -105,8 +101,8 @@ export default class WorldElement {
     this.shrinkAction.play();
   }
 
-  updateAnimationMixer = () => {
+  updateAnimationMixer = deltaSeconds => {
     if (!this.growthAction.isRunning() &&  !this.wiggleAction.isRunning() && !this.shrinkAction.isRunning()) return;
-    this.mixer.update(this.clock.getDelta());
+    this.mixer.update(deltaSeconds);
   }
 }

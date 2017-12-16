@@ -20,7 +20,10 @@ export default class ToneController extends EventEmitter2 {
     }, `2n`);
     this.loop.start();
 
-    this.createWind();
+    this.masterVolume = new Tone.Volume();
+
+    this._createWind();
+    this._createEffects();
     this._createSynths();
 
     Tone.Transport.start();
@@ -31,7 +34,7 @@ export default class ToneController extends EventEmitter2 {
     this.drumBeatRepresentations = Array.from(document.querySelectorAll(`.drum-beat-representation`));
     this._setDrumBeatRepresentationssetInitialClasses();
 
-    this.echoSynth = new Tone.AMSynth().toMaster();
+    //this.echoSynth = new Tone.AMSynth().toMaster();
 
     this._linkControls();
 
@@ -45,25 +48,29 @@ export default class ToneController extends EventEmitter2 {
     Tone.Listener.setOrientation(orientation.x, orientation.y, orientation.z, up.x, up.y, up.z);
   }
 
-  _createSynths = () => {
-
+  _createEffects = () => {
     this.autoWahEffect = new Tone.AutoWah(50, 10, - 30);
-    // this.autoWahEffect.toMaster();
-
     this.chorusEffect = new Tone.Chorus();
-    // this.chorusEffect.connect(this.autoWahEffect);
+    this.distortEffect = new Tone.Distortion();
+    this.distortEffect.wet.value = 0.1;
+  }
 
+  _createSynths = () => {
     this.panner = new Tone.Panner3D({coneOuterGain: 10});
     this.pannerSynth = new Tone.PolySynth(4, Tone.PluckySynth).connect(this.panner);
     this.pannerSynth.volume.value = 10;
 
     this.mainSynth = new MainSynth();
 
-    this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
-    this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, Tone.Master);
+    this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, this.masterVolume, Tone.Master);
+    this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, this.masterVolume, Tone.Master);
+    // this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, Tone.Master);
+    // this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, Tone.Master);
 
     // TOMS AND KICK
     this.membraneSynth = new BeatSynth();
+    this.membraneSynth.chain(this.distortEffect, this.masterVolume, Tone.Master);
+
   }
 
   handleOnDrumBeatRepresentationsListClick = ({target}) => {
@@ -107,9 +114,13 @@ export default class ToneController extends EventEmitter2 {
     this.chorusEffect.wet.value = y;
   }
 
-  handleVolumeRangeInput = volume => {
-    this.mainSynth.volume.value = volume;
-    this.membraneSynth.volume.value = volume - volume / 3;
+  distort = () => this.distortEffect.wet.value += 0.05;
+
+  clean = () => this.distortEffect.wet.value -= 0.05;
+
+  setMasterVolume = volume => {
+    this.masterVolume.volume.value = volume;
+    this.$volumeRange.value = volume;
   }
 
   toggleBeat = () => this.seq.loop = !this.seq.loop;
@@ -118,8 +129,9 @@ export default class ToneController extends EventEmitter2 {
     Tone.Transport.bpm.rampTo(bpm, .5);
   }
 
-  createWind = () => {
+  _createWind = () => {
     this.windNoise = new AmbientNoise();
+    this.windNoise.autoFilter.chain(this.masterVolume, Tone.Master);
   }
 
   createAmbientNoises = (...frequencies) => {

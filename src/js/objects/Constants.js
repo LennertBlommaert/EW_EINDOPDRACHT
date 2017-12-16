@@ -33,6 +33,8 @@ const Constants = {
   BPM: 120,
   BPM_MIN: 80,
   BPM_MAX: 160,
+  MASTER_VOLUME_MIN: - 10,
+  MASTER_VOLUME_MAX: 10,
 
   //MIDI
   MIDI_KEY_UP_COMMAND: 8,
