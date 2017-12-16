@@ -19,8 +19,5 @@ export default class Controls extends THREE.OrbitControls {
     this.autoRotate = !this.autoRotate;
   }
 
-  setAutorationSpeed = speed => {
-    console.log(speed);
-    this.autoRotateSpeed = speed;
-  };
+  setAutorationSpeed = speed => this.autoRotateSpeed = speed;
 }

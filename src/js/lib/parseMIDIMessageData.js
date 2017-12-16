@@ -5,7 +5,7 @@ const parseMIDIMessageData = data => {
   return {
     command: data[0] >> 4,
     channel: data[0] & 0xf,
-    note: data[1],
+    note: data[1] % 12,
     velocity: data[2] / 127,
     frequency: frequencyFromNoteNumber(data[1])
   };

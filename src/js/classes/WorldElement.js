@@ -49,8 +49,6 @@ export default class WorldElement {
   onAnimationActionFinished = e => {
     const {action} = e;
 
-    console.log(action._clip.name);
-
     if (action._clip.name === `grow`) this.animateWiggle();
     //WHEN WORKING WITH SET REPITIONS FOR WIGGLE
     //if (action._clip.name === `wiggle`) this.animateShrink();
@@ -90,17 +88,14 @@ export default class WorldElement {
     this.toggleMeshVisibility();
     this.shrinkAction.crossFadeTo(this.growthAction, 0, true);
     this.mixer.stopAllAction();
-    console.log(this.mixer);
   }
 
   animateGrowth = () => {
-    console.log(`ANIMATE GROWTH`);
     this.toggleMeshVisibility();
     this.growthAction.play();
   }
 
   animateWiggle = () => {
-    console.log(`ANIMATE WIGGLE`);
     this.growthAction.crossFadeTo(this.wiggleAction, .5, true);
     this.wiggleAction.play();
   }

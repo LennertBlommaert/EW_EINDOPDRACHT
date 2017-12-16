@@ -30,6 +30,7 @@ import teoria from 'teoria';
 import piu from 'piu';
 
 let controllerKeyIsDown = false;
+let gameModusIsActive = false;
 
 const getMIDIAccess = () => {
   if (navigator.requestMIDIAccess) {
@@ -66,8 +67,7 @@ const getNoteInfo = note => {
   const teoriaNote = teoria.note.fromMIDI(note);
   const noteName = teoriaNote.name().toUpperCase();
   const noteAccidental = teoriaNote.accidental();
-  const noteScientific = teoriaNote.scientific();
-  console.log(noteScientific);
+  //const noteScientific = teoriaNote.scientific();
   return `${noteName}${noteAccidental}`;
 };
 
@@ -90,16 +90,11 @@ const getRandomPositionVector = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
-  //QUESTION: maybe a function creating objects based on frequencies instead of notes?
-  // Maybe not, maybe rather play music based on notes
-
-  console.log(`handleControllerKeyDown`);
-
   const positionVector = getRandomPositionVector();
 
-  console.log(frequency, note);
+  console.log(note);
 
-  threeController.scene.manipulateWorldOnNote(note % 12, positionVector);
+  threeController.scene.manipulateWorldOnNote(note, positionVector);
   //toneController.turnAmbientNoiseUp(frequency);
 
   toneController.setListenerPosition(threeController.camera.position, threeController.camera.rotation, threeController.camera.up);
@@ -114,7 +109,9 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
 
   controllerKeyIsDown = true;
 
-  if (Constants.GAME_MODUS_ACTIVATED) {
+  visualKeyboardController.toggleCurrentKeyActive(note);
+
+  if (gameModusIsActive) {
     if (getNotesInfo(pushedNotes).root) return gameController.checkNotePlayed(getNotesInfo(pushedNotes).root);
     gameController.checkNotePlayed(getNoteInfo(note));
   }
@@ -125,6 +122,8 @@ const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   pushedNotes = pushedNotes.filter(n => n !== note);
   toneController.pannerSynth.triggerRelease([frequency]);
   toneController.mainSynth.triggerRelease([frequency]);
+
+  visualKeyboardController.toggleCurrentKeyActive(note);
 
   controllerKeyIsDown = false;
 };
@@ -220,8 +219,8 @@ const toggleFullScreen = () => {
 };
 
 const toggleGameModus = () => {
-  Constants.GAME_MODUS_ACTIVATED = !Constants.GAME_MODUS_ACTIVATED;
   gameController.start();
+  gameModusIsActive = !gameModusIsActive;
 };
 
 const initTone = () => {

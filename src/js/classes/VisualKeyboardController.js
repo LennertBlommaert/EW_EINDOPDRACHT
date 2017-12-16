@@ -12,4 +12,9 @@ export default class VisualKeyBoardController {
     this.keys.push(newKey);
     this.$keysContainer.appendChild(newKey.domElement);
   }
+
+  toggleCurrentKeyActive = note => {
+    this.currentKey = this.keys.find(key => key.note === note);
+    if (this.currentKey) this.currentKey.toggleActive();
+  };
 }

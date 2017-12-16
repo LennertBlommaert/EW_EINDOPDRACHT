@@ -47,98 +47,98 @@ const Constants = {
       key: `Q`,
       keyCode: 81,
       frequency: 130.81,
-      note: 60,
+      note: 0,
       objectName: `Terrain`
     },
-    {
-      key: `A`,
-      keyCode: 65,
-      frequency: 130.81,
-      note: 60,
-      objectName: `Terrain`
-    },
+    // {
+    //   key: `A`,
+    //   keyCode: 65,
+    //   frequency: 130.81,
+    //   note: 0,
+    //   objectName: `Terrain`
+    // },
     {
       key: `W`,
       keyCode: 87,
       frequency: 146.83,
-      note: 62,
+      note: 2,
       objectName: `Tree`
     },
-    {
-      key: `Z`,
-      keyCode: 90,
-      frequency: 146.83,
-      note: 62,
-      objectName: `Tree`
-    },
+    // {
+    //   key: `Z`,
+    //   keyCode: 90,
+    //   frequency: 146.83,
+    //   note: 2,
+    //   objectName: `Tree`
+    // },
     {
       key: `E`,
       keyCode: 69,
       frequency: 164.81,
-      note: 64,
+      note: 4,
       objectName: `Mushroom`
     },
     {
       key: `R`,
       keyCode: 82,
       frequency: 174.61,
-      note: 65,
+      note: 5,
       objectName: `Rock`
     },
     {
       key: `T`,
       keyCode: 84,
       frequency: 195.99,
-      note: 67
+      note: 7
     },
     {
       key: `U`,
       keyCode: 89,
       frequency: 220,
-      note: 69
+      note: 9
     },
     {
       key: `I`,
       keyCode: 85,
       frequency: 246.94,
-      note: 71
+      note: 11
     },
     {
       key: `O`,
       keyCode: 73,
       frequency: 261.62,
-      note: 72
+      note: 0
     },
     //EXTRA KEYS
     {
       key: `2`,
       keyCode: 50,
       frequency: 138.59,
-      note: 49
+      note: 1
     },
     {
       key: `3`,
       keyCode: 51,
       frequency: 155.56,
-      note: 51
+      note: 3
     },
     {
       key: `5`,
       keyCode: 53,
       frequency: 185,
-      note: 54
+      note: 6
     },
     {
       key: `6`,
       keyCode: 54,
       frequency: 207.65,
-      note: 56
+      note: 8
     },
     {
       key: `7`,
       keyCode: 55,
       frequency: 233.08,
-      note: 58
+      note: 10
     },
   ],
 };

@@ -10,7 +10,7 @@ export default class ToneController extends EventEmitter2 {
     super({});
 
     this.beatNote = Constants.BEAT_NOTE;
-    this.seqEvents = [this.beatNote, 0, 0, this.beatNote, 0, 0];
+    this.seqEvents = [this.beatNote, 0, 0, `D0`, 0, 0];
 
     this.seq = new Tone.Sequence(this._playNote, this.seqEvents, `6n`);
     this.seq.start();
@@ -115,8 +115,7 @@ export default class ToneController extends EventEmitter2 {
   toggleBeat = () => this.seq.loop = !this.seq.loop;
 
   setBPM = bpm => {
-    console.log(bpm);
-    Tone.Transport.bpm.rampTo(bpm, 2);
+    Tone.Transport.bpm.rampTo(bpm, .5);
   }
 
   createWind = () => {

@@ -11,9 +11,6 @@ export default class MIDIController extends EventEmitter2 {
 
     this.setMessageCallbacks();
 
-    //SCOPE THIS Error
-    // this.inputValues.forEach(val => val.onmidimessage = Data => this.emit(`midicontrollerkeyup`, parseMessageData(Data)));
-
     this.KEY_UP_COMMAND = 8;
     this.KEY_DOWN_COMMAND = 9;
   }
