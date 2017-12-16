@@ -181,7 +181,7 @@ const handleOnThreeControllerIntersection = objectName => {
 
 const setWorldSpeed = value => {
   $speedSlider.value = value;
-  threeController.controls.setAutorationSpeed(value / 10);
+  threeController.controls.setAutorationSpeed(value / 40);
   toneController.setBPM(value);
 };
 
@@ -271,6 +271,9 @@ const initEventListeners = () => {
     const value = parseInt(e.target.value, 10);
     setWorldSpeed(value);
   });
+
+  window.addEventListener(`blur`, () => toneController.pauseTransport());
+  window.addEventListener(`focus`, () => toneController.startTransport());
 };
 
 const init = () => {

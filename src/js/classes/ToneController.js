@@ -143,4 +143,8 @@ export default class ToneController extends EventEmitter2 {
     this.ambientNoise = this.ambientNoises.find(noise => noise.baseFrequency === frequency);
     if (this.ambientNoise) this.ambientNoise.turnNoiseUp(1);
   }
+
+  startTransport = () => Tone.Transport.start();
+
+  pauseTransport = () => Tone.Transport.pause();
 }
