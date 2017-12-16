@@ -23,6 +23,11 @@ export default class ThreeController extends EventEmitter2 {
     this.linkGUIControls();
   }
 
+  updateMouse(x, y) {
+    this.mouse.x = x;
+    this.mouse.y = y;
+  }
+
   darken() {
     this.camera.pointLight.intensity -= Constants.CAMERA_POINTLIGHT_INTENSITY_CHANGE;
   }
