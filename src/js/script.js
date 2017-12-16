@@ -25,6 +25,7 @@ let currentTonePosition = [0, 0, 0];
 let pushedFrequencies = [];
 let pushedNotes = [];
 
+//const $shortcutVisualisation = document.querySelector(`.shortcut-visualisation`);
 const $speedSlider = document.querySelector(`#bpm-range`);
 const loadedData = {};
 
@@ -85,6 +86,7 @@ const checkChordType = () => {
 };
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
+  //const positionVector = getRandomPositionVector(Constants.WORLD_ELEMENT_POSITION_SPREAD).applyMatrix4(threeController.camera.matrixWorld);
   const positionVector = getRandomPositionVector(Constants.WORLD_ELEMENT_POSITION_SPREAD);
 
   threeController.scene.manipulateWorldOnNote(note, positionVector);
@@ -199,7 +201,6 @@ const initVisualKeyboard = () => {
   visualKeyboardController = new VisualKeyboardController(Constants.KEYS);
   visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseDown`, keyData => handleControllerKeyDown(keyData)));
   visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseUp`, keyData => handleControllerKeyUp(keyData)));
-  // visualKeyboardController.keys.forEach(key => key.on('keyboardVisualisationKeyOnClick', handleKeyboardVisualisationKeyOnClick));
 };
 
 const toggleFullScreen = () => {
@@ -226,20 +227,48 @@ const initTone = () => {
 };
 
 const handleMouseMove = e => {
-  const {x = e.clientX, y = e.clientY, shiftKey} = e;
+  const {x = e.clientX, y = e.clientY, shiftKey, ctrlKey, altKey, metaKey} = e;
 
-  if (shiftKey) {
-    const mappedX = mapNumber(x, 0, window.innerWidth, Constants.BPM_MIN, Constants.BPM_MAX);
-    setWorldSpeed(mappedX);
+  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
+  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
+  toneController.updateEffects(mappedX, mappedY);
 
-    const mappedY = mapNumber(y, 0, window.innerHeight, Constants.MASTER_VOLUME_MIN, Constants.MASTER_VOLUME_MAX);
-    toneController.setMasterVolume(mappedY);
-  }
+  if (shiftKey) handleMouseMoveWithShiftKey(x, y);
+  if (ctrlKey) handleMouseMoveWithControlKey(x, y);
+  if (altKey) handleMouseMoveWithAltKey(x, y);
+  if (metaKey) handleMouseMoveWithMetaKey(x, y);
 
-  threeController.mouse.x = (x / window.innerWidth) * 2 - 1;
-  threeController.mouse.y = (y / window.innerHeight) * 2 - 1;
+  threeController.updateMouse((x / window.innerWidth) * 2 - 1, (y / window.innerHeight) * 2 - 1);
 
-  toneController.updateEffects(x, y);
+  // $shortcutVisualisation.classList.add(`active`);
+  // $shortcutVisualisation.querySelector(`.y`).textContent = parseInt(mappedX, 10);
+  // $shortcutVisualisation.querySelector(`.x`).textContent = parseInt(mappedY, 10);
+  // window.setTimeout($shortcutVisualisation.classList.remove(`active`), 1000);
+};
+
+const handleMouseMoveWithShiftKey = (x, y) => {
+  const mappedX = mapNumber(x, 0, window.innerWidth, Constants.BPM_MIN, Constants.BPM_MAX);
+  const mappedY = mapNumber(y, 0, window.innerHeight, Constants.MASTER_VOLUME_MIN, Constants.MASTER_VOLUME_MAX);
+  setWorldSpeed(mappedX);
+  toneController.setMasterVolume(mappedY);
+};
+
+const handleMouseMoveWithControlKey = (x, y) => {
+  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
+  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
+  threeController.scene.setLightsIntensities(mappedX, mappedY);
+};
+
+const handleMouseMoveWithAltKey = (x, y) => {
+  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
+  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
+  console.log(mappedX, mappedY);
+};
+
+const handleMouseMoveWithMetaKey = (x, y) => {
+  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
+  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
+  console.log(mappedX, mappedY);
 };
 
 const handleCanvasClick = () =>  threeController.checkIntersections();

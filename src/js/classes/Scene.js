@@ -106,7 +106,6 @@ export default class Scene extends THREE.Scene {
 
   createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
     // W/Z on keyboard
-    console.log(note);
 
     if (note === 2) {
       return this.createTree(positionVector);
@@ -389,5 +388,10 @@ export default class Scene extends THREE.Scene {
         child.scale.z += scaleIncreasement - (child.scale.x / 100);
       }
     });
+  }
+
+  setLightsIntensities = (x, y) => {
+    this.shadowLight.intensity = x;
+    this.hemisphereLight.intensity = y;
   }
 }

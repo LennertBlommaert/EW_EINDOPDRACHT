@@ -107,9 +107,6 @@ export default class ToneController extends EventEmitter2 {
   }
 
   updateEffects = (x, y) => {
-    x = x / window.innerWidth;
-    y = y / window.innerHeight;
-
     this.autoWahEffect.wet.value = x;
     this.chorusEffect.wet.value = y;
   }
