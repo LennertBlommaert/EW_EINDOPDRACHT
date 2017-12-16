@@ -1,10 +1,13 @@
 # The_Creation
 
+## LOOK into
+- https://github.com/Tonejs/Tone.js/wiki/Performance
+
 ##IDEAS
-Game
-3D Sound
-Ray
-Moving mouse changes sounds filters
+-Game
+-3D Sound
+-Ray
+-Moving mouse changes sounds filters
 
 ## VRAGEN CONSULT
 - Algemene codes tonen

@@ -158,7 +158,10 @@ const loop = () => {
 
   if (controllerKeyIsDown) {
     threeController.scene.inflateLastChildren(pushedNotes.length);
-    // threeController.scene.inflateLastChild();
+
+    // if (gameModusIsActive) {
+    //   gameController.updateCurrentNote();
+    // }
   }
 
   threeController.renderer.render(threeController.scene, threeController.camera);

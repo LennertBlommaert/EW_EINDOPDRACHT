@@ -24,6 +24,5 @@ export default class Key extends EventEmitter2 {
 
   toggleActive = () => {
     this.domElement.classList.toggle(`active`);
-    console.log(this.domElement);
   }
 }

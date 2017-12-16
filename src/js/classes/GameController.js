@@ -1,37 +1,42 @@
 export default class GameController {
   constructor(noteContainerDomElementClassName) {
     this.$noteContainer = document.querySelector(`.${noteContainerDomElementClassName}`);
+
     // this.notes = [
-    //   `B`, `D`
+    //   `B`, `D`, `B`, `D`, `B`, `D`,
+    //   `A`, `D`, `A`, `D`, `A`, `D`,
+    //   `G`, `D`, `G`, `D`, `G`, `D`,
+    //   `F#`, `D`, `F#`, `D`, `F#`, `D`,
     // ];
 
+    // this.notes = [
+    //   {tone: `F#`, duration: 1}, {tone: `A#`, duration: 1}, {tone: `Eb`, duration: 1}, {tone: `F#`, duration: 1},
+    //   {tone: `A#`, duration: 1}, {tone: `F#`, duration: 1}, {tone: `Eb`, duration: 1}, {tone: `A#`, duration: 1},
+    // ];
 
     this.notes = [
-      `B`, `D`, `B`, `D`, `B`, `D`,
-      `A`, `D`, `A`, `D`, `A`, `D`,
-      `G`, `D`, `G`, `D`, `G`, `D`,
-      `F#`, `D`, `F#`, `D`, `F#`, `D`,
+      {tone: `F#`}, {tone: `A#`}, {tone: `Eb`}, {tone: `F#`},
+      {tone: `A#`}, {tone: `F#`}, {tone: `Eb`}, {tone: `A#`},
+      {tone: `F#`}, {tone: `A#`}, {tone: `Eb`}, {tone: `F#`},
+      {tone: `A#`}, {tone: `F#`}, {tone: `Eb`}, {tone: `A#`},
     ];
 
-    this.notes.forEach((f, i) => {
-      const $li = document.createElement(`li`);
-      $li.textContent = f;
-      $li.dataset.index = i;
-      this.$noteContainer.appendChild($li);
+    // this.currentNoteOpacity = 0;
+    // this.currentNoteScale = 1;
+
+    this.notes.forEach((n, i) => {
+      n.domElement = document.createElement(`li`);
+      n.domElement.textContent = n.tone;
+      n.domElement.dataset.index = i;
+      this.$noteContainer.appendChild(n.domElement);
     });
 
     this.currentNoteIndex = 0;
-
-    // this.song = [
-    //   [`D4`, `8n`], [`A4`, `8n`], [`A4`, `8n`],
-    //   [`E4`, `16n`], [`B4`, `8n`],
-    //   [`C12`, `16n`]
-    // ];
   }
 
   checkNotePlayed = note => {
     console.log(note);
-    if (note === this.getCurrentNote()) return this.correctNotePlayed();
+    if (note === this.getCurrentNote().tone) return this.correctNotePlayed();
     this.wrongNotePlayed();
   }
 
@@ -70,8 +75,16 @@ export default class GameController {
     const $currentNote = this.$noteContainer.querySelector(`li[data-index='${this.currentNoteIndex}']`);
     if ($currentNote) $currentNote.classList.add(`active`);
 
-    this.$noteContainer.style.transform = `translateX(-${7.28 * this.currentNoteIndex}rem)`;
+    this.$noteContainer.style.transform = `translateX(-${10.3 * this.currentNoteIndex}rem)`;
   };
+
+  // updateCurrentNote = () => {
+  //   console.log(this.currentNoteScale);
+  //   this.currentNoteOpacity += 0.1;
+  //   this.currentNoteScale += 0.001;
+  //   this.getCurrentNote().domElement.style.opacity = this.currentNoteOpacity;
+  //   this.getCurrentNote().domElement.style.transform = `scale(${this.currentNoteScale})`;
+  // }
 
   resetNoteContainersClassLists = () => Array.from(this.$noteContainer.querySelectorAll(`li`)).forEach(li => li.classList.remove(`active`));
 

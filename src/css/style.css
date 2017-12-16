@@ -105,9 +105,9 @@ body {
   display: flex;
 
   & li {
-    padding: 2rem;
     opacity: .5;
     transition: all ease .5s;
+    padding: 2rem;
   }
 
   & .active {

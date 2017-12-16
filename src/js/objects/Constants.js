@@ -33,8 +33,8 @@ const Constants = {
   BPM: 120,
   BPM_MIN: 80,
   BPM_MAX: 160,
-  MASTER_VOLUME_MIN: - 10,
-  MASTER_VOLUME_MAX: 10,
+  MASTER_VOLUME_MIN: - 15,
+  MASTER_VOLUME_MAX: 15,
 
   //MIDI
   MIDI_KEY_UP_COMMAND: 8,
@@ -90,7 +90,7 @@ const Constants = {
       keyCode: 69,
       frequency: 164.81,
       note: 4,
-      objectName: `Mushroom`
+      objectName: `Cloud`
     },
     {
       key: `R`,
@@ -109,7 +109,8 @@ const Constants = {
       key: `T`,
       keyCode: 84,
       frequency: 195.99,
-      note: 7
+      note: 7,
+      objectName: `Mushroom`
     },
     {
       key: `6`,
@@ -118,10 +119,11 @@ const Constants = {
       note: 8
     },
     {
-      key: `U`,
+      key: `Y`,
       keyCode: 89,
       frequency: 220,
-      note: 9
+      note: 9,
+      objectName: `Flower`
     },
     {
       key: `7`,
@@ -130,13 +132,14 @@ const Constants = {
       note: 10
     },
     {
-      key: `I`,
+      key: `U`,
       keyCode: 85,
       frequency: 246.94,
-      note: 11
+      note: 11,
+      objectName: `Evergreen`
     },
     {
-      key: `O`,
+      key: `I`,
       keyCode: 73,
       frequency: 261.62,
       note: 12
