@@ -3,6 +3,7 @@ import Tree from '../classes/Tree';
 import Rock from '../classes/Rock';
 import Mushroom from '../classes/Mushroom';
 import Evergreen from '../classes/Evergreen';
+import Flower from '../classes/Flower';
 import Colors from '../objects/Colors';
 import Particles from '../classes/Particles';
 import Constants from '../objects/Constants';
@@ -27,6 +28,7 @@ export default class Scene extends THREE.Scene {
     this.rocks = [];
     this.mushrooms = [];
     this.evergreens = [];
+    this.flowers = [];
 
     window.setInterval(this.shrinkChildren, Constants.SCENE_SHRINK_CHILDREN_INTERVAL);
 
@@ -129,6 +131,11 @@ export default class Scene extends THREE.Scene {
     if (note === 9) {
       return this.createEvergreen(positionVector);
     }
+
+    // U on keyboard
+    if (note === 11) {
+      return this.createFlower(positionVector);
+    }
   }
 
   addParticles = () => {
@@ -228,6 +235,25 @@ export default class Scene extends THREE.Scene {
     return newEvergreen;
   }
 
+  createFlower = positionVector => {
+
+    const deadFlower = this.flowers.find(flower => flower.mesh.visible === false);
+    if (deadFlower) {
+      //NOTE: Should be worldElement.animateGrowth();
+      //But resusing same (unlooped) actions is very bugy
+      //Look back into another timeScale
+      //currently overwriting al actions
+      return deadFlower .setupAnimations();
+    }
+
+    const newFlower = new Flower(this.loadedData.flowerData[0], this.loadedData.flowerData[1], positionVector);
+    this.flowers.push(newFlower);
+
+    this.add(newFlower.mesh);
+
+    return newFlower;
+  }
+
   raiseTerrain = (distanceFromCamera = 0, increasement = 10) => {
 
     //WHEN USING THREE.Terrain
@@ -296,6 +322,7 @@ export default class Scene extends THREE.Scene {
     this.rocks.forEach(rock => rock.updateAnimationMixer(deltaSeconds));
     this.mushrooms.forEach(mushroom => mushroom.updateAnimationMixer(deltaSeconds));
     this.evergreens.forEach(evergreen => evergreen.updateAnimationMixer(deltaSeconds));
+    this.flowers.forEach(flower => flower.updateAnimationMixer(deltaSeconds));
   }
 
   emptyScene = () => {
@@ -325,6 +352,9 @@ export default class Scene extends THREE.Scene {
 
     const livingEvergreen = this.evergreens.find(evergreen => evergreen.mesh.visible === true);
     if (livingEvergreen) livingEvergreen.animateShrink();
+
+    const livingFlower = this.flowers.find(flower => flower.mesh.visible === true);
+    if (livingFlower) livingFlower.animateShrink();
 
   }
 

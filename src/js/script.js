@@ -349,6 +349,17 @@ const loadJSONFiles = () => {
       }
     )
 
+  )
+  .then(
+
+    loader.load(
+      `assets/data/flower.json`,
+      (geom, mat) => {
+        loadedData.flowerData = [geom, mat];
+        return;
+      }
+    )
+
   );
 };
 
