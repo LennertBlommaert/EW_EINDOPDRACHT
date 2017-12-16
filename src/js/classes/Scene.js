@@ -76,12 +76,6 @@ export default class Scene extends THREE.Scene {
       ySize: Constants.SCENE_TERRIAN_DIMENSION,
     });
 
-    // const geometry = new THREE.PlaneGeometry(1024, 1024, 63, 63);
-    // const material = new THREE.MeshBasicMaterial({color: 0x0B6623, side: THREE.DoubleSide, flatShading: true});
-    // const terrain = new THREE.Mesh(geometry, material);
-    // terrain.rotation.x = - Math.PI / 2;
-
-
     terrain.name = `Terrain`;
 
     // NO EFFECT
@@ -96,15 +90,9 @@ export default class Scene extends THREE.Scene {
 
     this.add(terrain);
   }
-  /*
-  this.mesh.position.z = getRandomArbitrary(- 500, 500);
-  this.mesh.position.x = getRandomArbitrary(- 500, 500);
-  this.mesh.position.y = getRandomArbitrary(- 10, - 5);
-  */
+
   manipulateWorldOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
 
-    // A/Q key on keyboard
-    //console.log(this.getObjectByName(`Terrain`));
     if (note === 0) {
       return this.raiseTerrain(Constants.SCENE_TERRIAN_DIMENSION / 4, 5);
     }
@@ -142,7 +130,13 @@ export default class Scene extends THREE.Scene {
 
   createCloud = positionVector => {
     const deadCloud = this.clouds.find(cloud => cloud.mesh.visible === false);
-    if (deadCloud) return deadCloud.animateGrowth();
+    if (deadCloud) {
+      //NOTE: Should be worldElement.animateGrowth();
+      //But resusing same (unlooped) actions is very bugy
+      //Look back into another timeScale
+      //currently overwriting al actions
+      return deadCloud.setupAnimations();
+    }
 
     const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], positionVector);
     this.clouds.push(newCloud);
@@ -154,7 +148,13 @@ export default class Scene extends THREE.Scene {
 
   createRock = positionVector => {
     const deadRock = this.rocks.find(rock => rock.mesh.visible === false);
-    if (deadRock) return deadRock.animateGrowth();
+    if (deadRock) {
+      //NOTE: Should be worldElement.animateGrowth();
+      //But resusing same (unlooped) actions is very bugy
+      //Look back into another timeScale
+      //currently overwriting al actions
+      return deadRock.setupAnimations();
+    }
 
     const newRock = new Rock(this.loadedData.rockData[0], this.loadedData.rockData[1], positionVector);
     this.rocks.push(newRock);
@@ -166,7 +166,13 @@ export default class Scene extends THREE.Scene {
 
   createMushroom = positionVector => {
     const deadMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === false);
-    if (deadMushroom) return deadMushroom.animateGrowth();
+    if (deadMushroom) {
+      //NOTE: Should be worldElement.animateGrowth();
+      //But resusing same (unlooped) actions is very bugy
+      //Look back into another timeScale
+      //currently overwriting al actions
+      return deadMushroom.setupAnimations();
+    }
 
     const newMushroom = new Mushroom(this.loadedData.mushroomData[0], this.loadedData.mushroomData[1], positionVector);
     this.mushrooms.push(newMushroom);
@@ -177,8 +183,17 @@ export default class Scene extends THREE.Scene {
   };
 
   createTree = positionVector => {
+
     const deadTree = this.trees.find(tree => tree.mesh.visible === false);
-    if (deadTree) return deadTree.animateGrowth();
+    if (deadTree) {
+      //NOTE: Should be worldElement.animateGrowth();
+      //But resusing same (unlooped) actions is very bugy
+      //Look back into another timeScale
+      //currently overwriting al actions
+      return deadTree.setupAnimations();
+    }
+
+    console.log(this.trees);
 
     const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);
     this.trees.push(newTree);

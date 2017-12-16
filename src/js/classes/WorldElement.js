@@ -16,9 +16,8 @@ export default class WorldElement {
 
     this._constructMesh();
 
-    this._setupAnimations();
+    this.setupAnimations();
 
-    this.animateGrowth();
     //this.animateWiggle();
 
     this.toggleMeshVisibility();
@@ -35,7 +34,7 @@ export default class WorldElement {
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
   }
 
-  _setupAnimations = () => {
+  setupAnimations = () => {
     this.mixer = new THREE.AnimationMixer(this.mesh);
 
     this._setupGrowthAction();
@@ -43,10 +42,14 @@ export default class WorldElement {
     this._setupShrinkAction();
 
     this.mixer.addEventListener(`finished`, e => this.onAnimationActionFinished(e));
+
+    this.animateGrowth();
   }
 
   onAnimationActionFinished = e => {
     const {action} = e;
+
+    console.log(action._clip.name);
 
     if (action._clip.name === `grow`) this.animateWiggle();
     //WHEN WORKING WITH SET REPITIONS FOR WIGGLE
@@ -85,14 +88,19 @@ export default class WorldElement {
     this.growthAction.enabled = false;
     this.wiggleAction.enabled = false;
     this.toggleMeshVisibility();
+    this.shrinkAction.crossFadeTo(this.growthAction, 0, true);
+    this.mixer.stopAllAction();
+    console.log(this.mixer);
   }
 
   animateGrowth = () => {
+    console.log(`ANIMATE GROWTH`);
     this.toggleMeshVisibility();
     this.growthAction.play();
   }
 
   animateWiggle = () => {
+    console.log(`ANIMATE WIGGLE`);
     this.growthAction.crossFadeTo(this.wiggleAction, .5, true);
     this.wiggleAction.play();
   }
