@@ -53,7 +53,7 @@ export default class WorldElement {
 
   _setupGrowthAction = () => {
     this.growMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`grow_`));
-    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`grow`, this.growMorphTargs, 60, true);
+    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`grow`, this.growMorphTargs, 25, true);
     this.growthAction = this.mixer.clipAction(this.growthClip);
     this.growthAction.setLoop(THREE.LoopOnce);
     this.growthAction.clampWhenFinished = true;
@@ -61,7 +61,7 @@ export default class WorldElement {
 
   _setupWiggleAction = () => {
     this.wiggleMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`wiggle_`));
-    this.wiggleClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`wiggle`, this.wiggleMorphTargs, 60, false);
+    this.wiggleClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`wiggle`, this.wiggleMorphTargs, 25, false);
     this.wiggleAction = this.mixer.clipAction(this.wiggleClip);
     this.wiggleAction.setLoop(THREE.LoopRepeat);
     //this.wiggleAction.repetitions = 12;
@@ -70,7 +70,7 @@ export default class WorldElement {
 
   _setupShrinkAction = () => {
     this.shrinkMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`shrink_`));
-    this.shrinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`shrink`, this.shrinkMorphTargs, 60, true);
+    this.shrinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`shrink`, this.shrinkMorphTargs, 25, true);
     this.shrinkAction = this.mixer.clipAction(this.shrinkClip);
     this.shrinkAction.setLoop(THREE.LoopOnce);
     //this.shrinkAction.clampWhenFinished = true;

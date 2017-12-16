@@ -335,6 +335,17 @@ const loadJSONFiles = () => {
       }
     )
 
+  )
+  .then(
+
+    loader.load(
+      `assets/data/evergreen.json`,
+      (geom, mat) => {
+        loadedData.evergreenData = [geom, mat];
+        return;
+      }
+    )
+
   );
 };
 
