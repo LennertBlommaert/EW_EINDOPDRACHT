@@ -41,61 +41,104 @@ const Constants = {
   GAME_MODUS_ACTIVATED: false,
   WIDTH: window.innerWidth,
   HEIGHT: window.innerHeight,
-  KEY_NOTE_FREQUENCY_OBJECTNAME: [
+  KEYS: [
+    //STANDARD KEYS
     {
+      key: `Q`,
       keyCode: 81,
       frequency: 130.81,
       note: 60,
       objectName: `Terrain`
     },
     {
+      key: `A`,
+      keyCode: 65,
+      frequency: 130.81,
+      note: 60,
+      objectName: `Terrain`
+    },
+    {
+      key: `W`,
       keyCode: 87,
       frequency: 146.83,
       note: 62,
       objectName: `Tree`
     },
     {
-      keyCode: 65,
-      frequency: 164.81,
-      note: 60,
-      objectName: `Cloud`
-    },
-    {
+      key: `Z`,
       keyCode: 90,
-      frequency: 174.61,
+      frequency: 146.83,
       note: 62,
-      objectName: `Rock`
+      objectName: `Tree`
     },
     {
+      key: `E`,
       keyCode: 69,
-      frequency: 195.99,
+      frequency: 164.81,
       note: 64,
       objectName: `Mushroom`
     },
     {
+      key: `R`,
       keyCode: 82,
-      frequency: 220.00,
-      note: 65
+      frequency: 174.61,
+      note: 65,
+      objectName: `Rock`
     },
     {
+      key: `T`,
       keyCode: 84,
-      frequency: 246.94,
+      frequency: 195.99,
       note: 67
     },
     {
+      key: `U`,
       keyCode: 89,
-      frequency: 261.62,
+      frequency: 220,
       note: 69
     },
     {
+      key: `I`,
       keyCode: 85,
-      frequency: 493.88,
+      frequency: 246.94,
       note: 71
     },
     {
+      key: `O`,
       keyCode: 73,
-      frequency: 523.25,
+      frequency: 261.62,
       note: 72
+    },
+    //EXTRA KEYS
+    {
+      key: `2`,
+      keyCode: 50,
+      frequency: 138.59,
+      note: 49
+    },
+    {
+      key: `3`,
+      keyCode: 51,
+      frequency: 155.56,
+      note: 51
+    },
+    {
+      key: `5`,
+      keyCode: 53,
+      frequency: 185,
+      note: 54
+    },
+    {
+      key: `6`,
+      keyCode: 54,
+      frequency: 207.65,
+      note: 56
+    },
+    {
+      key: `7`,
+      keyCode: 55,
+      frequency: 233.08,
+      note: 58
     },
   ],
 };

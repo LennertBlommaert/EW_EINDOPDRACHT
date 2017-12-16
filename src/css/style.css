@@ -115,3 +115,16 @@ body {
     transform: scale(1.3);
   }
 }
+
+.keys-container {
+  display: flex;
+  cursor: pointer;
+}
+
+.key {
+  padding: 1rem;
+
+  &.active {
+    color: red;
+  }
+}

@@ -7,6 +7,9 @@ const $speedSlider = document.querySelector(`#bpm-range`);
 import MIDIController from './classes/MIDIController';
 let midiController;
 
+import VisualKeyboardController from './classes/VisualKeyboardController';
+let visualKeyboardController;
+
 import ThreeController from './classes/ThreeController.js';
 let threeController;
 const loadedData = {};
@@ -90,7 +93,11 @@ const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) =
   //QUESTION: maybe a function creating objects based on frequencies instead of notes?
   // Maybe not, maybe rather play music based on notes
 
+  console.log(`handleControllerKeyDown`);
+
   const positionVector = getRandomPositionVector();
+
+  console.log(frequency, note);
 
   threeController.scene.manipulateWorldOnNote(note % 12, positionVector);
   //toneController.turnAmbientNoiseUp(frequency);
@@ -166,10 +173,8 @@ const loop = () => {
 };
 
 const getKeyCodeData = keyCode => {
-  const keyCodeData = Constants.KEY_NOTE_FREQUENCY_OBJECTNAME.find(d => d.keyCode === keyCode);
-
-  if (keyCodeData !== undefined) return keyCodeData;
-  return {};
+  const keyCodeData = Constants.KEYS.find(d => d.keyCode === keyCode);
+  return keyCodeData;
 };
 
 const handleOnThreeControllerIntersection = objectName => {
@@ -195,9 +200,15 @@ const initThree = () => {
   loop();
 };
 
+const initVisualKeyboard = () => {
+  visualKeyboardController = new VisualKeyboardController(Constants.KEYS);
+  visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseDown`, keyData => handleControllerKeyDown(keyData)));
+  visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseUp`, keyData => handleControllerKeyUp(keyData)));
+  // visualKeyboardController.keys.forEach(key => key.on('keyboardVisualisationKeyOnClick', handleKeyboardVisualisationKeyOnClick));
+};
+
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
-    console.log(document.querySelector(`.world`));
     document.querySelector(`.world`).requestFullscreen();
     handleWindowResize();
   } else {
@@ -243,12 +254,16 @@ const initEventListeners = () => {
   $toggleGameModusButton.addEventListener(`click`, toggleGameModus);
 
   window.addEventListener(`keydown`, ({keyCode}) => {
-    if (keyCode === 13 || keyCode === 27) return;
-    handleControllerKeyDown(getKeyCodeData(keyCode));
+    if (getKeyCodeData(keyCode) !== undefined) {
+      console.log(getKeyCodeData(keyCode));
+      handleControllerKeyDown(getKeyCodeData(keyCode));
+    }
   });
   window.addEventListener(`keyup`, ({keyCode}) => {
     if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
-    handleControllerKeyUp(getKeyCodeData(keyCode));
+    if (getKeyCodeData(keyCode) !== undefined) {
+      handleControllerKeyUp(getKeyCodeData(keyCode));
+    }
   });
 
   window.addEventListener(`mousemove`, handleMouseMove);
@@ -267,6 +282,7 @@ const init = () => {
       initThree();
       initTone();
       initEventListeners();
+      initVisualKeyboard();
       gameController = new GameController(`game-notes`);
     })
     .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
