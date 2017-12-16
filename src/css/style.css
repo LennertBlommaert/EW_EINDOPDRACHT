@@ -118,11 +118,21 @@ body {
 
 .keys-container {
   display: flex;
+  justify-content: space-between;
   cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 15vw);
+  width: 30vw;
+  z-index: 5;
+  padding-bottom: 3rem;
 }
 
 .key {
   padding: 1rem;
+  background-color: #1c151e;
+  width: 4rem;
+  height: 6rem;
 
   &.active {
     color: red;
