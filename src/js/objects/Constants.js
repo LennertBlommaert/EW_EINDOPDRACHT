@@ -16,7 +16,7 @@ const Constants = {
   CAMERA_FIELD_OF_VIEW: 100,
   CAMERA_NEAR: 1,
   CAMERA_FAR: 2000,
-  CAMERA_POSITION: {x: 0, y: 100, z: 0},
+  CAMERA_POSITION: {x: 0, y: 20, z: 100},
 
   CONTROLS_AUTROTATE_SPEED: 10,
 
@@ -58,6 +58,12 @@ const Constants = {
     //   objectName: `Terrain`
     // },
     {
+      key: `2`,
+      keyCode: 50,
+      frequency: 138.59,
+      note: 1
+    },
+    {
       key: `W`,
       keyCode: 87,
       frequency: 146.83,
@@ -71,6 +77,12 @@ const Constants = {
     //   note: 2,
     //   objectName: `Tree`
     // },
+    {
+      key: `3`,
+      keyCode: 51,
+      frequency: 155.56,
+      note: 3
+    },
     {
       key: `E`,
       keyCode: 69,
@@ -86,16 +98,34 @@ const Constants = {
       objectName: `Rock`
     },
     {
+      key: `5`,
+      keyCode: 53,
+      frequency: 185,
+      note: 6
+    },
+    {
       key: `T`,
       keyCode: 84,
       frequency: 195.99,
       note: 7
     },
     {
+      key: `6`,
+      keyCode: 54,
+      frequency: 207.65,
+      note: 8
+    },
+    {
       key: `U`,
       keyCode: 89,
       frequency: 220,
       note: 9
+    },
+    {
+      key: `7`,
+      keyCode: 55,
+      frequency: 233.08,
+      note: 10
     },
     {
       key: `I`,
@@ -107,39 +137,9 @@ const Constants = {
       key: `O`,
       keyCode: 73,
       frequency: 261.62,
-      note: 0
+      note: 12
     },
     //EXTRA KEYS
-    {
-      key: `2`,
-      keyCode: 50,
-      frequency: 138.59,
-      note: 1
-    },
-    {
-      key: `3`,
-      keyCode: 51,
-      frequency: 155.56,
-      note: 3
-    },
-    {
-      key: `5`,
-      keyCode: 53,
-      frequency: 185,
-      note: 6
-    },
-    {
-      key: `6`,
-      keyCode: 54,
-      frequency: 207.65,
-      note: 8
-    },
-    {
-      key: `7`,
-      keyCode: 55,
-      frequency: 233.08,
-      note: 10
-    },
   ],
 };
 

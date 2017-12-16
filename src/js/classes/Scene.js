@@ -102,6 +102,7 @@ export default class Scene extends THREE.Scene {
 
   createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
     // W/Z on keyboard
+    console.log(note);
 
     if (note === 2) {
       return this.createTree(positionVector);
@@ -193,8 +194,6 @@ export default class Scene extends THREE.Scene {
       return deadTree.setupAnimations();
     }
 
-    console.log(this.trees);
-
     const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);
     this.trees.push(newTree);
 
@@ -275,25 +274,11 @@ export default class Scene extends THREE.Scene {
   emptyScene = () => {
 
     while (this.children.length > 0) {
-      this.children[0].children.forEach(c => {
-        c.material.dispose();
-        c.geometry.dispose();
-      });
-
-      this.remove(this.children[0]);
+      this.removeChild(this.children[0]);
     }
 
     this.addLights();
     this.addTerrain();
-
-  }
-
-  brighten = () => {
-    console.info(`BRIGHTEN THE WORLD UP`);
-  }
-
-  darken = () => {
-    console.info(`DARKEN THE WORLD DOWN`);
   }
 
   shrinkChildren = () => {

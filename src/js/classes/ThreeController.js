@@ -19,24 +19,16 @@ export default class ThreeController extends EventEmitter2 {
     this.mouse = new THREE.Vector2();
 
     this.scene.add(this.camera);
-    //this.scene.add(this.camera.pointLight);
 
     this.linkGUIControls();
-
-    // does not work - PROBLEM w/ Camera + orbitcontrols
-    //this.camera.rotation.x = 0;
-    //this.camera.updateProjectionMatrix;
-    //this.controls.update();
   }
 
   darken() {
-    this.scene.darken();
     this.camera.pointLight.intensity -= Constants.CAMERA_POINTLIGHT_INTENSITY_CHANGE;
   }
 
   brighten() {
     this.camera.pointLight.intensity += Constants.CAMERA_POINTLIGHT_INTENSITY_CHANGE;
-    this.scene.brighten();
   }
 
 
@@ -62,9 +54,6 @@ export default class ThreeController extends EventEmitter2 {
 
     this.$autoRotateButton = document.querySelector(`.auto-rotation-button`);
     this.$autoRotateButton.addEventListener(`click`, this.controls.toggleAutorotate);
-
-  //   this.$autRotateSpeedRange = document.querySelector(`#auto-rotation-speed`);
-  //   this.$autRotateSpeedRange.addEventListener(`input`, ({currentTarget}) => this.controls.setAutorationSpeed(parseFloat(currentTarget.value, 10)));
   }
 
 }

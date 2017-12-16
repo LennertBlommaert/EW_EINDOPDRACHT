@@ -50,10 +50,12 @@ const MIDISucces = MIDIAccess => {
 };
 
 const minorChordPlayed = () => {
+  //MORE / LESS DISTORTION
   threeController.darken();
 };
 
 const majorChordPlayed = () => {
+  //MORE / LESS DISTORTION
   threeController.brighten();
 };
 
