@@ -4,6 +4,7 @@ import VisualKeyboardController from './classes/VisualKeyboardController/';
 
 import MIDIController from './classes/MIDIController';
 import GameController from './classes/GameController';
+import ShortcutVisualisation from './classes/ShortcutVisualisation';
 
 import {getRandomPositionVector, mapNumber} from './lib/functions';
 
@@ -12,13 +13,12 @@ import piu from 'piu';
 
 import Constants from './objects/Constants';
 
-let threeController, midiController, gameController, visualKeyboardController, toneController;
+let threeController, midiController, gameController, visualKeyboardController, toneController, shortcutVisualisation;
 
 let controllerKeyIsDown = false, gameModusIsActive = false;
 
 let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 
-//const $shortcutVisualisation = document.querySelector(`.shortcut-visualisation`);
 const $speedSlider = document.querySelector(`#bpm-range`);
 const loadedData = {};
 
@@ -225,46 +225,41 @@ const initTone = () => {
 const handleMouseMove = e => {
   const {x = e.clientX, y = e.clientY, shiftKey, ctrlKey, altKey, metaKey} = e;
 
+  threeController.updateMouse((x / window.innerWidth) * 2 - 1, (y / window.innerHeight) * 2 - 1);
+
   const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
   const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
   toneController.updateEffects(mappedX, mappedY);
 
-  if (shiftKey) handleMouseMoveWithShiftKey(x, y);
-  if (ctrlKey) handleMouseMoveWithControlKey(x, y);
-  if (altKey) handleMouseMoveWithAltKey(x, y);
-  if (metaKey) handleMouseMoveWithMetaKey(x, y);
+  shortcutVisualisation.reposition(x, y);
 
-  threeController.updateMouse((x / window.innerWidth) * 2 - 1, (y / window.innerHeight) * 2 - 1);
+  if (shiftKey) return handleMouseMoveWithShiftKey(mappedX, mappedY);
+  if (ctrlKey) return handleMouseMoveWithControlKey(mappedX, mappedY);
+  if (altKey) return handleMouseMoveWithAltKey(mappedX, mappedY);
+  if (metaKey) return handleMouseMoveWithMetaKey(mappedX, mappedY);
 
-  // $shortcutVisualisation.classList.add(`active`);
-  // $shortcutVisualisation.querySelector(`.y`).textContent = parseInt(mappedX, 10);
-  // $shortcutVisualisation.querySelector(`.x`).textContent = parseInt(mappedY, 10);
-  // window.setTimeout($shortcutVisualisation.classList.remove(`active`), 1000);
+  shortcutVisualisation.update({nameX: `Wah`, valueX: mappedX}, {nameY: `Chorus`, valueY: mappedY});
 };
 
 const handleMouseMoveWithShiftKey = (x, y) => {
-  const mappedX = mapNumber(x, 0, window.innerWidth, Constants.BPM_MIN, Constants.BPM_MAX);
-  const mappedY = mapNumber(y, 0, window.innerHeight, Constants.MASTER_VOLUME_MIN, Constants.MASTER_VOLUME_MAX);
-  setWorldSpeed(mappedX);
-  toneController.setMasterVolume(mappedY);
+  // const mappedX = mapNumber(x, 0, window.innerWidth, Constants.BPM_MIN, Constants.BPM_MAX);
+  // const mappedY = mapNumber(y, 0, window.innerHeight, Constants.MASTER_VOLUME_MIN, Constants.MASTER_VOLUME_MAX);
+  setWorldSpeed(x * Constants.BPM_MAX);
+  toneController.setMasterVolume(y * Constants.MASTER_VOLUME_MAX);
+  shortcutVisualisation.update({nameX: `Speed`, valueX: x}, {nameY: `Volume`, valueY: y});
 };
 
 const handleMouseMoveWithControlKey = (x, y) => {
-  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
-  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
-  threeController.scene.setLightsIntensities(mappedX, mappedY);
+  threeController.scene.setLightsIntensities(x, y);
+  shortcutVisualisation.update({nameX: `Shadow light`, valueX: x}, {nameY: `Global light`, valueY: y});
 };
 
 const handleMouseMoveWithAltKey = (x, y) => {
-  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
-  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
-  console.log(mappedX, mappedY);
+  console.log(x, y);
 };
 
 const handleMouseMoveWithMetaKey = (x, y) => {
-  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
-  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
-  console.log(mappedX, mappedY);
+  console.log(x, y);
 };
 
 const handleCanvasClick = () =>  threeController.checkIntersections();
@@ -315,6 +310,7 @@ const init = () => {
 
   getMIDIAccess();
   initVisualKeyboard();
+  shortcutVisualisation = new ShortcutVisualisation(document.querySelector(`.shortcut-visualisation`));
 };
 
 const loadJSONFiles = () => {

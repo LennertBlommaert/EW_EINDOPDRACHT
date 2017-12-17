@@ -17,6 +17,18 @@ body {
   */
 }
 
+.shortcut-visualisation {
+  position: absolute;
+  width: 3rem;
+  z-index: 10;
+  opacity: 0;
+  color: white;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
 .gui {
   background-color: midnightblue;
   color: white;

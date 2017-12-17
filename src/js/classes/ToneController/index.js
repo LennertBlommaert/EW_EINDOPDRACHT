@@ -125,7 +125,7 @@ export default class ToneController extends EventEmitter2 {
   toggleBeat = () => this.seq.loop = !this.seq.loop;
 
   setBPM = bpm => {
-    Tone.Transport.bpm.rampTo(bpm, .5);
+    if (bpm > 0) Tone.Transport.bpm.rampTo(bpm, .5);
   }
 
   _createWind = () => {
