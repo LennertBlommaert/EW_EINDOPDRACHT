@@ -194,6 +194,7 @@ const initThree = () => {
 
 const initVisualKeyboard = () => {
   visualKeyboardController = new VisualKeyboardController(Constants.KEYS);
+  visualKeyboardController.addKeysContainerActive();
   visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseDown`, keyData => handleControllerKeyDown(keyData)));
   visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseUp`, keyData => handleControllerKeyUp(keyData)));
 };
