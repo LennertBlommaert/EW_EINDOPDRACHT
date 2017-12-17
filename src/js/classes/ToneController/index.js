@@ -104,8 +104,9 @@ export default class ToneController extends EventEmitter2 {
     this.$volumeRange = document.querySelector(`#sound-volume-range`);
     this.$volumeRange.addEventListener(`input`, ({currentTarget}) => this.handleVolumeRangeInput(parseInt(currentTarget.value, 10)));
 
-    this.$autoRotateButton = document.querySelector(`.drum-beat-button`);
-    this.$autoRotateButton.addEventListener(`click`, this.toggleBeat);
+    this.$drumBeatButton = document.querySelector(`.drum-beat-button`);
+    this.$drumBeatButton.classList.add(`btn-toggle`);
+    this.$drumBeatButton.addEventListener(`click`, this.toggleBeat);
   }
 
   updateEffects = (x, y) => {
@@ -122,7 +123,10 @@ export default class ToneController extends EventEmitter2 {
     this.$volumeRange.value = volume;
   }
 
-  toggleBeat = () => this.seq.loop = !this.seq.loop;
+  toggleBeat = () => {
+    this.$drumBeatButton.classList.toggle(`btn-toggle`);
+    this.seq.loop = !this.seq.loop;
+  }
 
   setBPM = bpm => {
     Tone.Transport.bpm.rampTo(bpm, .5);

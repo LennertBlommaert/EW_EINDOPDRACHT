@@ -19,7 +19,10 @@ let controllerKeyIsDown = false, gameModusIsActive = false;
 let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 
 //const $shortcutVisualisation = document.querySelector(`.shortcut-visualisation`);
-const $speedSlider = document.querySelector(`#bpm-range`);
+const $speedSlider = document.querySelector(`#bpm-range`),
+  $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`),
+  $toggleGameModusButton = document.querySelector(`.toggle-game-modus`);
+
 const loadedData = {};
 
 // Currently unavailable, yet promising
@@ -200,6 +203,7 @@ const initVisualKeyboard = () => {
 };
 
 const toggleFullScreen = () => {
+  $toggleFullScreenButton.classList.toggle(`btn-toggle`);
   if (!document.fullscreenElement) {
     document.querySelector(`.world`).requestFullscreen();
     handleWindowResize();
@@ -212,6 +216,7 @@ const toggleFullScreen = () => {
 };
 
 const toggleGameModus = () => {
+  $toggleGameModusButton.classList.toggle(`btn-toggle`);
   gameController.start();
   gameModusIsActive = !gameModusIsActive;
 };
@@ -267,13 +272,20 @@ const handleMouseMoveWithMetaKey = (x, y) => {
   console.log(mappedX, mappedY);
 };
 
+const handleStartClick = () => {
+  const $startContainer = document.querySelector(`.start-container`),
+    $gui = document.querySelector(`.gui`);
+  $startContainer.style.display = `none`;
+  $gui.classList.add(`gui-activated`);
+  initVisualKeyboard();
+};
+
 const handleCanvasClick = () =>  threeController.checkIntersections();
 
 const initEventListeners = () => {
-  const $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`);
+  const $startbtn = document.querySelector(`.start-info-btn`);
+  $startbtn.addEventListener(`click`, handleStartClick);
   $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
-
-  const $toggleGameModusButton = document.querySelector(`.toggle-game-modus`);
   $toggleGameModusButton.addEventListener(`click`, toggleGameModus);
 
   window.addEventListener(`keydown`, ({keyCode}) => {
@@ -314,7 +326,6 @@ const init = () => {
     .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
 
   getMIDIAccess();
-  initVisualKeyboard();
 };
 
 const loadJSONFiles = () => {
