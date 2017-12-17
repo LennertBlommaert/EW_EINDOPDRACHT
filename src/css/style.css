@@ -117,24 +117,51 @@ body {
 }
 
 .keys-container {
-  display: flex;
-  justify-content: space-between;
   cursor: pointer;
   position: absolute;
-  bottom: 0;
-  left: calc(50% - 15vw);
-  width: 30vw;
+  left: 50%;
+  width: 40vw;
+
+  transform: translate(-50%, 10%);
+  opacity: 0;
+
+  bottom: 3%;
   z-index: 5;
-  padding-bottom: 3rem;
+  text-align: center;
+  font-size: 1.5rem;
+
+  &.active {
+    transition: all 1s ease;
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+
+  & div {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.white-keys {
+
+  & .key {
+    background-color: grey;
+    padding: 2rem 1.5rem;
+  }
+}
+
+.black-keys {
+
+  & .key {
+    color: grey;
+    background-color: black;
+    padding: 1.5rem;
+  }
 }
 
 .key {
-  padding: 1rem;
-  background-color: #1c151e;
-  width: 4rem;
-  height: 6rem;
 
   &.active {
-    color: red;
+    color: white;
   }
 }

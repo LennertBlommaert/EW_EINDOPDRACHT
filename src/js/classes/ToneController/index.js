@@ -1,9 +1,11 @@
-import EventEmitter2 from '../vendors/eventemitter2';
+import EventEmitter2 from '../../vendors/eventemitter2';
+import Tone from 'tone';
+
 import AmbientNoise from './AmbientNoise';
 import BeatSynth from './BeatSynth';
 import MainSynth from './MainSynth';
-import Constants from '../objects/Constants';
-import Tone from 'tone';
+
+import Constants from '../../objects/Constants';
 
 export default class ToneController extends EventEmitter2 {
   constructor() {

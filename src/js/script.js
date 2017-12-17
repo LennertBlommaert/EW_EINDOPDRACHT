@@ -1,29 +1,22 @@
-import ThreeController from './classes/ThreeController.js';
-import ToneController from './classes/ToneController.js';
-import MIDIController from './classes/MIDIController';
-import GameController from './classes/GameController.js';
-import VisualKeyboardController from './classes/VisualKeyboardController';
+import ThreeController from './classes/ThreeController/';
+import ToneController from './classes/ToneController/';
+import VisualKeyboardController from './classes/VisualKeyboardController/';
 
-import getRandomPositionVector from './lib/getRandomPositionVector';
-import mapNumber from './lib/mapNumber';
+import MIDIController from './classes/MIDIController';
+import GameController from './classes/GameController';
+
+import {getRandomPositionVector, mapNumber} from './lib/functions';
 
 import teoria from 'teoria';
 import piu from 'piu';
 
 import Constants from './objects/Constants';
 
-let threeController;
-let midiController;
-let gameController;
-let visualKeyboardController;
-let toneController;
+let threeController, midiController, gameController, visualKeyboardController, toneController;
 
-let controllerKeyIsDown = false;
-let gameModusIsActive = false;
+let controllerKeyIsDown = false, gameModusIsActive = false;
 
-let currentTonePosition = [0, 0, 0];
-let pushedFrequencies = [];
-let pushedNotes = [];
+let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 
 //const $shortcutVisualisation = document.querySelector(`.shortcut-visualisation`);
 const $speedSlider = document.querySelector(`#bpm-range`);
@@ -47,6 +40,8 @@ const MIDISucces = MIDIAccess => {
   midiController = new MIDIController(MIDIAccess);
   midiController.on(`midicontrollerkeyup`, handleControllerKeyUp);
   midiController.on(`midicontrollerkeydown`, handleControllerKeyDown);
+  midiController.on(`midiControllerConnectionOpen`, () => visualKeyboardController.removeKeysContainerActive());
+  midiController.on(`midiControllerConnectionClosed`, () => visualKeyboardController.addKeysContainerActive());
 };
 
 const minorChordPlayed = () => {
@@ -286,6 +281,7 @@ const initEventListeners = () => {
       handleControllerKeyDown(getKeyCodeData(keyCode));
     }
   });
+
   window.addEventListener(`keyup`, ({keyCode}) => {
     if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
     if (getKeyCodeData(keyCode) !== undefined) {
@@ -312,12 +308,12 @@ const init = () => {
       initThree();
       initTone();
       initEventListeners();
-      initVisualKeyboard();
       gameController = new GameController(`game-notes`);
     })
     .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
 
   getMIDIAccess();
+  initVisualKeyboard();
 };
 
 const loadJSONFiles = () => {

@@ -1,4 +1,4 @@
-import Constants from '../objects/Constants';
+import Constants from '../../objects/Constants';
 
 export default class Camera extends THREE.PerspectiveCamera {
   constructor({aspectRatio = Constants.CAMERA_ASPECTRATIO, fieldOfView = Constants.CAMERA_FIELD_OF_VIEW, near = Constants.CAMERA_NEAR, far = Constants.CAMERA_FAR}) {

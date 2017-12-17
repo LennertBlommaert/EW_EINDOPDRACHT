@@ -1,4 +1,4 @@
-import Constants from '../objects/Constants';
+import Constants from '../../objects/Constants';
 
 export default class Renderer extends THREE.WebGLRenderer {
   constructor({alpha = true, antialias = true}) {

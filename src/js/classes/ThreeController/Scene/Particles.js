@@ -1,5 +1,5 @@
-import Colors from '../objects/Colors';
-import Constants from '../objects/Constants';
+import Colors from '../../../objects/Colors';
+import Constants from '../../../objects/Constants';
 
 class Particles {
 

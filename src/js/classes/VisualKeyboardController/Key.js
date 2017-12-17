@@ -1,4 +1,4 @@
-import EventEmitter2 from '../vendors/eventemitter2';
+import EventEmitter2 from '../../vendors/eventemitter2';
 
 export default class Key extends EventEmitter2 {
   constructor({note, frequency, key}) {

@@ -1,12 +1,13 @@
-import Cloud from '../classes/Cloud';
-import Tree from '../classes/Tree';
-import Rock from '../classes/Rock';
-import Mushroom from '../classes/Mushroom';
-import Evergreen from '../classes/Evergreen';
-import Flower from '../classes/Flower';
-import Colors from '../objects/Colors';
-import Particles from '../classes/Particles';
-import Constants from '../objects/Constants';
+import Cloud from './Cloud';
+import Tree from './Tree';
+import Rock from './Rock';
+import Mushroom from './Mushroom';
+import Evergreen from './Evergreen';
+import Flower from './Flower';
+import Particles from './Particles';
+
+import Colors from '../../../objects/Colors';
+import Constants from '../../../objects/Constants';
 
 export default class Scene extends THREE.Scene {
 

@@ -1,5 +1,5 @@
 import EventEmitter2 from '../vendors/eventemitter2';
-import parseMIDIMessageData from '../lib/parseMIDIMessageData';
+import {parseMIDIMessageData} from '../lib/functions';
 
 export default class MIDIController extends EventEmitter2 {
   constructor(access) {
@@ -39,12 +39,15 @@ export default class MIDIController extends EventEmitter2 {
 
     if (e.port.connection === `pending`) {
       console.info(`MIDI connection - PENDING`);
+      this.emit(`midiControllerConnectionPendig`);
     }
     if (e.port.connection === `closed`) {
       console.info(`MIDI connection - CLOSED`);
+      this.emit(`midiControllerConnectionClosed`);
     }
     if (e.port.connection === `open`) {
       console.info(`MIDI connection - OPEN`);
+      this.emit(`midiControllerConnectionOpen`);
       this.access = e.srcElement;
       this.setMessageCallbacks();
     }

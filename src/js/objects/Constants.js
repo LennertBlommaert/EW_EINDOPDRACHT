@@ -26,7 +26,7 @@ const Constants = {
   PARTICLES_AMOUNT: 500,
   PARTICLES_SPREAD: 1500,
 
-  WORLD_ELEMENT_POSITION_SPREAD: 500,
+  WORLD_ELEMENT_POSITION_SPREAD: 1000,
 
   //TONE
   BEAT_NOTE: `C0`,
@@ -53,6 +53,7 @@ const Constants = {
       keyCode: 81,
       frequency: 130.81,
       note: 0,
+      type: `white`,
       objectName: `Terrain`
     },
     // {
@@ -66,6 +67,7 @@ const Constants = {
       key: `2`,
       keyCode: 50,
       frequency: 138.59,
+      type: `black`,
       note: 1
     },
     {
@@ -73,6 +75,7 @@ const Constants = {
       keyCode: 87,
       frequency: 146.83,
       note: 2,
+      type: `white`,
       objectName: `Tree`
     },
     // {
@@ -86,6 +89,7 @@ const Constants = {
       key: `3`,
       keyCode: 51,
       frequency: 155.56,
+      type: `black`,
       note: 3
     },
     {
@@ -93,6 +97,7 @@ const Constants = {
       keyCode: 69,
       frequency: 164.81,
       note: 4,
+      type: `white`,
       objectName: `Cloud`
     },
     {
@@ -100,12 +105,14 @@ const Constants = {
       keyCode: 82,
       frequency: 174.61,
       note: 5,
+      type: `white`,
       objectName: `Rock`
     },
     {
       key: `5`,
       keyCode: 53,
       frequency: 185,
+      type: `black`,
       note: 6
     },
     {
@@ -113,12 +120,14 @@ const Constants = {
       keyCode: 84,
       frequency: 195.99,
       note: 7,
+      type: `white`,
       objectName: `Mushroom`
     },
     {
       key: `6`,
       keyCode: 54,
       frequency: 207.65,
+      type: `black`,
       note: 8
     },
     {
@@ -126,12 +135,14 @@ const Constants = {
       keyCode: 89,
       frequency: 220,
       note: 9,
+      type: `white`,
       objectName: `Evergreen`
     },
     {
       key: `7`,
       keyCode: 55,
       frequency: 233.08,
+      type: `black`,
       note: 10
     },
     {
@@ -139,12 +150,14 @@ const Constants = {
       keyCode: 85,
       frequency: 246.94,
       note: 11,
+      type: `white`,
       objectName: `Flower`
     },
     {
       key: `I`,
       keyCode: 73,
       frequency: 261.62,
+      type: `white`,
       note: 12
     },
     //EXTRA KEYS

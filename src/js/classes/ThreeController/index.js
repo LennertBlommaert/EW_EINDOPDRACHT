@@ -1,9 +1,9 @@
-import Scene from './Scene';
+import Scene from './Scene/';
 import Renderer from './Renderer';
 import Camera from './Camera';
 import Controls from './Controls';
-import EventEmitter2 from '../vendors/eventemitter2';
-import Constants from '../objects/Constants';
+import EventEmitter2 from '../../vendors/eventemitter2';
+import Constants from '../../objects/Constants';
 
 export default class ThreeController extends EventEmitter2 {
   constructor(loadedData = {}) {

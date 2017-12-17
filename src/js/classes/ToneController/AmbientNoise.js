@@ -1,5 +1,5 @@
 import Tone from 'tone';
-import Constants from '../objects/Constants';
+import Constants from '../../objects/Constants';
 
 export default class AmbientNoise {
   constructor(baseFrequency = Constants.AMBIENT_NOISE_BASE_FREQUENCY, volume = Constants.AMBIENT_NOISE_VOLUME, type = Constants.AMBIENT_NOISE_TYPE) {
