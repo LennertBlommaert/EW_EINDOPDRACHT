@@ -1,3 +1,5 @@
+import Constants from '../objects/Constants';
+
 export default class ShortcutVisualisation {
   constructor(domElement) {
 
@@ -16,8 +18,7 @@ export default class ShortcutVisualisation {
     this.domElement.x.textContent = `${nameX}: ${valueX.toFixed(2) * 100}%`;
     this.domElement.y.textContent = `${nameY}: ${valueY.toFixed(2) * 100}%`;
 
-    // const timer = window.setTimeout(this.domElement.classList.remove(`active`), 1000);
-    this.timer = window.setTimeout(() => this.domElement.classList.remove(`active`), 2000);
+    this.timer = window.setTimeout(() => this.domElement.classList.remove(`active`), Constants.SHORTCUT_VISUALATION_HIDE_TIMEOUT);
   }
 
   reposition = (x, y) => this.domElement.style.transform = `translate(${x}px, ${y}px)`;

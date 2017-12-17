@@ -16,7 +16,8 @@ export default class Controls extends THREE.OrbitControls {
 
     this.enableDamping = true;
 
-    this.maxPolarAngle = maxPolarAngle;
+    console.log(`DISABLED MAX POLAR ANGLE FOR BUG FIXING`, maxPolarAngle);
+    //this.maxPolarAngle = maxPolarAngle;
 
     this.maxDistance = maxDistance;
 

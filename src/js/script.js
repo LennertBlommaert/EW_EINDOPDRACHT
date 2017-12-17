@@ -19,6 +19,10 @@ let controllerKeyIsDown = false, gameModusIsActive = false;
 
 let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 
+const stats = new Stats();
+stats.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
+
 const $speedSlider = document.querySelector(`#bpm-range`);
 const loadedData = {};
 
@@ -145,6 +149,9 @@ const handleToneControllerOnNewHalfMeasure = position => {
 };
 
 const loop = () => {
+
+  stats.begin();
+
   threeController.controls.update();
   threeController.scene.moveShadowLight();
   threeController.scene.lowerTerrain();
@@ -154,7 +161,7 @@ const loop = () => {
   threeController.scene.updateAnimationMixerWorldElements();
 
   if (controllerKeyIsDown) {
-    threeController.scene.inflateLastChildren(pushedNotes.length);
+    //threeController.scene.inflateLastChildren(pushedNotes.length);
 
     // if (gameModusIsActive) {
     //   gameController.updateCurrentNote();
@@ -162,6 +169,9 @@ const loop = () => {
   }
 
   threeController.renderer.render(threeController.scene, threeController.camera);
+
+  stats.end();
+
   window.requestAnimationFrame(loop);
 };
 

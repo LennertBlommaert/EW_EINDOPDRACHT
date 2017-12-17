@@ -4,5 +4,6 @@
     "THREE": true,
     "OrbitControls": true,
     "THREE.Terrain": true,
+    "Stats": true,
   }
 }
