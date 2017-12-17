@@ -272,14 +272,6 @@ const handleMouseMoveWithMetaKey = (x, y) => {
   console.log(mappedX, mappedY);
 };
 
-const handleStartClick = () => {
-  const $startContainer = document.querySelector(`.start-container`),
-    $gui = document.querySelector(`.gui`);
-  $startContainer.style.display = `none`;
-  $gui.classList.add(`gui-activated`);
-  initVisualKeyboard();
-};
-
 const handleCanvasClick = () =>  threeController.checkIntersections();
 
 const initEventListeners = () => {
@@ -326,6 +318,14 @@ const init = () => {
     .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
 
   getMIDIAccess();
+};
+
+const handleStartClick = () => {
+  const $startContainer = document.querySelector(`.start-container`),
+    $gui = document.querySelector(`.gui`);
+  $startContainer.style.display = `none`;
+  $gui.classList.add(`gui-activated`);
+  initVisualKeyboard();
 };
 
 const loadJSONFiles = () => {

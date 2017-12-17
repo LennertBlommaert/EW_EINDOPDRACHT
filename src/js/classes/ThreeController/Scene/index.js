@@ -108,6 +108,14 @@ export default class Scene extends THREE.Scene {
   createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
     // W/Z on keyboard
 
+    console.log(`------`);
+    console.log(`trees.length:`, this.trees.length);
+    console.log(`evergreens.length:`, this.evergreens.length);
+    console.log(`rocks.length:`, this.rocks.length);
+    console.log(`mushrooms.length:`, this.mushrooms.length);
+    console.log(`flowers.length:`, this.flowers.length);
+    console.log(`clouds.length:`, this.clouds.length);
+
     if (note === 2) {
       return this.createTree(positionVector);
     }
@@ -325,19 +333,8 @@ export default class Scene extends THREE.Scene {
     this.flowers.forEach(flower => flower.updateAnimationMixer(deltaSeconds));
   }
 
-  emptyScene = () => {
-
-    while (this.children.length > 0) {
-      this.removeChild(this.children[0]);
-    }
-
-    this.addLights();
-    this.addTerrain();
-  }
-
   shrinkChildren = () => {
 
-    // "POOLING" possibility?
     const livingTree = this.trees.find(tree => tree.mesh.visible === true);
     if (livingTree) livingTree.animateShrink();
 
@@ -358,11 +355,26 @@ export default class Scene extends THREE.Scene {
 
   }
 
+
+  emptyScene = () => {
+
+    while (this.children.length > 0) {
+      this.removeChild(this.children[0]);
+    }
+
+    this.addLights();
+    this.addTerrain();
+  }
+
   removeChild = child => {
-    child.children.forEach(block => {
-      block.material.dispose();
-      block.geometry.dispose();
-    });
+
+    if (child.children.length > 0) {
+      child.children.forEach(block => {
+        if (block.material) block.material.dispose();
+        if (block.geometry) block.geometry.dispose();
+      });
+    }
+
     this.remove(child);
   }
 
@@ -383,7 +395,7 @@ export default class Scene extends THREE.Scene {
     lastChilds.forEach(child => {
       if (child.type !== `Mesh`) return;
 
-      if (child.scale.x <= 200) {
+      if (child.scale.x <= 300) {
         child.scale.x += scaleIncreasement - (child.scale.x / 100);
         child.scale.y += scaleIncreasement - (child.scale.x / 100);
         child.scale.z += scaleIncreasement - (child.scale.x / 100);

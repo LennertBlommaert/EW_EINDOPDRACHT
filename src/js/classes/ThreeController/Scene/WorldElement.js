@@ -5,6 +5,9 @@ export default class WorldElement {
     this.positionVector = positionVector;
 
     this.geom = geom;
+    // NOT FIXING
+    //this.geom.verticesNeedUpdate = true;
+
     this.mats = mats;
 
     for (let i = 0;i < mats.length;i ++) {
@@ -16,6 +19,7 @@ export default class WorldElement {
 
     this._constructMesh();
 
+    this._setupClips();
     this.setupAnimations();
 
     this.toggleMeshVisibility();
@@ -25,9 +29,20 @@ export default class WorldElement {
     this.mesh = new THREE.Mesh(this.geom, this.mats);
     this.mesh.receiveShadow = true;
     this.mesh.castShadow = true;
-    //this.mesh.position.set(0, 0, - 1);
+    this.mesh.position.set(0, 0, - 1);
     this.mesh.position.set(this.positionVector.x, this.positionVector.y, this.positionVector.z);
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+  }
+
+  _setupClips = () => {
+    this.growMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`grow_`));
+    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`grow`, this.growMorphTargs, 25, true);
+
+    this.wiggleMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`wiggle_`));
+    this.wiggleClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`wiggle`, this.wiggleMorphTargs, 25, false);
+
+    this.shrinkMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`shrink_`));
+    this.shrinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`shrink`, this.shrinkMorphTargs, 25, true);
   }
 
   setupAnimations = () => {
@@ -52,16 +67,12 @@ export default class WorldElement {
   }
 
   _setupGrowthAction = () => {
-    this.growMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`grow_`));
-    this.growthClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`grow`, this.growMorphTargs, 25, true);
     this.growthAction = this.mixer.clipAction(this.growthClip);
     this.growthAction.setLoop(THREE.LoopOnce);
     this.growthAction.clampWhenFinished = true;
   }
 
   _setupWiggleAction = () => {
-    this.wiggleMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`wiggle_`));
-    this.wiggleClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`wiggle`, this.wiggleMorphTargs, 25, false);
     this.wiggleAction = this.mixer.clipAction(this.wiggleClip);
     this.wiggleAction.setLoop(THREE.LoopRepeat);
     //this.wiggleAction.repetitions = 12;
@@ -69,8 +80,6 @@ export default class WorldElement {
   }
 
   _setupShrinkAction = () => {
-    this.shrinkMorphTargs = this.mesh.geometry.morphTargets.filter(morphTarget => morphTarget.name.startsWith(`shrink_`));
-    this.shrinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence(`shrink`, this.shrinkMorphTargs, 25, true);
     this.shrinkAction = this.mixer.clipAction(this.shrinkClip);
     this.shrinkAction.setLoop(THREE.LoopOnce);
     //this.shrinkAction.clampWhenFinished = true;
@@ -82,7 +91,7 @@ export default class WorldElement {
     this.growthAction.enabled = false;
     this.wiggleAction.enabled = false;
     this.toggleMeshVisibility();
-    this.shrinkAction.crossFadeTo(this.growthAction, 0, true);
+    //this.shrinkAction.crossFadeTo(this.growthAction, 0, true);
     this.mixer.stopAllAction();
   }
 
@@ -104,5 +113,9 @@ export default class WorldElement {
   updateAnimationMixer = deltaSeconds => {
     if (!this.growthAction.isRunning() &&  !this.wiggleAction.isRunning() && !this.shrinkAction.isRunning()) return;
     this.mixer.update(deltaSeconds);
+
+    // NOT FIXING
+    //this.mesh.geometry.computeFaceNormals();
+    //this.mesh.geometry.computeVertexNormals();
   }
 }
