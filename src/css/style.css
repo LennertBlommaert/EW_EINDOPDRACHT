@@ -298,6 +298,43 @@ body {
     margin-left: -5rem;
   }
 
+  &-logo-title {
+    font: 15rem summerHearts;
+    display: flex;
+    align-items: center;
+    transform: rotate(-6deg);
+    position: relative;
+    text-align: center;
+
+    &:before {
+      position: absolute;
+      top:14rem;
+      left:21.5rem;
+      color: rgba(201, 32, 31, .5);
+      transform: rotate(-6deg);
+
+      content: 'esynthesize';
+    }
+  }
+
+  &-logo-text {
+    font: 15rem summerHearts;
+    background-image: linear-gradient(to right, rgb(19, 121, 229), rgb(16, 70, 213));
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    transform: rotate(-6deg);
+    padding: 3rem;
+  }
+
+  &-logo-r {
+    font-size: 38rem;
+    transform: translate(5.8rem, 3rem);
+    color: rgb(201, 32, 31);
+  }
+
   &-info {
     height: 50%;
     text-transform: uppercase;
