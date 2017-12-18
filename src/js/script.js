@@ -261,6 +261,10 @@ const handleOnMouseOverhelpBtn = () => $helpWindow.classList.add(`active`);
 
 const handleOnMouseLeavehelpBtn = () => $helpWindow.classList.remove(`active`);
 
+const handleOnMouseOverSlider = () => console.log(threeController.controls.enabled = false);
+
+const handleOnMouseLeaveSlider = () => console.log(threeController.controls.enabled = true);
+
 
 /*
   INIT CONTROLLERS
@@ -302,6 +306,11 @@ const initEventListeners = () => {
   document.querySelector(`canvas`).addEventListener(`click`, handleCanvasClick);
 
   $speedSlider.addEventListener(`input`, e => handleOnSpeedSliderInput(e));
+  $speedSlider.addEventListener(`mouseover`, handleOnMouseOverSlider);
+  $speedSlider.addEventListener(`mouseleave`, handleOnMouseLeaveSlider);
+
+  toneController.$volumeRange.addEventListener(`mouseover`, handleOnMouseOverSlider);
+  toneController.$volumeRange.addEventListener(`mouseleave`, handleOnMouseLeaveSlider);
 
   $gui.addEventListener(`mouseover`, handleOnMouseOverGui);
   $gui.addEventListener(`mouseleave`, handleOnMouseLeaveGui);
