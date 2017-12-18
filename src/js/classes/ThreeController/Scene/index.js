@@ -71,7 +71,7 @@ export default class Scene extends THREE.Scene {
   }
 
   addTerrain() {
-    const terrain = THREE.Terrain({
+    this.terrain = THREE.Terrain({
       name: `Terrain`,
       easing: THREE.Terrain.Linear,
       frequency: 2.5,
@@ -87,19 +87,19 @@ export default class Scene extends THREE.Scene {
       ySize: Constants.SCENE_TERRIAN_DIMENSION,
     });
 
-    terrain.name = `Terrain`;
+    this.terrain.name = `Terrain`;
 
     // NO EFFECT
-    terrain.children[0].receiveShadow = true;
-    terrain.children[0].castShadow = true;
-    terrain.receiveShadow = true;
-    terrain.castShadow = true;
+    this.terrain.children[0].receiveShadow = true;
+    this.terrain.children[0].castShadow = true;
+    this.terrain.receiveShadow = true;
+    this.terrain.castShadow = true;
 
     // NO EFFECT
-    // terrain.geometry.computeFaceNormals();
-    // terrain.geometry.computeVertexNormals();
+    // this.terrain.geometry.computeFaceNormals();
+    // this.terrain.geometry.computeVertexNormals();
 
-    this.add(terrain);
+    this.add(this.terrain);
   }
 
   manipulateWorldOnNote(note = 0, positionVector = new THREE.Vector3(0, 0, 0)) {
@@ -161,7 +161,6 @@ export default class Scene extends THREE.Scene {
 
     const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], positionVector);
     this.worldElements.push(newCloud);
-    console.log(this.worldElements);
 
     this.add(newCloud.mesh);
 
@@ -248,10 +247,7 @@ export default class Scene extends THREE.Scene {
 
   raiseTerrain(distanceFromCamera = 0, increasement = 10) {
 
-    //WHEN USING THREE.Terrain
-    const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
-
-    terrainGeom.vertices.forEach(v => {
+    this.terrain.children[0].geometry.vertices.forEach(v => {
       if (v.x > distanceFromCamera || v.x < - distanceFromCamera) {
         v.z += increasement - Math.random() * (increasement * 4 / 5) + (Math.abs(v.x) - distanceFromCamera) / 50;
       }
@@ -260,48 +256,31 @@ export default class Scene extends THREE.Scene {
       if (v.y > distanceFromCamera || v.y < - distanceFromCamera) {
         v.z += increasement - Math.random() * (increasement * 4 / 5)  + (Math.abs(v.y) - distanceFromCamera) / 50;
       }
-
-      // if (v.x > distanceFromCamera) {
-      //   v.z += increasement - Math.random() * (increasement * 4 / 5) + (v.x - distanceFromCamera) / 20;
-      // }
     });
 
-    terrainGeom.verticesNeedUpdate = true;
+    this.terrain.children[0].geometry.verticesNeedUpdate = true;
 
-    terrainGeom.computeFaceNormals();
-    terrainGeom.computeVertexNormals();
+    this.terrain.children[0].geometry.computeFaceNormals();
+    this.terrain.children[0].geometry.computeVertexNormals();
   }
 
   lowerTerrain(distanceFromCamera = 0, lowerSubstraction = 0.4) {
-    //WHEN USING THREE.Terrain
-    const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
+    this.terrain.children[0].geometry.vertices.forEach(v => {
 
-    //const terrainGeom = this.getObjectByName(`Terrain`).geometry;
-
-    terrainGeom.vertices.forEach(v => {
-      // if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera || v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
-      //   v.z -= lowerSubstraction;
-      // }
-
-      if (v.z >= 0 && (v.x > distanceFromCamera || v.x < - distanceFromCamera)) {
-        // v.z -= (lowerSubstraction + (Math.abs(v.x) - distanceFromCamera) / 200);
+      if (v.z >= 0 && (v.x >= distanceFromCamera || v.x <= - distanceFromCamera)) {
+        // v.z -= (lowerSubstraction + (Math.abs(v.x) + distanceFromCamera) / 200);
         v.z -= lowerSubstraction;
       }
 
-      if (v.z >= 0 && (v.y > distanceFromCamera || v.y < - distanceFromCamera)) {
-        // v.z -= (lowerSubstraction + (Math.abs(v.y) - distanceFromCamera) / 200);
+      if (v.z >= 0 && (v.y >= distanceFromCamera || v.y <= - distanceFromCamera)) {
         v.z -= lowerSubstraction;
       }
-
-      // if (v.z >= 0 && v.x > distanceFromCamera) {
-      //   v.z -= (lowerSubstraction + (v.x - distanceFromCamera) / 10);
-      // }
     });
 
-    terrainGeom.verticesNeedUpdate = true;
+    this.terrain.children[0].geometry.verticesNeedUpdate = true;
 
-    terrainGeom.computeFaceNormals();
-    terrainGeom.computeVertexNormals();
+    this.terrain.children[0].geometry.computeFaceNormals();
+    this.terrain.children[0].geometry.computeVertexNormals();
   }
 
   updateAnimationMixerWorldElements() {

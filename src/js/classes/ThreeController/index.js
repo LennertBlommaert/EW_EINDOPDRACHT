@@ -47,6 +47,8 @@ export default class ThreeController extends EventEmitter2 {
 
     this.intersects = this.raycaster.intersectObjects(objectsToCheckIntersection);
 
+    console.log(this.intersects.length);
+
     if (this.intersects.length > 0) {
       const firstIntersectionObjectName = this.intersects[0].object.name;
       this.emit(`threeControllerOnIntersection`, firstIntersectionObjectName);
