@@ -23,8 +23,9 @@ let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 const $speedSlider = document.querySelector(`#bpm-range`),
   $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`),
   $toggleGameModusButton = document.querySelector(`.toggle-game-modus`),
-  $gui = document.querySelector(`.gui`);
-
+  $gui = document.querySelector(`.gui`),
+  $helpWindow = document.querySelector(`.info-helpWindow`),
+  $infoBtn = document.querySelector(`.info-helpBtn`);
 
 // Currently unavailable, yet promising
 //import {chord} from 'tonal-detect';
@@ -256,6 +257,10 @@ const handleOnMouseOverGui = () => $gui.classList.add(`active`);
 
 const handleOnMouseLeaveGui = () => $gui.classList.remove(`active`);
 
+const handleOnMouseOverhelpBtn = () => $helpWindow.classList.add(`active`);
+
+const handleOnMouseLeavehelpBtn = () => $helpWindow.classList.remove(`active`);
+
 
 /*
   INIT CONTROLLERS
@@ -300,6 +305,9 @@ const initEventListeners = () => {
 
   $gui.addEventListener(`mouseover`, handleOnMouseOverGui);
   $gui.addEventListener(`mouseleave`, handleOnMouseLeaveGui);
+
+  $infoBtn.addEventListener(`mouseover`, handleOnMouseOverhelpBtn);
+  $infoBtn.addEventListener(`mouseleave`, handleOnMouseLeavehelpBtn);
 
   window.addEventListener(`blur`, () => toneController.pauseTransport());
   window.addEventListener(`focus`, () => toneController.startTransport());
@@ -356,6 +364,8 @@ const launchExperiment = () => {
 
   $gui.classList.add(`active`);
   window.setTimeout(() => $gui.classList.remove(`active`), 2000);
+
+  $infoBtn.classList.add(`active`);
 
   if (!midiControllerIsConnected) visualKeyboardController.addKeysContainerActive();
 };

@@ -280,7 +280,7 @@ body {
     letter-spacing: .2em;
     color: white;
     line-height: 3rem;
-    transition: all 1s ease;
+    transition: all .3s ease;
     opacity: 0;
     transform: translateY(-10rem);
 
@@ -369,14 +369,15 @@ body {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-
-    & h2 {
-      font-size: 1.6rem;
-      margin-bottom: 5rem;
-      letter-spacing: .5rem;
-    }
   }
 
+  &-info-help {
+    font-size: 1.6rem;
+    margin-bottom: 5rem;
+    letter-spacing: .5rem;
+    display: flex;
+    align-items: center;
+  }
   &-info-footer {
     font-size: 1rem;
     color: rgb(190, 190, 190);
@@ -388,6 +389,81 @@ body {
     & a {
       text-decoration: none;
       color: white;
+    }
+  }
+}
+
+.info {
+
+  &-helpWindow {
+    position: absolute;
+    top: 10rem;;
+    left: 50%;
+    transform: translate(-50%, 20rem);
+    transition: all .3s ease;
+    opacity: 0;
+    width: 50rem;
+    background: linear-gradient(rgba(16, 70, 213, .5), rgb(19, 121, 229, .5));
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: .2rem;
+    padding: 5rem;
+    line-height: 1.6rem;
+
+    & h3 {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+    }
+
+    & ul {
+      margin: 2rem;
+    }
+
+    & p {
+      margin-bottom: 2rem;
+    }
+
+    & em {
+      color: rgb(190, 190, 190);
+    }
+
+
+    &.active {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+
+  &-helpBtn {
+    position: absolute;
+    bottom: 3rem;
+    left: 3rem;
+    width: 3rem;
+    height: 3rem;
+    margin-top: 1.1rem;
+    border: white solid 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    transform: translate(-50%, 20rem);
+    transition: all .3s ease;
+    opacity: 0;
+
+    &.active {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+
+
+
+    &:hover {
+      background: white;
+      color: #0f1836;
+      transition: all .3s ease;
     }
   }
 }
