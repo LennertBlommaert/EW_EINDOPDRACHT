@@ -14,6 +14,7 @@ export default class Scene extends THREE.Scene {
   constructor({skyColor = Colors.sky, groundColor = Colors.grass, fogNear = Constants.SCENE_FOG_NEAR, fogFar = Constants.SCENE_FOG_FAR, loadedData = []}) {
     super();
     this.loadedData = loadedData;
+    console.log(this.loadedData);
     this.groundColor = groundColor;
     this.skyColor = skyColor;
     this.fog = new THREE.Fog(this.skyColor, fogNear, fogFar);

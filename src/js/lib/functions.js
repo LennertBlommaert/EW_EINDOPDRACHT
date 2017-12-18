@@ -1,3 +1,5 @@
+import Constants from '../objects/Constants';
+
 export const getRandomArbitrary = (min, max) => {
   return Math.random() * (max - min) + min;
 };
@@ -16,6 +18,11 @@ export const frequencyFromNoteNumber = note => {
 
 export const mapNumber = (value, low1, high1, low2, high2) => {
   return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+};
+
+export const getKeyCodeData = keyCode => {
+  const keyCodeData = Constants.KEYS.find(d => d.keyCode === keyCode);
+  return keyCodeData;
 };
 
 export const parseMIDIMessageData = data => {

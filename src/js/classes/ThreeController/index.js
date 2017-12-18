@@ -58,7 +58,10 @@ export default class ThreeController extends EventEmitter2 {
     this.$resetButton.addEventListener(`click`, this.scene.emptyScene);
 
     this.$autoRotateButton = document.querySelector(`.auto-rotation-button`);
-    this.$autoRotateButton.addEventListener(`click`, this.controls.toggleAutorotate);
+    this.$autoRotateButton.addEventListener(`click`, () => {
+      this.$autoRotateButton.classList.toggle(`btn-toggle`);
+      this.controls.toggleAutorotate();
+    });
   }
 
 }

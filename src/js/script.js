@@ -5,7 +5,8 @@ import VisualKeyboardController from './classes/VisualKeyboardController/';
 import MIDIController from './classes/MIDIController';
 import GameController from './classes/GameController';
 
-import {getRandomPositionVector, mapNumber} from './lib/functions';
+import {getRandomPositionVector, mapNumber, getKeyCodeData} from './lib/functions';
+import loadJSONFiles from './lib/loadJSONFiles';
 
 import teoria from 'teoria';
 import piu from 'piu';
@@ -14,50 +15,19 @@ import Constants from './objects/Constants';
 
 let threeController, midiController, gameController, visualKeyboardController, toneController;
 
-let controllerKeyIsDown = false, gameModusIsActive = false;
+let controllerKeyIsDown = false, gameModusIsActive = false, midiControllerIsConnected = false, experimentIsLaunched = false;
 
 let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 
 //const $shortcutVisualisation = document.querySelector(`.shortcut-visualisation`);
 const $speedSlider = document.querySelector(`#bpm-range`),
   $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`),
-  $toggleGameModusButton = document.querySelector(`.toggle-game-modus`);
+  $toggleGameModusButton = document.querySelector(`.toggle-game-modus`),
+  $gui = document.querySelector(`.gui`);
 
-const loadedData = {};
 
 // Currently unavailable, yet promising
 //import {chord} from 'tonal-detect';
-
-const getMIDIAccess = () => {
-  if (navigator.requestMIDIAccess) {
-
-    return navigator.requestMIDIAccess()
-    .then(MIDISucces, e => console.log(e));
-
-  } else {
-    console.log(`Your browser does not support the Web Midi API`);
-  }
-};
-
-const MIDISucces = MIDIAccess => {
-  midiController = new MIDIController(MIDIAccess);
-  midiController.on(`midicontrollerkeyup`, handleControllerKeyUp);
-  midiController.on(`midicontrollerkeydown`, handleControllerKeyDown);
-  midiController.on(`midiControllerConnectionOpen`, () => visualKeyboardController.removeKeysContainerActive());
-  midiController.on(`midiControllerConnectionClosed`, () => visualKeyboardController.addKeysContainerActive());
-};
-
-const minorChordPlayed = () => {
-  //MORE / LESS DISTORTION
-  toneController.distort();
-  threeController.darken();
-};
-
-const majorChordPlayed = () => {
-  //MORE / LESS DISTORTION
-  toneController.clean();
-  threeController.brighten();
-};
 
 const getNotesInfo = notes => {
   const teoriaNotes = notes.map(teoria.note.fromMIDI);
@@ -79,9 +49,62 @@ const checkChordType = () => {
   // Check if a chord is recognised
   if (notesInfo.length === 0) return;
 
-  if (notesInfo[0].type === `m`) return minorChordPlayed();
-  if (notesInfo[0].type === ``) return majorChordPlayed();
+  if (notesInfo[0].type === `m`) return handleMinorChordPlayed();
+  if (notesInfo[0].type === ``) return handleMajorChordPlayed();
 };
+
+const loop = () => {
+  threeController.controls.update();
+  threeController.scene.moveShadowLight();
+  threeController.scene.lowerTerrain();
+  threeController.camera.moveY();
+
+  threeController.scene.particles.move();
+  threeController.scene.updateAnimationMixerWorldElements();
+
+  if (controllerKeyIsDown) {
+    threeController.scene.inflateLastChildren(pushedNotes.length);
+
+    // if (gameModusIsActive) {
+    //   gameController.updateCurrentNote();
+    // }
+  }
+
+  threeController.renderer.render(threeController.scene, threeController.camera);
+  window.requestAnimationFrame(loop);
+};
+
+const setWorldSpeed = value => {
+  $speedSlider.value = value;
+  threeController.controls.setAutorationSpeed(value / 40);
+  toneController.setBPM(value);
+};
+
+const toggleFullScreen = () => {
+  $toggleFullScreenButton.classList.toggle(`btn-toggle`);
+  if (!document.fullscreenElement) {
+    document.querySelector(`.world`).requestFullscreen();
+    // document.querySelector(`.global-container`).requestFullscreen();
+    handleWindowResize();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+      handleWindowResize();
+    }
+  }
+};
+
+const toggleGameModus = () => {
+  $toggleGameModusButton.classList.toggle(`btn-toggle`);
+  gameController.start();
+  gameModusIsActive = !gameModusIsActive;
+};
+
+/*
+
+  EVENT HANDLERS
+
+*/
 
 const handleControllerKeyDown = ({note = 69, frequency = 440, velocity = 0.5}) => {
   //const positionVector = getRandomPositionVector(Constants.WORLD_ELEMENT_POSITION_SPREAD).applyMatrix4(threeController.camera.matrixWorld);
@@ -122,6 +145,16 @@ const handleControllerKeyUp = ({note = 69, frequency = 440}) => {
   controllerKeyIsDown = false;
 };
 
+const handleMinorChordPlayed = () => {
+  toneController.distort();
+  threeController.darken();
+};
+
+const handleMajorChordPlayed = () => {
+  toneController.clean();
+  threeController.brighten();
+};
+
 const handleWindowResize = () => {
   Constants.WIDTH = window.innerWidth;
   Constants.HEIGHT = window.innerHeight;
@@ -147,85 +180,13 @@ const handleToneControllerOnNewHalfMeasure = position => {
   }
 };
 
-const loop = () => {
-  threeController.controls.update();
-  threeController.scene.moveShadowLight();
-  threeController.scene.lowerTerrain();
-  threeController.camera.moveY();
-
-  threeController.scene.particles.move();
-  threeController.scene.updateAnimationMixerWorldElements();
-
-  if (controllerKeyIsDown) {
-    threeController.scene.inflateLastChildren(pushedNotes.length);
-
-    // if (gameModusIsActive) {
-    //   gameController.updateCurrentNote();
-    // }
-  }
-
-  threeController.renderer.render(threeController.scene, threeController.camera);
-  window.requestAnimationFrame(loop);
-};
-
-const getKeyCodeData = keyCode => {
-  const keyCodeData = Constants.KEYS.find(d => d.keyCode === keyCode);
-  return keyCodeData;
-};
-
 const handleOnThreeControllerIntersection = objectName => {
   const frequency = Constants.KEY_NOTE_FREQUENCY_OBJECTNAME.find(d => d.objectName === objectName).frequency;
   if (frequency === undefined) return;
   toneController.pannerSynth.triggerAttackRelease(frequency, `8n`);
 };
 
-const setWorldSpeed = value => {
-  $speedSlider.value = value;
-  threeController.controls.setAutorationSpeed(value / 40);
-  toneController.setBPM(value);
-};
-
-const initThree = () => {
-
-  threeController = new ThreeController(loadedData);
-  threeController.on(`threeControllerOnIntersection`, handleOnThreeControllerIntersection);
-
-  window.addEventListener(`resize`, handleWindowResize, false);
-
-  loop();
-};
-
-const initVisualKeyboard = () => {
-  visualKeyboardController = new VisualKeyboardController(Constants.KEYS);
-  visualKeyboardController.addKeysContainerActive();
-  visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseDown`, keyData => handleControllerKeyDown(keyData)));
-  visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseUp`, keyData => handleControllerKeyUp(keyData)));
-};
-
-const toggleFullScreen = () => {
-  $toggleFullScreenButton.classList.toggle(`btn-toggle`);
-  if (!document.fullscreenElement) {
-    document.querySelector(`.world`).requestFullscreen();
-    handleWindowResize();
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-      handleWindowResize();
-    }
-  }
-};
-
-const toggleGameModus = () => {
-  $toggleGameModusButton.classList.toggle(`btn-toggle`);
-  gameController.start();
-  gameModusIsActive = !gameModusIsActive;
-};
-
-const initTone = () => {
-  toneController = new ToneController();
-  toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
-  toneController.on(`tonecontrollernewhalfmeasure`, handleToneControllerOnNewHalfMeasure);
-};
+const handleCanvasClick = () =>  threeController.checkIntersections();
 
 const handleMouseMove = e => {
   const {x = e.clientX, y = e.clientY, shiftKey, ctrlKey, altKey, metaKey} = e;
@@ -272,132 +233,132 @@ const handleMouseMoveWithMetaKey = (x, y) => {
   console.log(mappedX, mappedY);
 };
 
-const handleCanvasClick = () =>  threeController.checkIntersections();
+const handleOnWindowKeyUp = ({keyCode}) => {
+  if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
+  if (getKeyCodeData(keyCode) !== undefined) {
+    handleControllerKeyUp(getKeyCodeData(keyCode));
+  }
+};
+
+const handleOnWindowKeyDown = ({keyCode}) => {
+  if (getKeyCodeData(keyCode) !== undefined) {
+    console.log(getKeyCodeData(keyCode));
+    handleControllerKeyDown(getKeyCodeData(keyCode));
+  }
+};
+
+const handleOnSpeedSliderInput = e => {
+  const value = parseInt(e.target.value, 10);
+  setWorldSpeed(value);
+};
+
+const handleOnMouseOverGui = () => $gui.classList.add(`active`);
+
+const handleOnMouseLeaveGui = () => $gui.classList.remove(`active`);
+
+
+/*
+  INIT CONTROLLERS
+*/
+
+const initThree = loadedData => {
+
+  threeController = new ThreeController(loadedData);
+  threeController.on(`threeControllerOnIntersection`, handleOnThreeControllerIntersection);
+
+  window.addEventListener(`resize`, handleWindowResize, false);
+
+  loop();
+};
+
+const initTone = () => {
+  toneController = new ToneController();
+  toneController.on(`tonecontrollerplayedtom`, handleToneControllerBeatPlayed);
+  toneController.on(`tonecontrollernewhalfmeasure`, handleToneControllerOnNewHalfMeasure);
+};
+
+const initVisualKeyboard = () => {
+  visualKeyboardController = new VisualKeyboardController(Constants.KEYS);
+  visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseDown`, keyData => handleControllerKeyDown(keyData)));
+  visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseUp`, keyData => handleControllerKeyUp(keyData)));
+};
 
 const initEventListeners = () => {
   const $startbtn = document.querySelector(`.start-info-btn`);
-  $startbtn.addEventListener(`click`, handleStartClick);
+  $startbtn.addEventListener(`click`, launchExperiment);
+
   $toggleFullScreenButton.addEventListener(`click`, toggleFullScreen);
   $toggleGameModusButton.addEventListener(`click`, toggleGameModus);
 
-  window.addEventListener(`keydown`, ({keyCode}) => {
-    if (getKeyCodeData(keyCode) !== undefined) {
-      console.log(getKeyCodeData(keyCode));
-      handleControllerKeyDown(getKeyCodeData(keyCode));
-    }
-  });
-
-  window.addEventListener(`keyup`, ({keyCode}) => {
-    if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
-    if (getKeyCodeData(keyCode) !== undefined) {
-      handleControllerKeyUp(getKeyCodeData(keyCode));
-    }
-  });
+  window.addEventListener(`keydown`, handleOnWindowKeyDown);
+  window.addEventListener(`keyup`, handleOnWindowKeyUp);
 
   window.addEventListener(`mousemove`, handleMouseMove);
   document.querySelector(`canvas`).addEventListener(`click`, handleCanvasClick);
 
-  $speedSlider.addEventListener(`input`, e => {
-    const value = parseInt(e.target.value, 10);
-    setWorldSpeed(value);
-  });
+  $speedSlider.addEventListener(`input`, e => handleOnSpeedSliderInput(e));
+
+  $gui.addEventListener(`mouseover`, handleOnMouseOverGui);
+  $gui.addEventListener(`mouseleave`, handleOnMouseLeaveGui);
 
   window.addEventListener(`blur`, () => toneController.pauseTransport());
   window.addEventListener(`focus`, () => toneController.startTransport());
 };
 
+const initMIDI = () => {
+  if (navigator.requestMIDIAccess) {
+
+    return navigator.requestMIDIAccess()
+    .then(MIDISucces, e => console.log(e));
+
+  } else {
+    console.log(`Your browser does not support the Web Midi API`);
+  }
+};
+
+const MIDISucces = MIDIAccess => {
+  midiController = new MIDIController(MIDIAccess);
+  midiController.on(`midicontrollerkeyup`, handleControllerKeyUp);
+  midiController.on(`midicontrollerkeydown`, handleControllerKeyDown);
+  midiController.on(`midiControllerConnectionOpen`, () => {
+    launchExperiment();
+    midiControllerIsConnected = true;
+    visualKeyboardController.removeKeysContainerActive();
+  });
+  midiController.on(`midiControllerConnectionClosed`, () => {
+    if (experimentIsLaunched) visualKeyboardController.addKeysContainerActive();
+    midiControllerIsConnected = false;
+  });
+};
+
+
 const init = () => {
 
   loadJSONFiles()
-    .then(() => {
-      initThree();
+    .then(loadedData => {
+      initThree(loadedData);
       initTone();
-      initEventListeners();
+      initVisualKeyboard();
       gameController = new GameController(`game-notes`);
+      initEventListeners();
+      initMIDI();
     })
     .catch(reason => console.error(`Loading JSON files for three objects failed: ${reason}`));
-
-  getMIDIAccess();
 };
 
-const handleStartClick = () => {
-  const $startContainer = document.querySelector(`.start-container`),
-    $gui = document.querySelector(`.gui`);
-  $startContainer.style.display = `none`;
-  $gui.classList.add(`gui-activated`);
-  initVisualKeyboard();
+const launchExperiment = () => {
+  const $startContainer = document.querySelector(`.start-container`);
+
+  $startContainer.classList.remove(`active`);
+  window.setTimeout(() => $startContainer.style.display = `none`, 1001);
+
+  experimentIsLaunched = true;
+
+  $gui.classList.add(`active`);
+  window.setTimeout(() => $gui.classList.remove(`active`), 2000);
+
+  if (!midiControllerIsConnected) visualKeyboardController.addKeysContainerActive();
 };
 
-const loadJSONFiles = () => {
-
-  const loader = new THREE.JSONLoader();
-
-  return new Promise(resolve => {
-
-    loader.load(
-      `assets/data/tree.json`,
-      (geom, mat) => {
-        loadedData.treeData = [geom, mat];
-        resolve();
-      }
-    );
-
-  })
-  .then(
-
-    loader.load(
-      `assets/data/cloud.json`,
-      (geom, mat) => {
-        loadedData.cloudData = [geom, mat];
-        return;
-      }
-    )
-
-  )
-  .then(
-
-    loader.load(
-      `assets/data/rock.json`,
-      (geom, mat) => {
-        loadedData.rockData = [geom, mat];
-        return;
-      }
-    )
-
-  )
-  .then(
-
-    loader.load(
-      `assets/data/mushroom.json`,
-      (geom, mat) => {
-        loadedData.mushroomData = [geom, mat];
-        return;
-      }
-    )
-
-  )
-  .then(
-
-    loader.load(
-      `assets/data/evergreen.json`,
-      (geom, mat) => {
-        loadedData.evergreenData = [geom, mat];
-        return;
-      }
-    )
-
-  )
-  .then(
-
-    loader.load(
-      `assets/data/flower.json`,
-      (geom, mat) => {
-        loadedData.flowerData = [geom, mat];
-        return;
-      }
-    )
-
-  );
-};
 
 init();

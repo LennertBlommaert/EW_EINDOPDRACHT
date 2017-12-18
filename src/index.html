@@ -39,17 +39,9 @@
 
 <body>
 
-  <!-- <header>
-    <h1>The Creation</h1>
-    <h2>Create your world by playing music</h2>
-    <div>
-      Play with your MIDI controller or with the Q-W-E-R-T-Y keys
-    </div>
-    <button type="button" name="button">
-      Start experience
-    </button>
-  </header> -->
-  <div class="start-container">
+  <div class='global-container'>
+
+  <div class="start-container active">
     <div class="start-logo">
       <img src="assets/img/logo.png" alt="logo"/>
     </div>
@@ -61,6 +53,8 @@
       <p class="start-info-btn">Play with keyboard</p>
     </div>
   </div>
+
+  <div class='challenge-message'></div>
 
   <div class="keys-container">
     <div class="black-keys"></div>
@@ -78,7 +72,7 @@
         <!-- <label for='auto-rotation-speed'>Auto rotation speed</label>
         <input id='auto-rotation-speed' name="auto-rotation-speed" type="range" value="10" min="0.5" step="0.1" max="30" /> -->
 
-        <div class="auto-rotation-button btn">
+        <div class="auto-rotation-button btn btn-toggle">
           auto rotation
         </div>
 
@@ -139,6 +133,8 @@
       <li class="x"></li>
       <li class="y"></li>
     </ul>
+  </div>
+
   </div>
 
   <script type="text/javascript" src="js/vendors/three.min.js"></script>
