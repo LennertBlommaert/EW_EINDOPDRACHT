@@ -162,9 +162,8 @@ const Constants = {
       keyCode: 73,
       frequency: 261.62,
       type: `white`,
-      note: 12
+      note: 0
     },
-    //EXTRA KEYS
   ],
 };
 

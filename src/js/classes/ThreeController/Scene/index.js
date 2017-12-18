@@ -14,7 +14,6 @@ export default class Scene extends THREE.Scene {
   constructor({skyColor = Colors.sky, groundColor = Colors.grass, fogNear = Constants.SCENE_FOG_NEAR, fogFar = Constants.SCENE_FOG_FAR, loadedData = []}) {
     super();
     this.loadedData = loadedData;
-    console.log(this.loadedData);
     this.groundColor = groundColor;
     this.skyColor = skyColor;
     this.fog = new THREE.Fog(this.skyColor, fogNear, fogFar);
@@ -25,47 +24,53 @@ export default class Scene extends THREE.Scene {
 
     this.background = new THREE.Color(this.skyColor);
 
-    this.trees = [];
-    this.clouds = [];
-    this.rocks = [];
-    this.mushrooms = [];
-    this.evergreens = [];
-    this.flowers = [];
+    this.worldElements = [];
 
-    window.setInterval(this.shrinkChildren, Constants.SCENE_SHRINK_CHILDREN_INTERVAL);
+    this.shadowLightAngle = 0;
+
+    window.setInterval(() => this.shrinkChildren(), Constants.SCENE_SHRINK_CHILDREN_INTERVAL);
 
   }
 
-  addLights = () => {
+  addLights() {
     this.hemisphereLight = new THREE.HemisphereLight(this.skyColor, this.groundColor);
-    this.shadowLight = this.createShadowLight();
+    this.createShadowLight();
     this.add(this.hemisphereLight);
+  }
+
+  createShadowLight() {
+    this.shadowLight = new THREE.DirectionalLight(Colors.sun, Constants.SCENE_SHADOWLIGHT_INTENSITY);
+    //this.shadowLight = new THREE.SpotLight(0xffffff, .9);
+    this.shadowLight.position.set(200, 800, 500);
+    this.shadowLight.target.position.set(0, 0, 0);
+    this.shadowLight.castShadow = true;
+    this.shadowLight.shadowCameraVisible = true;
+
+    // Define visible area of projected this.shadowLight
+    this.shadowLight.shadow.camera.left = - 700;
+    this.shadowLight.shadow.camera.right = 700;
+    this.shadowLight.shadow.camera.top = 300;
+    this.shadowLight.shadow.camera.bottom = - 700;
+    this.shadowLight.shadow.camera.near = 1;
+    this.shadowLight.shadow.camera.far = 2000;
+
+    this.shadowLight.shadow.mapSize.width = 2000;
+    this.shadowLight.shadow.mapSize.height = 2000;
+
     this.add(this.shadowLight);
+
+    // this.helper = new THREE.CameraHelper(this.shadowLight.shadow.camera);
+    // this.add(this.helper);
   }
 
-  createShadowLight = () => {
-    const shadowLight = new THREE.DirectionalLight(Colors.sun, Constants.SCENE_SHADOWLIGHT_INTENSITY);
-    // const shadowLight = new THREE.SpotLight(0xffffff, .9);
-    shadowLight.position.set(150, 350, 350);
-    shadowLight.castShadow = true;
+  moveShadowLight() {
+    this.shadowLightAngle += 0.01;
 
-    // Define visible area of projected shadowLight
-    shadowLight.shadow.camera.left = - 400;
-    shadowLight.shadow.camera.right = 400;
-    shadowLight.shadow.camera.top = 400;
-    shadowLight.shadow.camera.bottom = - 400;
-    shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 1000;
-
-    shadowLight.shadow.mapSize.width = 2048;
-    shadowLight.shadow.mapSize.height = 2048;
-
-    return shadowLight;
+    this.shadowLight.position.x = 200 + 20 * Math.cos(this.shadowLightAngle);
+    this.shadowLight.position.z = 500 + 20 * Math.sin(this.shadowLightAngle);
   }
 
-  moveShadowLight = () => {}
-
-  addTerrain = () => {
+  addTerrain() {
     const terrain = THREE.Terrain({
       name: `Terrain`,
       easing: THREE.Terrain.Linear,
@@ -97,25 +102,16 @@ export default class Scene extends THREE.Scene {
     this.add(terrain);
   }
 
-  manipulateWorldOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
+  manipulateWorldOnNote(note = 0, positionVector = new THREE.Vector3(0, 0, 0)) {
 
     if (note === 0) {
       return this.raiseTerrain(Constants.SCENE_TERRIAN_DIMENSION / 4, 5);
     }
 
     this.createObjectOnNote(note, positionVector);
-  };
+  }
 
-  createObjectOnNote = (note = 0, positionVector = new THREE.Vector3(0, 0, 0)) => {
-    // W/Z on keyboard
-
-    console.log(`------`);
-    console.log(`trees.length:`, this.trees.length);
-    console.log(`evergreens.length:`, this.evergreens.length);
-    console.log(`rocks.length:`, this.rocks.length);
-    console.log(`mushrooms.length:`, this.mushrooms.length);
-    console.log(`flowers.length:`, this.flowers.length);
-    console.log(`clouds.length:`, this.clouds.length);
+  createObjectOnNote(note = 0, positionVector = new THREE.Vector3(0, 0, 0)) {
 
     if (note === 2) {
       return this.createTree(positionVector);
@@ -147,123 +143,110 @@ export default class Scene extends THREE.Scene {
     }
   }
 
-  addParticles = () => {
+  addParticles() {
     this.particles = new Particles();
     this.add(this.particles.particleSystem);
-  };
+  }
 
-  createCloud = positionVector => {
-    const deadCloud = this.clouds.find(cloud => cloud.mesh.visible === false);
-    if (deadCloud) {
-      //NOTE: Should be worldElement.animateGrowth();
-      //But resusing same (unlooped) actions is very bugy
-      //Look back into another timeScale
-      //currently overwriting al actions
-      return deadCloud.setupAnimations();
-    }
+  createCloud(positionVector) {
+    // NOTE: for object pooling - but animations are very buggy second run
+    // const deadCloud = this.clouds.find(cloud => cloud.mesh.visible === false);
+    // if (deadCloud) {
+    //   //NOTE: Should be worldElement.animateGrowth();
+    //   //But resusing same (unlooped) actions is very bugy
+    //   //Look back into another timeScale
+    //   //currently overwriting al actions
+    //   return deadCloud.setupAnimations();
+    // }
 
     const newCloud = new Cloud(this.loadedData.cloudData[0], this.loadedData.cloudData[1], positionVector);
-    this.clouds.push(newCloud);
+    this.worldElements.push(newCloud);
+    console.log(this.worldElements);
 
     this.add(newCloud.mesh);
 
     return newCloud;
-  };
+  }
 
-  createRock = positionVector => {
-    const deadRock = this.rocks.find(rock => rock.mesh.visible === false);
-    if (deadRock) {
-      //NOTE: Should be worldElement.animateGrowth();
-      //But resusing same (unlooped) actions is very bugy
-      //Look back into another timeScale
-      //currently overwriting al actions
-      return deadRock.setupAnimations();
-    }
+  createRock(positionVector) {
+    // NOTE: for object pooling - but animations are very buggy second run
+    // const deadRock = this.rocks.find(rock => rock.mesh.visible === false);
+    // if (deadRock) {
+    //   return deadRock.setupAnimations();
+    // }
 
     const newRock = new Rock(this.loadedData.rockData[0], this.loadedData.rockData[1], positionVector);
-    this.rocks.push(newRock);
+    this.worldElements.push(newRock);
 
     this.add(newRock.mesh);
 
     return newRock;
-  };
+  }
 
-  createMushroom = positionVector => {
-    const deadMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === false);
-    if (deadMushroom) {
-      //NOTE: Should be worldElement.animateGrowth();
-      //But resusing same (unlooped) actions is very bugy
-      //Look back into another timeScale
-      //currently overwriting al actions
-      return deadMushroom.setupAnimations();
-    }
+  createMushroom(positionVector) {
+    // NOTE: for object pooling - but animations are very buggy second run
+    // const deadMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === false);
+    // if (deadMushroom) {
+    //   return deadMushroom.setupAnimations();
+    // }
 
     const newMushroom = new Mushroom(this.loadedData.mushroomData[0], this.loadedData.mushroomData[1], positionVector);
-    this.mushrooms.push(newMushroom);
+    this.worldElements.push(newMushroom);
 
     this.add(newMushroom.mesh);
 
     return newMushroom;
-  };
+  }
 
-  createTree = positionVector => {
+  createTree(positionVector) {
 
-    const deadTree = this.trees.find(tree => tree.mesh.visible === false);
-    if (deadTree) {
-      //NOTE: Should be worldElement.animateGrowth();
-      //But resusing same (unlooped) actions is very bugy
-      //Look back into another timeScale
-      //currently overwriting al actions
-      return deadTree.setupAnimations();
-    }
+    // NOTE: for object pooling - but animations are very buggy second run
+    // const deadTree = this.trees.find(tree => tree.mesh.visible === false);
+    // if (deadTree) {
+    //   return deadTree.setupAnimations();
+    // }
 
     const newTree = new Tree(this.loadedData.treeData[0], this.loadedData.treeData[1], positionVector);
-    this.trees.push(newTree);
+    this.worldElements.push(newTree);
 
     this.add(newTree.mesh);
 
     return newTree;
   }
 
-  createEvergreen = positionVector => {
+  createEvergreen(positionVector) {
 
-    const deadEvergreen = this.evergreens.find(evergreen => evergreen.mesh.visible === false);
-    if (deadEvergreen) {
-      //NOTE: Should be worldElement.animateGrowth();
-      //But resusing same (unlooped) actions is very bugy
-      //Look back into another timeScale
-      //currently overwriting al actions
-      return deadEvergreen .setupAnimations();
-    }
+    // NOTE: for object pooling - but animations are very buggy second run
+    // const deadEvergreen = this.evergreens.find(evergreen => evergreen.mesh.visible === false);
+    // if (deadEvergreen) {
+    //   return deadEvergreen .setupAnimations();
+    // }
 
     const newEvergreen = new Evergreen(this.loadedData.evergreenData[0], this.loadedData.evergreenData[1], positionVector);
-    this.evergreens.push(newEvergreen);
+    this.worldElements.push(newEvergreen);
 
     this.add(newEvergreen.mesh);
 
     return newEvergreen;
   }
 
-  createFlower = positionVector => {
+  createFlower(positionVector) {
 
-    const deadFlower = this.flowers.find(flower => flower.mesh.visible === false);
-    if (deadFlower) {
-      //NOTE: Should be worldElement.animateGrowth();
-      //But resusing same (unlooped) actions is very bugy
-      //Look back into another timeScale
-      //currently overwriting al actions
-      return deadFlower .setupAnimations();
-    }
+    // NOTE: for object pooling - but animations are very buggy second run
+    // const deadFlower = this.flowers.find(flower => flower.mesh.visible === false);
+    // if (deadFlower) {
+    //   return deadFlower .setupAnimations();
+    // }
 
     const newFlower = new Flower(this.loadedData.flowerData[0], this.loadedData.flowerData[1], positionVector);
-    this.flowers.push(newFlower);
+    this.worldElements.push(newFlower);
 
     this.add(newFlower.mesh);
 
     return newFlower;
   }
 
-  raiseTerrain = (distanceFromCamera = 0, increasement = 10) => {
+  raiseTerrain(distanceFromCamera = 0, increasement = 10) {
 
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
@@ -289,7 +272,7 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeVertexNormals();
   }
 
-  lowerTerrain = (distanceFromCamera = 0, lowerSubstraction = 0.4) => {
+  lowerTerrain(distanceFromCamera = 0, lowerSubstraction = 0.4) {
     //WHEN USING THREE.Terrain
     const terrainGeom = this.getObjectByName(`Terrain`).children[0].geometry;
 
@@ -321,53 +304,56 @@ export default class Scene extends THREE.Scene {
     terrainGeom.computeVertexNormals();
   }
 
-  updateAnimationMixerWorldElements = () => {
+  updateAnimationMixerWorldElements() {
     const deltaSeconds = this.clock.getDelta();
 
-    this.trees.forEach(tree => {
+    this.worldElements.forEach(tree => {
       tree.updateAnimationMixer(deltaSeconds);
     });
-    this.clouds.forEach(cloud => cloud.updateAnimationMixer(deltaSeconds));
-    this.rocks.forEach(rock => rock.updateAnimationMixer(deltaSeconds));
-    this.mushrooms.forEach(mushroom => mushroom.updateAnimationMixer(deltaSeconds));
-    this.evergreens.forEach(evergreen => evergreen.updateAnimationMixer(deltaSeconds));
-    this.flowers.forEach(flower => flower.updateAnimationMixer(deltaSeconds));
   }
 
-  shrinkChildren = () => {
+  shrinkChildren() {
+    if (this.worldElements.length <= 0) return;
 
-    const livingTree = this.trees.find(tree => tree.mesh.visible === true);
-    if (livingTree) livingTree.animateShrink();
+    this.worldElements[0].animateShrink();
 
-    const livingCloud = this.clouds.find(cloud => cloud.mesh.visible === true);
-    if (livingCloud) livingCloud.animateShrink();
-
-    const livingMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === true);
-    if (livingMushroom) livingMushroom.animateShrink();
-
-    const livingRock = this.rocks.find(rock => rock.mesh.visible === true);
-    if (livingRock) livingRock.animateShrink();
-
-    const livingEvergreen = this.evergreens.find(evergreen => evergreen.mesh.visible === true);
-    if (livingEvergreen) livingEvergreen.animateShrink();
-
-    const livingFlower = this.flowers.find(flower => flower.mesh.visible === true);
-    if (livingFlower) livingFlower.animateShrink();
-
+    window.setTimeout(() => {
+      this.removeChild(this.worldElements[0].mesh);
+      this.worldElements.shift();
+    }, 2000);
   }
 
+  // shrinkChildren() {
+  //
+  //   const livingTree = this.trees.find(tree => tree.mesh.visible === true);
+  //   if (livingTree) livingTree.animateShrink();
+  //
+  //   const livingCloud = this.clouds.find(cloud => cloud.mesh.visible === true);
+  //   if (livingCloud) livingCloud.animateShrink();
+  //
+  //   const livingMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === true);
+  //   if (livingMushroom) livingMushroom.animateShrink();
+  //
+  //   const livingRock = this.rocks.find(rock => rock.mesh.visible === true);
+  //   if (livingRock) livingRock.animateShrink();
+  //
+  //   const livingEvergreen = this.evergreens.find(evergreen => evergreen.mesh.visible === true);
+  //   if (livingEvergreen) livingEvergreen.animateShrink();
+  //
+  //   const livingFlower = this.flowers.find(flower => flower.mesh.visible === true);
+  //   if (livingFlower) livingFlower.animateShrink();
+  //
+  // }
 
-  emptyScene = () => {
+  emptyScene() {
 
-    while (this.children.length > 0) {
-      this.removeChild(this.children[0]);
+    while (this.worldElements.length > 0) {
+      this.removeChild(this.worldElements[0].mesh);
+      this.worldElements.shift();
     }
-
-    this.addLights();
-    this.addTerrain();
   }
 
-  removeChild = child => {
+  removeChild(child) {
 
     if (child.children.length > 0) {
       child.children.forEach(block => {
@@ -379,7 +365,7 @@ export default class Scene extends THREE.Scene {
     this.remove(child);
   }
 
-  inflateLastChild = (scaleIncreasement = 1) => {
+  inflateLastChild(scaleIncreasement = 1) {
     //work with pushed notes.length
     const lastChild = this.children[this.children.length - 1];
 
@@ -390,7 +376,7 @@ export default class Scene extends THREE.Scene {
     lastChild.scale.z += scaleIncreasement;
   }
 
-  inflateLastChildren = (numberToInflate, scaleIncreasement = 2) => {
+  inflateLastChildren(numberToInflate, scaleIncreasement = 2) {
     const lastChilds = this.children.slice(this.children.length - numberToInflate);
 
     lastChilds.forEach(child => {
@@ -404,7 +390,7 @@ export default class Scene extends THREE.Scene {
     });
   }
 
-  setLightsIntensities = (x, y) => {
+  setLightsIntensities(x, y) {
     this.shadowLight.intensity = x;
     this.hemisphereLight.intensity = y;
   }
