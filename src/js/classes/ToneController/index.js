@@ -10,7 +10,7 @@ import Constants from '../../objects/Constants';
 export default class ToneController extends EventEmitter2 {
   constructor() {
     super({});
-
+    this.$volumeRange = document.querySelector(`#sound-volume-range`);
     this.beatNote = Constants.BEAT_NOTE;
     this.seqEvents = [this.beatNote, 0, 0, `D0`, 0, 0];
 
@@ -101,8 +101,7 @@ export default class ToneController extends EventEmitter2 {
   }
 
   _linkControls = () => {
-    this.$volumeRange = document.querySelector(`#sound-volume-range`);
-    this.$volumeRange.addEventListener(`input`, ({currentTarget}) => this.handleVolumeRangeInput(parseInt(currentTarget.value, 10)));
+    this.$volumeRange.addEventListener(`input`, ({currentTarget}) => this.setMasterVolume(parseInt(currentTarget.value, 10)));
 
     this.$drumBeatButton = document.querySelector(`.drum-beat-button`);
     this.$drumBeatButton.classList.add(`btn-toggle`);
