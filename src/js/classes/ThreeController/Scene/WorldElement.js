@@ -29,7 +29,6 @@ export default class WorldElement {
     this.mesh = new THREE.Mesh(this.geom, this.mats);
     this.mesh.receiveShadow = true;
     this.mesh.castShadow = true;
-    // this.mesh.position.set(0, 0, - 1);
     this.mesh.position.set(this.positionVector.x, this.positionVector.y, this.positionVector.z);
     this.mesh.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
   }

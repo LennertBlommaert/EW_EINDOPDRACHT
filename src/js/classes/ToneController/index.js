@@ -24,6 +24,8 @@ export default class ToneController extends EventEmitter2 {
 
     this.masterVolume = new Tone.Volume();
 
+    this.currentEffectSetIndex = 0;
+
     this._createWind();
     this._createEffects();
     this._createSynths();
@@ -51,21 +53,47 @@ export default class ToneController extends EventEmitter2 {
   }
 
   _createEffects = () => {
-    this.autoWahEffect = new Tone.AutoWah(50, 10, - 30);
-    this.chorusEffect = new Tone.Chorus();
+
+    this.effectSets = [
+      [
+        new Tone.AutoWah(50, 10, - 30),
+        new Tone.Chorus()
+      ],
+      [
+        new Tone.FeedbackDelay(),
+        new Tone.Chebyshev()
+      ],
+      [
+        new Tone.Tremolo(),
+        new Tone.Vibrato()
+      ],
+    ];
+
+    this.dryEffectSets();
+
     this.distortEffect = new Tone.Distortion();
     this.distortEffect.wet.value = 0.1;
+  }
+
+  dryEffectSets() {
+    this.effectSets.forEach(set => this.dryEffectSet(set));
+  }
+
+  dryEffectSet(set) {
+    set.forEach(effect => {
+      effect.wet.value = 0;
+    });
   }
 
   _createSynths = () => {
     this.panner = new Tone.Panner3D({coneOuterGain: 10});
     this.pannerSynth = new Tone.PolySynth(4, Tone.PluckySynth).connect(this.panner);
-    this.pannerSynth.volume.value = 10;
+    this.pannerSynth.volume.value = 50;
 
     this.mainSynth = new MainSynth();
 
-    this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, this.masterVolume, Tone.Master);
-    this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, this.masterVolume, Tone.Master);
+    this.panner.chain(this.effectSets[0][0], this.effectSets[0][1], this.effectSets[1][0], this.effectSets[1][1], this.effectSets[2][0], this.effectSets[2][1], this.distortEffect, this.masterVolume, Tone.Master);
+    this.mainSynth.chain(this.effectSets[0][0], this.effectSets[0][1], this.effectSets[1][0], this.effectSets[1][1], this.effectSets[2][0], this.effectSets[2][1], this.distortEffect, this.masterVolume, Tone.Master);
     // this.pannerSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, Tone.Master);
     // this.mainSynth.chain(this.autoWahEffect, this.chorusEffect, this.distortEffect, Tone.Master);
 
@@ -109,8 +137,21 @@ export default class ToneController extends EventEmitter2 {
   }
 
   updateEffects = (x, y) => {
-    this.autoWahEffect.wet.value = x;
-    this.chorusEffect.wet.value = y;
+    console.log(x, y);
+    this.effectSets[this.currentEffectSetIndex][0].wet.value = x;
+    this.effectSets[this.currentEffectSetIndex][1].wet.value = y;
+  }
+
+  nextEffectSet() {
+    this.dryEffectSet(this.effectSets[this.currentEffectSetIndex]);
+    this.currentEffectSetIndex ++;
+    if (this.currentEffectSetIndex > this.effectSets.length - 1) this.currentEffectSetIndex = 0;
+  }
+
+  previousEffectSet() {
+    this.dryEffectSet(this.effectSets[this.currentEffectSetIndex]);
+    this.currentEffectSetIndex --;
+    if (this.currentEffectSetIndex < 0) this.currentEffectSetIndex = this.effectSets.length - 1;
   }
 
   distort = () => this.distortEffect.wet.value += 0.05;

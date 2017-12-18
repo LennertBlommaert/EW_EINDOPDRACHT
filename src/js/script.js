@@ -235,6 +235,11 @@ const handleMouseMoveWithMetaKey = (x, y) => {
 };
 
 const handleOnWindowKeyUp = ({keyCode}) => {
+
+  console.log(keyCode);
+  if (keyCode === 38 || keyCode === 39) toneController.nextEffectSet();
+  if (keyCode === 40 || keyCode === 37) toneController.previousEffectSet();
+
   if (keyCode === 13 || keyCode === 27) return toggleFullScreen();
   if (getKeyCodeData(keyCode) !== undefined) {
     handleControllerKeyUp(getKeyCodeData(keyCode));

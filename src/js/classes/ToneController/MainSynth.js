@@ -3,7 +3,7 @@ import Tone from 'tone';
 export default class MainSynth extends Tone.PolySynth {
   constructor() {
     super(4, Tone.DuoSynth);
-    this.volume.value = - 10;
+    this.volume.value = - 20;
 
     this.set(
       {

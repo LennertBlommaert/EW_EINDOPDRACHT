@@ -20,7 +20,7 @@ export default class Controls extends THREE.OrbitControls {
 
     this.maxDistance = maxDistance;
 
-    this.minDistance = 100;
+    this.minDistance = minDistance;
 
     this.enablePan = minDistance;
 
