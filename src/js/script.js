@@ -7,7 +7,7 @@ import MIDIController from './classes/MIDIController';
 import GameController from './classes/GameController';
 
 import {getRandomPositionVector, mapNumber, getKeyCodeData} from './lib/functions';
-import loadJSONFiles from './lib/loadJSONFiles';
+import loadFiles from './lib/loadFiles';
 
 import teoria from 'teoria';
 import piu from 'piu';
@@ -20,7 +20,6 @@ let controllerKeyIsDown = false, gameModusIsActive = false, midiControllerIsConn
 
 let currentTonePosition = [0, 0, 0], pushedFrequencies = [], pushedNotes = [];
 
-//const $shortcutVisualisation = document.querySelector(`.shortcut-visualisation`);
 const $speedSlider = document.querySelector(`#bpm-range`),
   $toggleFullScreenButton = document.querySelector(`.toggle-fullscreen-button`),
   $toggleGameModusButton = document.querySelector(`.toggle-game-modus`),
@@ -28,12 +27,8 @@ const $speedSlider = document.querySelector(`#bpm-range`),
   $helpWindow = document.querySelector(`.info-helpWindow`),
   $infoBtn = document.querySelector(`.info-helpBtn`);
 
-// Currently unavailable, yet promising
-//import {chord} from 'tonal-detect';
-
 const getNotesInfo = notes => {
   const teoriaNotes = notes.map(teoria.note.fromMIDI);
-  // const triads = piu.triads(teoriaNotes);
   return piu.infer(teoriaNotes);
 };
 
@@ -41,14 +36,12 @@ const getNoteInfo = note => {
   const teoriaNote = teoria.note.fromMIDI(note);
   const noteName = teoriaNote.name().toUpperCase();
   const noteAccidental = teoriaNote.accidental();
-  //const noteScientific = teoriaNote.scientific();
   return `${noteName}${noteAccidental}`;
 };
 
 const checkChordType = () => {
   const notesInfo = getNotesInfo(pushedNotes);
 
-  // Check if a chord is recognised
   if (notesInfo.length === 0) return;
 
   if (notesInfo[0].type === `m`) return handleMinorChordPlayed();
@@ -365,7 +358,7 @@ const MIDISucces = MIDIAccess => {
 
 const init = () => {
 
-  loadJSONFiles()
+  loadFiles()
     .then(loadedData => {
       initThree(loadedData);
       initTone();

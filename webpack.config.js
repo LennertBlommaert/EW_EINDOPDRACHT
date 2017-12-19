@@ -14,18 +14,26 @@ const {ifProduction, ifDevelopment} = getIfUtils(process.env.NODE_ENV);
 const extractCSS = new ExtractTextWebpackPlugin(`css/style.css`);
 
 // change for production build on different server path
-const publicPath = `/`;
+const publicPath = `http://student.howest.be/lennert.blommaert/20172018/EXW/Eindopdracht/`;
 
 const port = 3000;
 
-const copy = new CopyWebpackPlugin([{
-  from: `./src/assets`,
-  to: `assets`
-}], {
-  ignore: [
-    `.DS_Store`
-  ]
-});
+const copy = new CopyWebpackPlugin(
+  [
+    {
+      from: `./src/assets`,
+      to: `assets`
+    },
+    {
+      from: `./src/js/vendors`,
+      to: `js/vendors`
+    },
+  ],
+  {
+    ignore: [
+      `.DS_Store`
+    ]
+  });
 
 const config = {
 

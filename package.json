@@ -37,6 +37,7 @@
     "stylelint": "^7.8.0",
     "stylelint-config-devine": "^1.1.0",
     "teoria": "^2.5.0",
+    "three-orbit-controls": "^82.1.0",
     "tonal": "^1.1.0",
     "tone": "^0.12.27",
     "url-loader": "^0.5.7",
@@ -44,5 +45,8 @@
     "webpack-config-htmls": "^1.0.1",
     "webpack-config-utils": "^2.3.0",
     "webpack-dev-server": "^2.4.1"
+  },
+  "dependencies": {
+    "eventemitter2": "^5.0.0"
   }
 }

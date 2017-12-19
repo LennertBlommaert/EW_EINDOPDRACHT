@@ -1,5 +1,10 @@
-import EventEmitter2 from '../vendors/eventemitter2';
+import EventEmitter2 from 'eventemitter2';
 import {parseMIDIMessageData} from '../lib/functions';
+
+/*
+  A class contianing all the logic to use the MIDI controller
+  once a connection has been
+*/
 
 export default class MIDIController extends EventEmitter2 {
   constructor(access) {

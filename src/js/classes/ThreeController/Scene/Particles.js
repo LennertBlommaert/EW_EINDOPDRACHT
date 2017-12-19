@@ -1,18 +1,20 @@
 import Constants from '../../../objects/Constants';
+import Colors from '../../../objects/Colors';
 
-class Particles {
+export default class Particles {
 
   constructor() {
 
     this.particleGeometry = new THREE.Geometry();
-    this.particleMaterial = new THREE.PointsMaterial({
-      size: 3.5,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      map: THREE.ImageUtils.loadTexture(`../../../../assets/img/particle.png`),
-      depthWrite: false
-    });
-    // this.particleMaterial = new THREE.PointsMaterial({color: Colors.white, size: 1.5});
+    // this.particleMaterial = new THREE.PointsMaterial({
+    //   size: 3.5,
+    //   transparent: true,
+    //   blending: THREE.AdditiveBlending,
+    //   map: THREE.ImageUtils.loadTexture(`../../../../assets/img/particle.png`),
+    //   depthWrite: false
+    // });
+
+    this.particleMaterial = new THREE.PointsMaterial({color: Colors.white, size: 1.5});
     // this.particleSystem = new THREE.GPUParticleSystem({maxParticles: 250000});
     // this.options = {
     //   position: new THREE.Vector3(),
@@ -114,5 +116,3 @@ class Particles {
   }
 
 }
-
-export default Particles;

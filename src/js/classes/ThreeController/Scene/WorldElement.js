@@ -5,8 +5,6 @@ export default class WorldElement {
     this.positionVector = positionVector;
 
     this.geom = geom;
-    // NOT FIXING
-    //this.geom.verticesNeedUpdate = true;
 
     this.mats = mats;
 

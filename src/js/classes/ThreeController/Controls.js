@@ -24,14 +24,6 @@ export default class Controls extends THREE.OrbitControls {
 
     this.enablePan = minDistance;
 
-    //this.keyPanSpeed = 100;
-
-    // this.keys = {
-    //   LEFT: 37, //left arrow
-    //   UP: 38, // up arrow
-    //   RIGHT: 39, // right arrow
-    //   BOTTOM: 40 // down arrow
-    // };
   }
 
   toggleAutorotate = () => {

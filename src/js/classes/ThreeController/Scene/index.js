@@ -44,7 +44,6 @@ export default class Scene extends THREE.Scene {
     this.shadowLight.position.set(200, 800, 500);
     this.shadowLight.target.position.set(0, 0, 0);
     this.shadowLight.castShadow = true;
-    this.shadowLight.shadowCameraVisible = true;
 
     // Define visible area of projected this.shadowLight
     this.shadowLight.shadow.camera.left = - 700;
@@ -58,9 +57,6 @@ export default class Scene extends THREE.Scene {
     this.shadowLight.shadow.mapSize.height = 2000;
 
     this.add(this.shadowLight);
-
-    // this.helper = new THREE.CameraHelper(this.shadowLight.shadow.camera);
-    // this.add(this.helper);
   }
 
   moveShadowLight() {
@@ -144,7 +140,8 @@ export default class Scene extends THREE.Scene {
   }
 
   addParticles() {
-    this.particles = new Particles();
+    this.particles = new Particles(this.loadedData.texture);
+    console.log(this.loadedData.texture);
     this.add(this.particles.particleSystem);
   }
 

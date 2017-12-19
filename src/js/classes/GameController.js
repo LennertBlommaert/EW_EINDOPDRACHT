@@ -4,31 +4,12 @@ export default class GameController {
     this.$notesList = this.$notesListContainer.querySelector(`ul`);
     this.$congratulations = this.$notesListContainer.querySelector(`.congratulations`);
 
-    // this.notes = [
-    //   `B`, `D`, `B`, `D`, `B`, `D`,
-    //   `A`, `D`, `A`, `D`, `A`, `D`,
-    //   `G`, `D`, `G`, `D`, `G`, `D`,
-    //   `F#`, `D`, `F#`, `D`, `F#`, `D`,
-    // ];
-
-    // this.notes = [
-    //   {tone: `F#`, duration: 1}, {tone: `A#`, duration: 1}, {tone: `Eb`, duration: 1}, {tone: `F#`, duration: 1},
-    //   {tone: `A#`, duration: 1}, {tone: `F#`, duration: 1}, {tone: `Eb`, duration: 1}, {tone: `A#`, duration: 1},
-    // ];
-
     this.notes = [
-      {tone: `C`}, {tone: `E`}, {tone: `C`}, {tone: `E`}, {tone: `C`}, {tone: `E`}
+      {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
+      {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
+      {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
+      {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
     ];
-    //
-    // this.notes = [
-    //   {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
-    //   {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
-    //   {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
-    //   {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
-    // ];
-
-    // this.currentNoteOpacity = 0;
-    // this.currentNoteScale = 1;
 
     this.notes.forEach((n, i) => {
       n.domElement = document.createElement(`li`);
@@ -99,7 +80,7 @@ export default class GameController {
     const $currentNote = this.$notesList.querySelector(`li[data-index='${this.currentNoteIndex}']`);
     if ($currentNote) $currentNote.classList.add(`active`);
 
-    this.$notesList.style.transform = `translateX(-${8 * this.currentNoteIndex + 2}rem)`;
+    this.$notesList.style.transform = `translateX(-${7.3 * this.currentNoteIndex + 2}rem)`;
   };
 
   // updateCurrentNote = () => {

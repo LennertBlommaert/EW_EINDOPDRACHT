@@ -1,5 +1,10 @@
 import Key from './Key';
 
+/*
+  A class containing al the logic for the viusaul keyboard,
+  which serves as e fallback MIDI Controller
+*/
+
 export default class VisualKeyBoardController {
   constructor(keys) {
     this.$keysContainer = document.querySelector(`.keys-container`);
