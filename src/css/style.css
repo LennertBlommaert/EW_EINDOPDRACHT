@@ -3,6 +3,8 @@
 
 body {
   font-family: Poppins;
+  text-transform: uppercase;
+  letter-spacing: .2rem;
   width: 100%;
   height: 100%;
   background: #0f1836;
@@ -37,12 +39,12 @@ body {
 }
 
 .info-message {
+  font-size: 1.2rem;
   position: absolute;
   text-align: center;
   color: white;
   top: 15%;
   left: 50%;
-  font-size: 2.2rem;
   cursor: pointer;
   opacity: 0;
   transition: all 1s ease;
@@ -182,7 +184,7 @@ body {
   top: 15%;
   left: 50%;
   background: none;
-  transform: translate(.5, .5);
+  transform: translate(-50%, 5.5rem);
   width: 28rem;
   height: 9rem;
 
@@ -191,7 +193,7 @@ body {
   & .challenge-message {
     text-align: center;
     transition: all ease .5s;
-    font-size: 2.7rem;
+    font-size: 1.2rem;
     text-decoration: underline;
     opacity: .8;
     transform: translate(-14rem, 0);
@@ -210,6 +212,7 @@ body {
     transform: translate(16rem, -4rem);
     opacity: 0;
     width: 7.8rem;
+    margin-top: 2rem;
   }
 
   & div {
@@ -228,7 +231,6 @@ body {
   }
 
   &.game-started {
-
     overflow: hidden;
 
     & .challenge-message {
