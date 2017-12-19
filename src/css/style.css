@@ -170,6 +170,7 @@ body {
   cursor: pointer;
 
   & .challenge-message {
+    text-align: center;
     transition: all ease .5s;
     font-size: 3rem;
     text-decoration: underline;

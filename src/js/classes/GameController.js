@@ -43,7 +43,11 @@ export default class GameController {
 
   showChallengeMessage() {
     this.$notesListContainer.classList.remove(`game-inactive`);
-    this.$notesListContainer.onclick = () => this.start();
+    this.removeChallengeTimer = window.setTimeout(() => this.$notesListContainer.classList.add(`game-inactive`), 5000);
+    this.$notesListContainer.onclick = () => {
+      window.clearTimeout(this.removeChallengeTimer);
+      this.start();
+    };
   }
 
   start = () => {
@@ -77,6 +81,10 @@ export default class GameController {
     this.$congratulations.textContent = `Wow! in ${Math.floor(this.endTime - this.startTime) / 1000}s`;
     this.$notesListContainer.classList.add(`game-over`);
     this.$notesListContainer.classList.remove(`game-started`);
+    window.setTimeout(() => {
+      this.$notesListContainer.classList.remove(`game-over`);
+      this.$notesListContainer.classList.add(`game-inactive`);
+    }, 2000);
   }
 
   displayCurrentNote = () => {

@@ -15,13 +15,17 @@ export default class InfoMessageController extends EventEmitter2 {
 
     this.messagesIndex = 0;
 
+    // this.messages = [
+    //   new InfoMessage(`Moving the mouse changes the sound effects influence`, 10000, 6000),
+    //   new InfoMessage(`Using the arrow keys changes the type of sound effects`, 10000, 6000),
+    //   new InfoMessage(`Holding <shift> and moving the mouse changes the world volume and speed`, 10000, 6000),
+    //   new InfoMessage(`Holding <ctrl> and moving the mouse changes the worlds light`, 10000, 6000),
+    //   new InfoMessage(`Why don't you try to play a few minor chords?`, 10000, 6000),
+    //   new InfoMessage(`Do you know some major chords?`, 10000, 6000),
+    // ];
+
     this.messages = [
-      new InfoMessage(`Moving the mouse changes the sound effects influence`, 10000, 6000),
-      new InfoMessage(`Using the arrow keys changes the type of sound effects`, 10000, 6000),
-      new InfoMessage(`Holding <shift> and moving the mouse changes the world volume and speed`, 10000, 6000),
-      new InfoMessage(`Holding <ctrl> and moving the mouse changes the worlds light`, 10000, 6000),
-      new InfoMessage(`Why don't you try to play a few minor chords?`, 10000, 6000),
-      new InfoMessage(`Do you know some major chords?`, 10000, 6000),
+      new InfoMessage(`Moving the mouse changes the sound effects influence`, 100, 500),
     ];
 
     this.timer = window.setTimeout(() => this.showInfoMessage(), this.messages[this.messagesIndex].displayAfter);
