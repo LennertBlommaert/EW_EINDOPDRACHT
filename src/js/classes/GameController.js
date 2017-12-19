@@ -17,11 +17,15 @@ export default class GameController {
     // ];
 
     this.notes = [
-      {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
-      {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
-      {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
-      {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
+      {tone: `C`}, {tone: `E`}, {tone: `C`}, {tone: `E`}, {tone: `C`}, {tone: `E`}
     ];
+    //
+    // this.notes = [
+    //   {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
+    //   {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
+    //   {tone: `C`}, {tone: `E`}, {tone: `G`}, {tone: `B`},
+    //   {tone: `C`}, {tone: `B`}, {tone: `G`}, {tone: `E`},
+    // ];
 
     // this.currentNoteOpacity = 0;
     // this.currentNoteScale = 1;
@@ -95,7 +99,7 @@ export default class GameController {
     const $currentNote = this.$notesList.querySelector(`li[data-index='${this.currentNoteIndex}']`);
     if ($currentNote) $currentNote.classList.add(`active`);
 
-    this.$notesList.style.transform = `translateX(-${7.8 * this.currentNoteIndex + 2}rem)`;
+    this.$notesList.style.transform = `translateX(-${8 * this.currentNoteIndex + 2}rem)`;
   };
 
   // updateCurrentNote = () => {

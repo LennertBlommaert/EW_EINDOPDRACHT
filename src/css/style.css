@@ -196,9 +196,8 @@ body {
     font-size: 1.2rem;
     text-decoration: underline;
     opacity: .8;
-    transform: translate(-14rem, 0);
+    transform: translate(0, 0);
     text-transform: uppercase;
-
 
     &:hover {
       opacity: 1;
@@ -207,12 +206,12 @@ body {
 
   & li {
     transition: all ease .5s;
-    padding: 2rem;
     font-size: 5rem;
     transform: translate(16rem, -4rem);
     opacity: 0;
-    width: 7.8rem;
+    padding: 2rem;
     margin-top: 2rem;
+    text-align: center;
   }
 
   & div {
@@ -233,9 +232,11 @@ body {
   &.game-started {
     overflow: hidden;
 
+    transform: translate(0, 5.5rem);
+
     & .challenge-message {
-      transform: translate(-14rem,-7rem);
-      opacity: 0
+      transform: translate(-28rem, 0);
+      opacity: 0;
     }
 
     & li {
@@ -251,6 +252,8 @@ body {
 
   &.game-over {
     opacity: 1;
+    overflow: hidden;
+    transform: translate(-50%, 5.5rem);
 
     & .congratulations {
       transform: translateY(-10rem);
@@ -263,7 +266,7 @@ body {
     }
 
     & li {
-      opacity: .5;
+      opacity: 0;
     }
   }
 }
@@ -565,8 +568,6 @@ body {
       transform: translate(0, 0);
       opacity: 1;
     }
-
-
 
     &:hover {
       background: white;
