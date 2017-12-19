@@ -12,6 +12,20 @@ body {
   display: none;
 }
 
+/* .wf-loading {
+
+  & .start-container {
+    opacity: 0;
+  }
+}
+
+.wf-active {
+
+  & .start-container {
+    opacity: 1;
+  }
+} */
+
 .world {
   position: absolute;
   width: 100%;
@@ -177,10 +191,12 @@ body {
   & .challenge-message {
     text-align: center;
     transition: all ease .5s;
-    font-size: 3rem;
+    font-size: 2.7rem;
     text-decoration: underline;
     opacity: .8;
     transform: translate(-14rem, 0);
+    text-transform: uppercase;
+
 
     &:hover {
       opacity: 1;
@@ -193,6 +209,7 @@ body {
     font-size: 5rem;
     transform: translate(16rem, -4rem);
     opacity: 0;
+    width: 7.8rem;
   }
 
   & div {
@@ -203,6 +220,11 @@ body {
 
   &.game-inactive {
     opacity: 0;
+
+    & .challenge-message {
+      transform: translate(-14rem, 0);
+      opacity: 0
+    }
   }
 
   &.game-started {
@@ -210,7 +232,7 @@ body {
     overflow: hidden;
 
     & .challenge-message {
-      transform: translate(50%,-7rem);
+      transform: translate(-14rem,-7rem);
       opacity: 0
     }
 
@@ -234,8 +256,12 @@ body {
     }
 
     & .challenge-message {
-      transform: translateY(-7rem);
+      transform: translate(-14rem, 0);
       opacity: 0
+    }
+
+    & li {
+      opacity: .5;
     }
   }
 }
