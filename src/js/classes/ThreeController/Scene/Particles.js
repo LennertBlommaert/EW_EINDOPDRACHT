@@ -6,34 +6,9 @@ export default class Particles {
   constructor() {
 
     this.particleGeometry = new THREE.Geometry();
-    // this.particleMaterial = new THREE.PointsMaterial({
-    //   size: 3.5,
-    //   transparent: true,
-    //   blending: THREE.AdditiveBlending,
-    //   map: THREE.ImageUtils.loadTexture(`../../../../assets/img/particle.png`),
-    //   depthWrite: false
-    // });
 
     this.particleMaterial = new THREE.PointsMaterial({color: Colors.white, size: 1.5});
-    // this.particleSystem = new THREE.GPUParticleSystem({maxParticles: 250000});
-    // this.options = {
-    //   position: new THREE.Vector3(),
-    //   positionRandomness: .3,
-    //   velocity: new THREE.Vector3(),
-    //   velocityRandomness: .5,
-    //   color: 0xaa88ff,
-    //   colorRandomness: .2,
-    //   turbulence: .5,
-    //   lifetime: 2,
-    //   size: 5,
-    //   sizeRandomness: 1
-    // };
-    // this.spawnerOptions = {
-    //   spawnRate: 15000,
-    //   horizontalSpeed: 1.5,
-    //   verticalSpeed: 1.33,
-    //   timeScale: 1
-    // };
+
     for (let i = 0;i < Constants.PARTICLES_AMOUNT;i ++) {
 
       const particle = new THREE.Vector3();

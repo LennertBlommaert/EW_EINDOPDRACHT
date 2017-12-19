@@ -27,27 +27,6 @@ const $speedSlider = document.querySelector(`#bpm-range`),
   $helpWindow = document.querySelector(`.info-helpWindow`),
   $infoBtn = document.querySelector(`.info-helpBtn`);
 
-const getNotesInfo = notes => {
-  const teoriaNotes = notes.map(teoria.note.fromMIDI);
-  return piu.infer(teoriaNotes);
-};
-
-const getNoteInfo = note => {
-  const teoriaNote = teoria.note.fromMIDI(note);
-  const noteName = teoriaNote.name().toUpperCase();
-  const noteAccidental = teoriaNote.accidental();
-  return `${noteName}${noteAccidental}`;
-};
-
-const checkChordType = () => {
-  const notesInfo = getNotesInfo(pushedNotes);
-
-  if (notesInfo.length === 0) return;
-
-  if (notesInfo[0].type === `m`) return handleMinorChordPlayed();
-  if (notesInfo[0].type === ``) return handleMajorChordPlayed();
-};
-
 const loop = () => {
   threeController.controls.update();
   threeController.scene.moveShadowLight();
@@ -59,10 +38,6 @@ const loop = () => {
 
   if (controllerKeyIsDown) {
     threeController.scene.inflateLastChildren(pushedNotes.length);
-
-    // if (gameModusIsActive) {
-    //   gameController.updateCurrentNote();
-    // }
   }
 
   threeController.renderer.render(threeController.scene, threeController.camera);
@@ -93,6 +68,27 @@ const toggleGameModus = () => {
   $toggleGameModusButton.classList.toggle(`btn-toggle`);
   gameController.start();
   gameModusIsActive = !gameModusIsActive;
+};
+
+const getNotesInfo = notes => {
+  const teoriaNotes = notes.map(teoria.note.fromMIDI);
+  return piu.infer(teoriaNotes);
+};
+
+const getNoteInfo = note => {
+  const teoriaNote = teoria.note.fromMIDI(note);
+  const noteName = teoriaNote.name().toUpperCase();
+  const noteAccidental = teoriaNote.accidental();
+  return `${noteName}${noteAccidental}`;
+};
+
+const checkChordType = () => {
+  const notesInfo = getNotesInfo(pushedNotes);
+
+  if (notesInfo.length === 0) return;
+
+  if (notesInfo[0].type === `m`) return handleMinorChordPlayed();
+  if (notesInfo[0].type === ``) return handleMajorChordPlayed();
 };
 
 /*
@@ -184,7 +180,7 @@ const handleOnThreeControllerIntersection = objectName => {
 const handleCanvasClick = () =>  threeController.checkIntersections();
 
 const handleMouseMove = e => {
-  const {x = e.clientX, y = e.clientY, shiftKey, ctrlKey, altKey, metaKey} = e;
+  const {x = e.clientX, y = e.clientY, shiftKey, ctrlKey} = e;
 
   const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
   const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
@@ -192,15 +188,8 @@ const handleMouseMove = e => {
 
   if (shiftKey) handleMouseMoveWithShiftKey(x, y);
   if (ctrlKey) handleMouseMoveWithControlKey(x, y);
-  if (altKey) handleMouseMoveWithAltKey(x, y);
-  if (metaKey) handleMouseMoveWithMetaKey(x, y);
 
   threeController.updateMouse((x / window.innerWidth) * 2 - 1, (y / window.innerHeight) * 2 - 1);
-
-  // $shortcutVisualisation.classList.add(`active`);
-  // $shortcutVisualisation.querySelector(`.y`).textContent = parseInt(mappedX, 10);
-  // $shortcutVisualisation.querySelector(`.x`).textContent = parseInt(mappedY, 10);
-  // window.setTimeout($shortcutVisualisation.classList.remove(`active`), 1000);
 };
 
 const handleMouseMoveWithShiftKey = (x, y) => {
@@ -216,21 +205,8 @@ const handleMouseMoveWithControlKey = (x, y) => {
   threeController.scene.setLightsIntensities(mappedX, mappedY);
 };
 
-const handleMouseMoveWithAltKey = (x, y) => {
-  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
-  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
-  console.log(mappedX, mappedY);
-};
-
-const handleMouseMoveWithMetaKey = (x, y) => {
-  const mappedX = mapNumber(x, 0, window.innerWidth, 0, 1);
-  const mappedY = mapNumber(y, 0, window.innerHeight, 0, 1);
-  console.log(mappedX, mappedY);
-};
-
 const handleOnWindowKeyUp = ({keyCode}) => {
 
-  console.log(keyCode);
   if (keyCode === 38 || keyCode === 39) toneController.nextEffectSet();
   if (keyCode === 40 || keyCode === 37) toneController.previousEffectSet();
 
@@ -242,7 +218,6 @@ const handleOnWindowKeyUp = ({keyCode}) => {
 
 const handleOnWindowKeyDown = ({keyCode}) => {
   if (getKeyCodeData(keyCode) !== undefined) {
-    console.log(getKeyCodeData(keyCode));
     handleControllerKeyDown(getKeyCodeData(keyCode));
   }
 };
@@ -260,9 +235,9 @@ const handleOnMouseOverhelpBtn = () => $helpWindow.classList.add(`active`);
 
 const handleOnMouseLeavehelpBtn = () => $helpWindow.classList.remove(`active`);
 
-const handleOnMouseOverSlider = () => console.log(threeController.controls.enabled = false);
+const handleOnMouseOverSlider = () => threeController.controls.enabled = false;
 
-const handleOnMouseLeaveSlider = () => console.log(threeController.controls.enabled = true);
+const handleOnMouseLeaveSlider = () => threeController.controls.enabled = true;
 
 
 /*

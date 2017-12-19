@@ -38,6 +38,5 @@ export default class Camera extends THREE.PerspectiveCamera {
   //NOT IN USE
   rotate(angle = 0.005) {
     this.rotation.y -= angle;
-    //console.log(angle);
   }
 }

@@ -62,7 +62,6 @@ export default class GameController {
 
   gameWon = () => {
     this.endTime = Date.now();
-    console.log(this.beginTime);
     this.$congratulations.textContent = `Wow! in ${Math.floor(this.endTime - this.startTime) / 1000}s`;
     this.$notesListContainer.classList.add(`game-over`);
     this.$notesListContainer.classList.remove(`game-started`);
@@ -82,14 +81,6 @@ export default class GameController {
 
     this.$notesList.style.transform = `translateX(-${7.3 * this.currentNoteIndex + 2}rem)`;
   };
-
-  // updateCurrentNote = () => {
-  //   console.log(this.currentNoteScale);
-  //   this.currentNoteOpacity += 0.1;
-  //   this.currentNoteScale += 0.001;
-  //   this.getCurrentNote().domElement.style.opacity = this.currentNoteOpacity;
-  //   this.getCurrentNote().domElement.style.transform = `scale(${this.currentNoteScale})`;
-  // }
 
   resetNoteContainersClassLists = () => Array.from(this.$notesList.querySelectorAll(`li`)).forEach(li => li.classList.remove(`active`));
 

@@ -141,7 +141,6 @@ export default class Scene extends THREE.Scene {
 
   addParticles() {
     this.particles = new Particles(this.loadedData.texture);
-    console.log(this.loadedData.texture);
     this.add(this.particles.particleSystem);
   }
 
@@ -298,28 +297,6 @@ export default class Scene extends THREE.Scene {
       this.worldElements.shift();
     }, 2000);
   }
-
-  // shrinkChildren() {
-  //
-  //   const livingTree = this.trees.find(tree => tree.mesh.visible === true);
-  //   if (livingTree) livingTree.animateShrink();
-  //
-  //   const livingCloud = this.clouds.find(cloud => cloud.mesh.visible === true);
-  //   if (livingCloud) livingCloud.animateShrink();
-  //
-  //   const livingMushroom = this.mushrooms.find(mushroom => mushroom.mesh.visible === true);
-  //   if (livingMushroom) livingMushroom.animateShrink();
-  //
-  //   const livingRock = this.rocks.find(rock => rock.mesh.visible === true);
-  //   if (livingRock) livingRock.animateShrink();
-  //
-  //   const livingEvergreen = this.evergreens.find(evergreen => evergreen.mesh.visible === true);
-  //   if (livingEvergreen) livingEvergreen.animateShrink();
-  //
-  //   const livingFlower = this.flowers.find(flower => flower.mesh.visible === true);
-  //   if (livingFlower) livingFlower.animateShrink();
-  //
-  // }
 
   emptyScene() {
 

@@ -60,14 +60,14 @@ const Constants = {
   HEIGHT: window.innerHeight,
   KEYS: [
     //STANDARD KEYS
-    // {
-    //   key: `Q`,
-    //   keyCode: 81,
-    //   frequency: 130.81,
-    //   note: 0,
-    //   type: `white`,
-    //   objectName: `Terrain`
-    // },
+    {
+      key: `Q`,
+      keyCode: 81,
+      frequency: 130.81,
+      note: 0,
+      type: `white`,
+      objectName: `Terrain`
+    },
     {
       key: `A`,
       keyCode: 65,
@@ -82,14 +82,14 @@ const Constants = {
       type: `black`,
       note: 1
     },
-    // {
-    //   key: `W`,
-    //   keyCode: 87,
-    //   frequency: 146.83,
-    //   note: 2,
-    //   type: `white`,
-    //   objectName: `Tree`
-    // },
+    {
+      key: `W`,
+      keyCode: 87,
+      frequency: 146.83,
+      note: 2,
+      type: `white`,
+      objectName: `Tree`
+    },
     {
       key: `Z`,
       keyCode: 90,

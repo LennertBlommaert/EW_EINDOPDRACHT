@@ -3,7 +3,6 @@ import EventEmitter2 from 'eventemitter2';
 export default class Key extends EventEmitter2 {
   constructor({note, frequency, key}) {
     super({});
-    //console.log(key);
     this.note = note;
     this.frequency = frequency;
     this.key = key;
