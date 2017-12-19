@@ -104,6 +104,11 @@ body {
   }
 }
 
+.label {
+  text-transform: uppercase;
+  letter-spacing: .1rem;
+}
+
 .btn {
   padding: 2rem;
   margin-top: 1.1rem;
