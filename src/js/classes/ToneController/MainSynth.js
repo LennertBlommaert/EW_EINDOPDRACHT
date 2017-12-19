@@ -1,9 +1,10 @@
 import Tone from 'tone';
+import Constants from '../../objects/Constants';
 
 export default class MainSynth extends Tone.PolySynth {
-  constructor() {
+  constructor(volume = Constants.MAIN_SYNTH_VOLUME) {
     super(4, Tone.DuoSynth);
-    this.volume.value = - 20;
+    this.volume.value = - volume;
 
     this.set(
       {

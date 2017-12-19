@@ -1,6 +1,7 @@
 import ThreeController from './classes/ThreeController/';
 import ToneController from './classes/ToneController/';
 import VisualKeyboardController from './classes/VisualKeyboardController/';
+import InfoMessageController from './classes/InfoMessageController/';
 
 import MIDIController from './classes/MIDIController';
 import GameController from './classes/GameController';
@@ -13,7 +14,7 @@ import piu from 'piu';
 
 import Constants from './objects/Constants';
 
-let threeController, midiController, gameController, visualKeyboardController, toneController;
+let threeController, midiController, gameController, visualKeyboardController, toneController, infoMessageController;
 
 let controllerKeyIsDown = false, gameModusIsActive = false, midiControllerIsConnected = false, experimentIsLaunched = false;
 
@@ -297,6 +298,14 @@ const initVisualKeyboard = () => {
   visualKeyboardController.keys.forEach(key => key.on(`keyboardVisualisationKeyOnMouseUp`, keyData => handleControllerKeyUp(keyData)));
 };
 
+const initInfoMessageController = () => {
+  infoMessageController = new InfoMessageController(document.querySelector(`.info-message`));
+  infoMessageController.on(`infoMessageControllerOnLastMessage`, () => {
+    gameModusIsActive = true;
+    gameController.showChallengeMessage();
+  });
+};
+
 const initEventListeners = () => {
   const $startbtn = document.querySelector(`.start-info-btn`);
   $startbtn.addEventListener(`click`, launchExperiment);
@@ -361,7 +370,7 @@ const init = () => {
       initThree(loadedData);
       initTone();
       initVisualKeyboard();
-      gameController = new GameController(`game-notes`);
+      gameController = new GameController(`game-notes-container`);
       initEventListeners();
       initMIDI();
     })
@@ -380,6 +389,8 @@ const launchExperiment = () => {
   window.setTimeout(() => $gui.classList.remove(`active`), 2000);
 
   $infoBtn.classList.add(`active`);
+
+  initInfoMessageController();
 
   if (!midiControllerIsConnected) visualKeyboardController.addKeysContainerActive();
 };

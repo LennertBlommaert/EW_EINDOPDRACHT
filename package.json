@@ -26,6 +26,7 @@
     "image-webpack-loader": "^3.1.0",
     "local-web-server": "^1.2.6",
     "lodash": "^4.17.4",
+    "piu": "^1.0.0",
     "postcss-cssnext": "^2.9.0",
     "postcss-import": "^10.0.0",
     "postcss-loader": "^1.2.1",
@@ -37,14 +38,11 @@
     "stylelint-config-devine": "^1.1.0",
     "teoria": "^2.5.0",
     "tonal": "^1.1.0",
+    "tone": "^0.12.27",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.0",
     "webpack-config-htmls": "^1.0.1",
     "webpack-config-utils": "^2.3.0",
     "webpack-dev-server": "^2.4.1"
-  },
-  "dependencies": {
-    "piu": "^1.0.0",
-    "tone": "^0.11.11"
   }
 }

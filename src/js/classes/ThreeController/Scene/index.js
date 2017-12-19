@@ -334,11 +334,13 @@ export default class Scene extends THREE.Scene {
 
   removeChild(child) {
 
-    if (child.children.length > 0) {
-      child.children.forEach(block => {
-        if (block.material) block.material.dispose();
-        if (block.geometry) block.geometry.dispose();
-      });
+    if (child.children) {
+      if (child.children.length > 0) {
+        child.children.forEach(block => {
+          if (block.material) block.material.dispose();
+          if (block.geometry) block.geometry.dispose();
+        });
+      }
     }
 
     this.remove(child);

@@ -86,9 +86,9 @@ export default class ToneController extends EventEmitter2 {
   }
 
   _createSynths = () => {
-    this.panner = new Tone.Panner3D({coneOuterGain: 10});
+    this.panner = new Tone.Panner3D({coneOuterGain: Constants.PANNER_SYNTH_VOLUME});
     this.pannerSynth = new Tone.PolySynth(4, Tone.PluckySynth).connect(this.panner);
-    this.pannerSynth.volume.value = 50;
+    this.pannerSynth.volume.value = Constants.PANNER_SYNTH_VOLUME;
 
     this.mainSynth = new MainSynth();
 
@@ -137,7 +137,6 @@ export default class ToneController extends EventEmitter2 {
   }
 
   updateEffects = (x, y) => {
-    console.log(x, y);
     this.effectSets[this.currentEffectSetIndex][0].wet.value = x;
     this.effectSets[this.currentEffectSetIndex][1].wet.value = y;
   }

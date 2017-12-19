@@ -57,7 +57,7 @@ export default class ThreeController extends EventEmitter2 {
 
   linkGUIControls = () => {
     this.$resetButton = document.querySelector(`.reset-button`);
-    this.$resetButton.addEventListener(`click`, this.scene.emptyScene);
+    this.$resetButton.addEventListener(`click`, () => this.scene.emptyScene());
 
     this.$autoRotateButton = document.querySelector(`.auto-rotation-button`);
     this.$autoRotateButton.addEventListener(`click`, () => {

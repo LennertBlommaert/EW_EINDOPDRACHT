@@ -1,6 +1,8 @@
 export default class GameController {
   constructor(noteContainerDomElementClassName) {
-    this.$noteContainer = document.querySelector(`.${noteContainerDomElementClassName}`);
+    this.$notesListContainer = document.querySelector(`.${noteContainerDomElementClassName}`);
+    this.$notesList = this.$notesListContainer.querySelector(`ul`);
+    this.$congratulations = this.$notesListContainer.querySelector(`.congratulations`);
 
     // this.notes = [
     //   `B`, `D`, `B`, `D`, `B`, `D`,
@@ -28,23 +30,29 @@ export default class GameController {
       n.domElement = document.createElement(`li`);
       n.domElement.textContent = n.tone;
       n.domElement.dataset.index = i;
-      this.$noteContainer.appendChild(n.domElement);
+      this.$notesList.appendChild(n.domElement);
     });
 
     this.currentNoteIndex = 0;
   }
 
   checkNotePlayed = note => {
-    console.log(note);
     if (note === this.getCurrentNote().tone) return this.correctNotePlayed();
     this.wrongNotePlayed();
   }
 
+  showChallengeMessage() {
+    this.$notesListContainer.classList.remove(`game-inactive`);
+    this.$notesListContainer.onclick = () => this.start();
+  }
+
   start = () => {
     this.currentNoteIndex = 0;
-    this.$noteContainer.parentNode.classList.remove(`game-over`);
-    this.$noteContainer.parentNode.classList.toggle(`game-inactive`);
+    this.$notesListContainer.classList.remove(`game-over`);
+    this.$notesListContainer.classList.remove(`game-inactive`);
+    this.$notesListContainer.classList.add(`game-started`);
     this.displayCurrentNote();
+    this.startTime = Date.now();
   }
 
   correctNotePlayed = () => {
@@ -64,18 +72,22 @@ export default class GameController {
   }
 
   gameWon = () => {
-    console.log(`YOU WON!`);
-    this.$noteContainer.parentNode.classList.toggle(`game-over`);
+    this.endTime = Date.now();
+    console.log(this.beginTime);
+    this.$congratulations.textContent = `Wow! in ${Math.floor(this.endTime - this.startTime) / 1000}s`;
+    this.$notesListContainer.classList.add(`game-over`);
+    this.$notesListContainer.classList.remove(`game-started`);
   }
 
   displayCurrentNote = () => {
-    const $previousNote = this.$noteContainer.querySelector(`li[data-index='${this.currentNoteIndex - 1}']`);
+
+    const $previousNote = this.$notesList.querySelector(`li[data-index='${this.currentNoteIndex - 1}']`);
     if ($previousNote) $previousNote.classList.remove(`active`);
 
-    const $currentNote = this.$noteContainer.querySelector(`li[data-index='${this.currentNoteIndex}']`);
+    const $currentNote = this.$notesList.querySelector(`li[data-index='${this.currentNoteIndex}']`);
     if ($currentNote) $currentNote.classList.add(`active`);
 
-    this.$noteContainer.style.transform = `translateX(-${10.3 * this.currentNoteIndex}rem)`;
+    this.$notesList.style.transform = `translateX(-${11.3 * this.currentNoteIndex}rem)`;
   };
 
   // updateCurrentNote = () => {
@@ -86,7 +98,7 @@ export default class GameController {
   //   this.getCurrentNote().domElement.style.transform = `scale(${this.currentNoteScale})`;
   // }
 
-  resetNoteContainersClassLists = () => Array.from(this.$noteContainer.querySelectorAll(`li`)).forEach(li => li.classList.remove(`active`));
+  resetNoteContainersClassLists = () => Array.from(this.$notesList.querySelectorAll(`li`)).forEach(li => li.classList.remove(`active`));
 
   getCurrentNote = () => this.notes[this.currentNoteIndex];
 

@@ -22,6 +22,29 @@ body {
   */
 }
 
+.info-message {
+  position: absolute;
+  text-align: center;
+  color: white;
+  top: 15%;
+  left: 50%;
+  font-size: 2.2rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 1s ease;
+  line-height: 140%;
+  transform: translate(-50%, -50%);
+
+  &.active {
+    transform: translate(-50%, 50%);
+    opacity: 1;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
 .shortcut-visualisation {
   position: absolute;
   width: 3rem;
@@ -136,15 +159,34 @@ body {
 
 .game-notes-container {
   color: white;
-  font-size: 5rem;
   position: absolute;
   top: 15%;
   left: 50%;
   background: none;
   transform: translate(.5, .5);
-  width: 18.2rem;
+  width: 28rem;
   height: 9rem;
   overflow: hidden;
+  cursor: pointer;
+
+  & .challenge-message {
+    transition: all ease .5s;
+    font-size: 3rem;
+    text-decoration: underline;
+    opacity: .8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  & li {
+    transition: all ease .5s;
+    padding: 2rem;
+    font-size: 5rem;
+    transform: translateX(12rem);
+    opacity: 0;
+  }
 
   & div {
     font-size: 3.5rem;
@@ -156,17 +198,35 @@ body {
     opacity: 0;
   }
 
+  &.game-started {
+
+    & .challenge-message {
+      transform: translateY(-7rem);
+      opacity: 0
+    }
+
+    & li {
+      opacity: .5;
+      transform: translate(0, -3rem);
+
+      &.active {
+        opacity: 1;
+        transform: scale(1.3), translateY(-3rem);
+      }
+    }
+  }
+
   &.game-over {
     opacity: 1;
 
-    & li {
-      transform: translateY(-7rem);
-      opacity: 0;
+    & .congratulations {
+      transform: translateY(-10rem);
+      opacity: 1;
     }
 
-    & .congratulations {
+    & .challenge-message {
       transform: translateY(-7rem);
-      opacity: 1;
+      opacity: 0
     }
   }
 }
@@ -174,17 +234,6 @@ body {
 .game-notes {
   transition: all .5s .1s ease;
   display: flex;
-
-  & li {
-    opacity: .5;
-    transition: all ease .5s;
-    padding: 2rem;
-  }
-
-  & .active {
-    opacity: 1;
-    transform: scale(1.3);
-  }
 }
 
 .keys-container {
