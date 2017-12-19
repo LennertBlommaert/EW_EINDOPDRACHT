@@ -25,7 +25,7 @@ export default class InfoMessageController extends EventEmitter2 {
     // ];
 
     this.messages = [
-      new InfoMessage(`Moving the mouse changes the sound effects influence`, 100, 500),
+      new InfoMessage(`Moving the mouse changes the sound effects influence`, 10000, 6000),
     ];
 
     this.timer = window.setTimeout(() => this.showInfoMessage(), this.messages[this.messagesIndex].displayAfter);

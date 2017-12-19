@@ -166,7 +166,7 @@ body {
   transform: translate(.5, .5);
   width: 28rem;
   height: 9rem;
-  overflow: hidden;
+
   cursor: pointer;
 
   & .challenge-message {
@@ -175,6 +175,7 @@ body {
     font-size: 3rem;
     text-decoration: underline;
     opacity: .8;
+    transform: translate(-14rem, 0);
 
     &:hover {
       opacity: 1;
@@ -185,7 +186,7 @@ body {
     transition: all ease .5s;
     padding: 2rem;
     font-size: 5rem;
-    transform: translateX(12rem);
+    transform: translate(16rem, -4rem);
     opacity: 0;
   }
 
@@ -201,14 +202,16 @@ body {
 
   &.game-started {
 
+    overflow: hidden;
+
     & .challenge-message {
-      transform: translateY(-7rem);
+      transform: translate(50%,-7rem);
       opacity: 0
     }
 
     & li {
       opacity: .5;
-      transform: translate(0, -3rem);
+      transform: translate(0, -4rem);
 
       &.active {
         opacity: 1;
@@ -330,13 +333,35 @@ body {
     letter-spacing: .2em;
     color: white;
     line-height: 3rem;
-    transition: all .3s ease;
+    transition: opacity .3s ease;
     opacity: 0;
-    transform: translateY(-10rem);
+
+    & .start-logo {
+      transition: transform .3s ease;
+    }
+
+    & .start-info-paragraph, & .start-info-footer {
+      transition: transform .3s ease;
+    }
+
+    & .start-info-paragraph {
+      transform: translate(0, -10rem);
+    }
+
+    & .start-info-footer {
+      transform: translate(0, 2rem);
+    }
 
     &.active {
       opacity: 1;
-      transform: translateY(0);
+
+      & .start-info-paragraph, & .start-info-footer {
+        transform: translate(0, 0);
+      }
+
+      & .start-logo {
+        transform: translate(-3rem, 0);
+      }
     }
   }
 
@@ -346,7 +371,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-left: -5rem;
-    transform:translatex(-3rem);
+    transform: translate(-3rem, -8rem);
   }
 
   &-logo-title {

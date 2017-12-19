@@ -95,7 +95,7 @@ export default class GameController {
     const $currentNote = this.$notesList.querySelector(`li[data-index='${this.currentNoteIndex}']`);
     if ($currentNote) $currentNote.classList.add(`active`);
 
-    this.$notesList.style.transform = `translateX(-${11.3 * this.currentNoteIndex}rem)`;
+    this.$notesList.style.transform = `translateX(-${11.3 * this.currentNoteIndex + 2}rem)`;
   };
 
   // updateCurrentNote = () => {
